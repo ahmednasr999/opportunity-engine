@@ -111,4 +111,195 @@
     </div>
     {% endif %}
 </div>
+
+<!-- FEATURE: Weekly Report Email Section -->
+<div class="card mt-4" style="border-left: 4px solid #3B82F6;">
+    <div class="card-header">
+        <div class="card-title">
+            <i class="fas fa-envelope" style="color: #3B82F6;"></i> Weekly Report Email
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="generateWeeklyReport()">
+            <i class="fas fa-paper-plane"></i> Generate Report
+        </button>
+    </div>
+    <div style="padding: 20px;">
+        <p class="text-secondary" style="margin-bottom: 20px;">
+            Auto-generated Sunday night summary for tracking your job search progress
+        </p>
+        
+        <!-- Preview -->
+        <div id="weeklyReportPreview" style="display: none;">
+            <div style="padding: 20px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 20px;">
+                <div style="font-weight: 600; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">
+                    Subject: Weekly Progress Report: Feb 9 - Feb 15
+                </div>
+                <div style="font-family: monospace; font-size: 13px; white-space: pre-wrap; color: var(--text-secondary);">
+Hi Ahmed,
+
+Here's your weekly progress report for the week of February 9 - February 15.
+
+==================================================
+📊 PIPELINE OVERVIEW
+==================================================
+
+🎯 Target Salary: $200,000
+💰 Pipeline Value: $85,000 (43% of target)
+📋 Active Offers: 0
+💵 Average Offer: $0
+
+==================================================
+📈 CONVERSION METRICS
+==================================================
+
+📨 Application → Interview: 18.5%
+🎤 Interview → Offer: 33.3%
+📊 Overall Conversion: 2.1%
+📏 Industry Benchmark: Industry avg: 2-5%
+
+==================================================
+⚡ ACTIVITY TRACKER
+==================================================
+
+📝 This Week: 4 applications
+📅 This Month: 12 applications
+🎯 Weekly Target: 5
+📈 Status: ⚠️ NEEDS ATTENTION
+📊 Average ATS Score: 82
+
+==================================================
+💡 RECOMMENDATIONS
+==================================================
+
+🔴 LOW VOLUME: Only 4 apps this week. Target: 5+
+🟢 ATS SCORES: Avg 82/100. Well optimized.
+🟡 CONVERSION: Low response rate. Consider network warm intros.
+
+==================================================
+📅 NEXT WEEK FOCUS
+==================================================
+
+1. Increase application volume to 5+/week
+2. Focus on network warm intros for better conversion
+3. Schedule mock interviews to improve close rate
+4. Target $200,000+ roles
+
+---
+Generated: 2026-02-15 10:00
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; text-align: center;">
+                <div style="font-size: 24px; font-weight: 700;">4</div>
+                <div class="text-muted" style="font-size: 12px;">Apps This Week</div>
+            </div>
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; text-align: center;">
+                <div style="font-size: 24px; font-weight: 700;">12</div>
+                <div class="text-muted" style="font-size: 12px;">Apps This Month</div>
+            </div>
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; text-align: center;">
+                <div style="font-size: 24px; font-weight: 700;">82%</div>
+                <div class="text-muted" style="font-size: 12px;">Avg ATS Score</div>
+            </div>
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; text-align: center;">
+                <div style="font-size: 24px; font-weight: 700; color: var(--warning);">43%</div>
+                <div class="text-muted" style="font-size: 12px;">Pipeline Coverage</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURE: Goal Setting Dashboard Section -->
+<div class="card mt-4" style="border-left: 4px solid #10B981;">
+    <div class="card-header">
+        <div class="card-title">
+            <i class="fas fa-bullseye" style="color: #10B981;"></i> Goal Setting Dashboard
+        </div>
+    </div>
+    <div style="padding: 20px;">
+        <p class="text-secondary" style="margin-bottom: 20px;">
+            Set and track monthly targets with progress visualization
+        </p>
+        
+        <!-- Goals -->
+        <div style="display: grid; gap: 16px;">
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div>
+                        <strong>Weekly Applications</strong>
+                        <div class="text-muted" style="font-size: 13px;">Target: 5 per week</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 24px; font-weight: 700;">4/5</div>
+                        <div class="text-muted" style="font-size: 12px;">80% complete</div>
+                    </div>
+                </div>
+                <div class="progress-bar" style="height: 8px;">
+                    <div class="progress-fill" style="width: 80%; background: var(--warning);"></div>
+                </div>
+            </div>
+            
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div>
+                        <strong>Monthly Interviews</strong>
+                        <div class="text-muted" style="font-size: 13px;">Target: 3 per month</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 24px; font-weight: 700;">2/3</div>
+                        <div class="text-muted" style="font-size: 12px;">67% complete</div>
+                    </div>
+                </div>
+                <div class="progress-bar" style="height: 8px;">
+                    <div class="progress-fill" style="width: 67%;"></div>
+                </div>
+            </div>
+            
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div>
+                        <strong>Network Outreach</strong>
+                        <div class="text-muted" style="font-size: 13px;">Target: 10 per week</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 24px; font-weight: 700;">7/10</div>
+                        <div class="text-muted" style="font-size: 12px;">70% complete</div>
+                    </div>
+                </div>
+                <div class="progress-bar" style="height: 8px;">
+                    <div class="progress-fill" style="width: 70%;"></div>
+                </div>
+            </div>
+            
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div>
+                        <strong>Salary Target</strong>
+                        <div class="text-muted" style="font-size: 13px;">Target: $200,000</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 24px; font-weight: 700;">$0/$200K</div>
+                        <div class="text-muted" style="font-size: 12px;">0% complete</div>
+                    </div>
+                </div>
+                <div class="progress-bar" style="height: 8px;">
+                    <div class="progress-fill" style="width: 0%; background: var(--text-muted);"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function generateWeeklyReport() {
+    const preview = document.getElementById('weeklyReportPreview');
+    if (preview.style.display === 'none') {
+        preview.style.display = 'block';
+    } else {
+        preview.style.display = 'none';
+    }
+}
+</script>
 {% endblock %}

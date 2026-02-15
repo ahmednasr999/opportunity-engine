@@ -7,7 +7,7 @@ Tracks recruiters, referrals, and decision-makers for executive job search
 import json
 import os
 from datetime import datetime, timedelta
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Tuple, Any
 from dataclasses import dataclass, asdict
 from pathlib import Path
 import uuid
@@ -41,6 +41,29 @@ class Contact:
     def from_dict(cls, data: Dict) -> 'Contact':
         return cls(**data)
 
+
+@dataclass
+class MeetingNote:
+    """Meeting notes for a contact"""
+    id: str
+    contact_id: str
+    date: str
+    title: str
+    content: str  # Full meeting notes
+    key_points: List[str]
+    action_items: List[Dict]
+    sentiment: str
+    created_at: str
+
+@dataclass
+class ContactGroup:
+    """Contact group for categorization"""
+    id: str
+    name: str
+    description: str
+    color: str
+    contact_ids: List[str]
+    created_at: str
 
 @dataclass
 class Interaction:
@@ -326,6 +349,240 @@ class NetworkMapper:
                 })
         
         return sorted(suggestions, key=lambda x: x["score"], reverse=True)
+    
+    # ===== MEETING NOTES FEATURE =====
+    def add_meeting_note(self, contact_id: str, title: str, content: str,
+                         key_points: List[str] = None, action_items: List[Dict] = None,
+                         sentiment: str = "positive") -> Optional[MeetingNote]:
+        """Add meeting notes for a contact"""
+        if contact_id not in self.contacts:
+            return None
+        
+        note = MeetingNote(
+            id=str(uuid.uuid4())[:8],
+            contact_id=contact_id,
+            date=datetime.now().isoformat(),
+            title=title,
+            content=content,
+            key_points=key_points or [],
+            action_items=action_items or [],
+            sentiment=sentiment,
+            created_at=datetime.now().isoformat()
+        )
+        
+        # Save to file
+        self._save_meeting_note(note)
+        return note
+    
+    def get_meeting_notes(self, contact_id: str) -> List[MeetingNote]:
+        """Get all meeting notes for a contact"""
+        notes_file = self.data_dir / "meeting_notes.json"
+        notes = []
+        if notes_file.exists():
+            with open(notes_file, 'r') as f:
+                data = json.load(f)
+                for n in data:
+                    if n['contact_id'] == contact_id:
+                        notes.append(MeetingNote(**n))
+        return sorted(notes, key=lambda x: x.date, reverse=True)
+    
+    def _save_meeting_note(self, note: MeetingNote):
+        """Save meeting note to file"""
+        notes_file = self.data_dir / "meeting_notes.json"
+        notes = []
+        
+        if notes_file.exists():
+            with open(notes_file, 'r') as f:
+                notes = json.load(f)
+        
+        notes.append(asdict(note))
+        
+        with open(notes_file, 'w') as f:
+            json.dump(notes, f, indent=2)
+    
+    # ===== CONTACT GROUPS FEATURE =====
+    def add_contact_group(self, name: str, description: str = "", 
+                          color: str = "#3B82F6") -> ContactGroup:
+        """Create a new contact group"""
+        group = ContactGroup(
+            id=str(uuid.uuid4())[:8],
+            name=name,
+            description=description,
+            color=color,
+            contact_ids=[],
+            created_at=datetime.now().isoformat()
+        )
+        
+        self._save_contact_group(group)
+        return group
+    
+    def get_contact_groups(self) -> List[ContactGroup]:
+        """Get all contact groups"""
+        groups_file = self.data_dir / "contact_groups.json"
+        groups = []
+        if groups_file.exists():
+            with open(groups_file, 'r') as f:
+                data = json.load(f)
+                for g in data:
+                    groups.append(ContactGroup(**g))
+        return groups
+    
+    def add_contact_to_group(self, contact_id: str, group_id: str):
+        """Add a contact to a group"""
+        groups = self.get_contact_groups()
+        for group in groups:
+            if group.id == group_id:
+                if contact_id not in group.contact_ids:
+                    group.contact_ids.append(contact_id)
+                    self._save_contact_group(group, update=True)
+                break
+    
+    def remove_contact_from_group(self, contact_id: str, group_id: str):
+        """Remove a contact from a group"""
+        groups = self.get_contact_groups()
+        for group in groups:
+            if group.id == group_id:
+                if contact_id in group.contact_ids:
+                    group.contact_ids.remove(contact_id)
+                    self._save_contact_group(group, update=True)
+                break
+    
+    def get_contacts_by_group(self, group_id: str) -> List[Contact]:
+        """Get all contacts in a group"""
+        groups = self.get_contact_groups()
+        for group in groups:
+            if group.id == group_id:
+                return [self.contacts[cid] for cid in group.contact_ids if cid in self.contacts]
+        return []
+    
+    def _save_contact_group(self, group: ContactGroup, update: bool = False):
+        """Save contact group to file"""
+        groups_file = self.data_dir / "contact_groups.json"
+        groups = []
+        
+        if groups_file.exists() and not update:
+            with open(groups_file, 'r') as f:
+                groups = json.load(f)
+        
+        if update:
+            if groups_file.exists():
+                with open(groups_file, 'r') as f:
+                    groups = json.load(f)
+                for i, g in enumerate(groups):
+                    if g['id'] == group.id:
+                        groups[i] = asdict(group)
+                        break
+        else:
+            groups.append(asdict(group))
+        
+        with open(groups_file, 'w') as f:
+            json.dump(groups, f, indent=2)
+    
+    # ===== COLD EMAIL TEMPLATES FEATURE =====
+    COLD_EMAIL_TEMPLATES = [
+        {
+            "name": "Initial Outreach - Recruiter",
+            "category": "recruiter",
+            "subject": "Quick question about {{company}}",
+            "template": """Hi {{name}},
+
+I hope you're having a great week! I'm reaching out because I'm currently exploring opportunities in the {{sector}} space and noticed {{company}} seems to be growing quickly.
+
+I have {{years}} years of experience in {{skills}}, and I'd love to learn more about any roles that might be a fit.
+
+Do you have 15 minutes for a quick call this week? I'm happy to work around your schedule.
+
+Best regards,
+{{your_name}}"""
+        },
+        {
+            "name": "Referral Request",
+            "category": "referral",
+            "subject": "Would you be open to an introduction?",
+            "template": """Hi {{name}},
+
+I hope this message finds you well! I noticed we have a mutual connection through {{mutual_contact}}, and I wanted to reach out.
+
+I'm currently looking for opportunities in {{target_role}} at {{target_company}}, and I noticed you have connections there. Would you be comfortable making an introduction to {{target_person}}?
+
+I'd be happy to grab coffee (virtual or in-person) to chat about your experience and how you built your network.
+
+Thanks so much for your time!
+
+Best,
+{{your_name}}"""
+        },
+        {
+            "name": "Follow-up After Event",
+            "category": "networking",
+            "subject": "Great meeting you at {{event}}",
+            "template": """Hi {{name}},
+
+It was great meeting you at {{event}}! I really enjoyed our conversation about {{topic_discussed}}.
+
+As promised, here's a link to {{resource}} that I mentioned - I think it could be helpful for your work on {{area}}.
+
+I'd love to continue the conversation - would you be open to a coffee chat sometime in the next few weeks?
+
+Best regards,
+{{your_name}}"""
+        },
+        {
+            "name": "Cold Application - Hiring Manager",
+            "category": "hiring_manager",
+            "subject": "{{your_name}} - {{target_role}} inquiry",
+            "template": """Hi {{name}},
+
+I came across your profile while researching {{company}}, and I'm impressed by what the team is building in the {{sector}} space.
+
+With my background in {{skills}} and {{years}} years of experience driving results in similar roles, I believe I could contribute meaningfully to your team. I'm particularly excited about {{company_value}} and would love to discuss how I might support your goals.
+
+Would you be open to a brief conversation? I'm happy to work around your schedule.
+
+Best regards,
+{{your_name}}"""
+        },
+        {
+            "name": "Re-engagement - Stale Contact",
+            "category": "re-engagement",
+            "subject": "Checking in, {{name}}!",
+            "template": """Hi {{name}},
+
+It's been a while since we last connected! I wanted to reach out and see how things are going on your end.
+
+I recently {{recent_update}} and thought of you. Specifically, I'm still interested in opportunities at {{company}} and would love to reconnect to see if there's a fit.
+
+No pressure at all - just let me know if it'd be helpful to chat.
+
+Best,
+{{your_name}}"""
+        }
+    ]
+    
+    def get_cold_email_templates(self, category: str = None) -> List[Dict]:
+        """Get cold email templates, optionally filtered by category"""
+        if category:
+            return [t for t in self.COLD_EMAIL_TEMPLATES if t['category'] == category]
+        return self.COLD_EMAIL_TEMPLATES
+    
+    def generate_cold_email(self, template_name: str, variables: Dict) -> Dict:
+        """Generate a cold email from a template with variables"""
+        for template in self.COLD_EMAIL_TEMPLATES:
+            if template['name'] == template_name:
+                subject = template['subject']
+                body = template['template']
+                
+                for key, value in variables.items():
+                    placeholder = "{{" + key + "}}"
+                    subject = subject.replace(placeholder, value)
+                    body = body.replace(placeholder, value)
+                
+                return {
+                    "subject": subject,
+                    "body": body,
+                    "template_name": template_name
+                }
+        return {}
 
 
 def print_network_stats(mapper: NetworkMapper):

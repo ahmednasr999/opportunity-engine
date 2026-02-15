@@ -114,4 +114,138 @@ function copyContent() {
         </ul>
     </div>
 </div>
+
+<!-- FEATURE: Hook Generator Section -->
+<div class="card mt-4" style="border-left: 4px solid #8B5CF6;">
+    <div class="card-header">
+        <div class="card-title">
+            <i class="fas fa-bolt" style="color: #8B5CF6;"></i> Hook Generator
+        </div>
+    </div>
+    <div style="padding: 20px;">
+        <p class="text-secondary" style="margin-bottom: 20px;">
+            Generate attention-grabbing opening lines for your LinkedIn posts
+        </p>
+        
+        <!-- Generate Hooks Form -->
+        <div style="display: flex; gap: 16px; align-items: end; flex-wrap: wrap; margin-bottom: 24px;">
+            <div class="form-group" style="flex: 1; min-width: 150px;">
+                <label class="form-label">Number of Hooks</label>
+                <select class="form-select" id="hookCount">
+                    <option value="3">3 Hooks</option>
+                    <option value="5" selected>5 Hooks</option>
+                    <option value="10">10 Hooks</option>
+                </select>
+            </div>
+            <div class="form-group" style="flex: 1; min-width: 150px;">
+                <label class="form-label">Hook Type</label>
+                <select class="form-select" id="hookType">
+                    <option value="">All Types</option>
+                    <option value="question">Question</option>
+                    <option value="stat">Statistic</option>
+                    <option value="story">Story</option>
+                    <option value="contrarian">Contrarian</option>
+                    <option value="list">List</option>
+                    <option value="howto">How-to</option>
+                    <option value="problem">Problem/Gap</option>
+                </select>
+            </div>
+            <div class="form-group" style="flex: 1; min-width: 150px;">
+                <label class="form-label">Industry</label>
+                <select class="form-select" id="hookIndustry">
+                    <option value="HealthTech" selected>HealthTech</option>
+                    <option value="FinTech">FinTech</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Healthcare">Healthcare</option>
+                </select>
+            </div>
+            <button class="btn btn-primary btn-md" onclick="generateHooks()">
+                <i class="fas fa-bolt"></i> Generate Hooks
+            </button>
+        </div>
+        
+        <!-- Generated Hooks -->
+        <div id="hooksResult" style="display: grid; gap: 12px;">
+            <!-- Sample Hooks -->
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; border-left: 4px solid #8B5CF6;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span class="badge badge-purple">Question</span>
+                    <span class="badge badge-green">High Engagement</span>
+                </div>
+                <div style="font-size: 15px; font-weight: 500; margin-bottom: 12px;">
+                    What if I told you most hospitals are sitting on data gold mines but can't extract value?
+                </div>
+                <button class="btn btn-sm btn-outline" onclick="copyHook(this)">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+            
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; border-left: 4px solid #10B981;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span class="badge badge-green">Stat</span>
+                    <span class="badge badge-green">High Engagement</span>
+                </div>
+                <div style="font-size: 15px; font-weight: 500; margin-bottom: 12px;">
+                    80% of healthcare leaders don't know this about AI adoption. You probably don't either.
+                </div>
+                <button class="btn btn-sm btn-outline" onclick="copyHook(this)">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+            
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; border-left: 4px solid #F59E0B;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span class="badge badge-yellow">Contrarian</span>
+                    <span class="badge badge-green">High Engagement</span>
+                </div>
+                <div style="font-size: 15px; font-weight: 500; margin-bottom: 12px;">
+                    Unpopular opinion: AI won't replace healthcare workers - it will replace those who don't adapt.
+                </div>
+                <button class="btn btn-sm btn-outline" onclick="copyHook(this)">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+            
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; border-left: 4px solid #3B82F6;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span class="badge badge-blue">List</span>
+                    <span class="badge badge-green">High Engagement</span>
+                </div>
+                <div style="font-size: 15px; font-weight: 500; margin-bottom: 12px;">
+                    5 things I wish I knew before becoming a VP:
+                </div>
+                <button class="btn btn-sm btn-outline" onclick="copyHook(this)">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+            
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; border-left: 4px solid #EC4899;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span class="badge badge-pink">Story</span>
+                    <span class="badge badge-green">High Engagement</span>
+                </div>
+                <div style="font-size: 15px; font-weight: 500; margin-bottom: 12px;">
+                    After 15 years in HealthTech, here's what actually matters:
+                </div>
+                <button class="btn btn-sm btn-outline" onclick="copyHook(this)">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function generateHooks() {
+    alert('Generate hooks - API integration with content_factory.generate_hooks()');
+}
+function copyHook(btn) {
+    const text = btn.parentElement.querySelector('div:nth-child(2)').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(() => btn.innerHTML = originalText, 2000);
+    });
+}
+</script>
 {% endblock %}

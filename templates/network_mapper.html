@@ -158,4 +158,145 @@
         </div>
     {% endif %}
 </div>
+
+<!-- FEATURE: Contact Groups Section -->
+<div class="card mt-4" style="border-left: 4px solid #EC4899;">
+    <div class="card-header">
+        <div class="card-title">
+            <i class="fas fa-users" style="color: #EC4899;"></i> Contact Groups
+        </div>
+    </div>
+    <div style="padding: 20px;">
+        <p class="text-secondary" style="margin-bottom: 20px;">
+            Organize contacts into groups for targeted outreach
+        </p>
+        <div style="display: flex; gap: 16px; margin-bottom: 20px;">
+            <button class="btn btn-secondary btn-md" onclick="showCreateGroupModal()">
+                <i class="fas fa-plus"></i> Create New Group
+            </button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; border-left: 4px solid #3B82F6;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <strong>HealthTech VPs</strong>
+                    <span class="badge badge-blue">8</span>
+                </div>
+                <div class="text-muted" style="font-size: 12px;">VP-level contacts in HealthTech</div>
+            </div>
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; border-left: 4px solid #10B981;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <strong>Recruiters</strong>
+                    <span class="badge badge-green">12</span>
+                </div>
+                <div class="text-muted" style="font-size: 12px;">Active recruiters in your field</div>
+            </div>
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; border-left: 4px solid #F59E0B;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <strong>Peers</strong>
+                    <span class="badge badge-yellow">5</span>
+                </div>
+                <div class="text-muted" style="font-size: 12px;">Professional peers at similar level</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURE: Meeting Notes Section -->
+<div class="card mt-4" style="border-left: 4px solid #8B5CF6;">
+    <div class="card-header">
+        <div class="card-title">
+            <i class="fas fa-sticky-note" style="color: #8B5CF6;"></i> Meeting Notes
+        </div>
+    </div>
+    <div style="padding: 20px;">
+        <p class="text-secondary" style="margin-bottom: 20px;">
+            Track conversations with contacts for better relationship management
+        </p>
+        <div style="display: flex; gap: 16px; margin-bottom: 20px;">
+            <button class="btn btn-secondary btn-md" onclick="showAddNoteModal()">
+                <i class="fas fa-plus"></i> Add Meeting Note
+            </button>
+        </div>
+        <div style="display: grid; gap: 12px;">
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <strong>Coffee with Sarah Chen</strong>
+                    <span class="badge badge-gray">Feb 12, 2026</span>
+                </div>
+                <div class="text-muted" style="font-size: 13px; margin-bottom: 12px;">
+                    Discussed current role at Saudi German Hospital. She's connected to the CTO there. 
+                    She's willing to make an intro but wants to see my updated CV first.
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <span class="badge badge-blue">Positive</span>
+                    <span class="badge badge-gray">Action: Send CV</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURE: Cold Email Templates Section -->
+<div class="card mt-4" style="border-left: 4px solid #F59E0B;">
+    <div class="card-header">
+        <div class="card-title">
+            <i class="fas fa-envelope" style="color: #F59E0B;"></i> Cold Email Templates
+        </div>
+    </div>
+    <div style="padding: 20px;">
+        <p class="text-secondary" style="margin-bottom: 20px;">
+            Proven outreach templates for different scenarios
+        </p>
+        <div style="display: grid; gap: 16px;">
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <strong>Initial Outreach - Recruiter</strong>
+                    <span class="badge badge-blue">Recruiter</span>
+                </div>
+                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; font-family: monospace; white-space: pre-wrap;">Hi {{name}},
+
+I hope you're having a great week! I'm reaching out because I'm currently exploring opportunities in the {{sector}} space and noticed {{company}} seems to be growing quickly.
+
+I have {{years}} years of experience in {{skills}}, and I'd love to learn more about any roles that might be a fit.</div>
+                <button class="btn btn-sm btn-primary" onclick="useTemplate('Initial Outreach - Recruiter')">
+                    <i class="fas fa-copy"></i> Use Template
+                </button>
+            </div>
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <strong>Referral Request</strong>
+                    <span class="badge badge-green">Referral</span>
+                </div>
+                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; font-family: monospace; white-space: pre-wrap;">Hi {{name}},
+
+I hope this message finds you well! I noticed we have a mutual connection through {{mutual_contact}}, and I wanted to reach out.
+
+I'm currently looking for opportunities in {{target_role}} at {{target_company}}, and I noticed you have connections there.</div>
+                <button class="btn btn-sm btn-primary" onclick="useTemplate('Referral Request')">
+                    <i class="fas fa-copy"></i> Use Template
+                </button>
+            </div>
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <strong>Cold Application - Hiring Manager</strong>
+                    <span class="badge badge-purple">Hiring Manager</span>
+                </div>
+                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; font-family: monospace; white-space: pre-wrap;">Hi {{name}},
+
+I came across your profile while researching {{company}}, and I'm impressed by what the team is building in the {{sector}} space.
+
+With my background in {{skills}} and {{years}} years of experience driving results in similar roles, I believe I could contribute meaningfully to your team.</div>
+                <button class="btn btn-sm btn-primary" onclick="useTemplate('Cold Application - Hiring Manager')">
+                    <i class="fas fa-copy"></i> Use Template
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showCreateGroupModal() { alert('Create contact group'); }
+function showAddNoteModal() { alert('Add meeting note'); }
+function useTemplate(name) { alert('Use template: ' + name); }
+</script>
 {% endblock %}

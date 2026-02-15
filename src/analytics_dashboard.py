@@ -291,6 +291,82 @@ class AnalyticsDashboard:
         
         return recs
     
+    # ===== WEEKLY REPORT EMAIL - PHASE 1 FEATURE =====
+    def generate_weekly_report_email(self) -> Dict:
+        """Generate weekly report email content"""
+        summary = self.generate_executive_summary()
+        
+        # Get date range for this week
+        today = datetime.now()
+        week_start = today - timedelta(days=today.weekday())
+        week_end = week_start + timedelta(days=6)
+        
+        email_subject = f"Weekly Progress Report: {week_start.strftime('%b %d')} - {week_end.strftime('%b %d')}"
+        
+        # Build email body
+        email_body = f"""
+Hi Ahmed,
+
+Here's your weekly progress report for the week of {week_start.strftime('%B %d')} - {week_end.strftime('%B %d')}.
+
+{'=' * 50}
+📊 PIPELINE OVERVIEW
+{'=' * 50}
+
+🎯 Target Salary: ${summary['revenue']['target_annual_salary']:,}
+💰 Pipeline Value: ${summary['revenue']['current_pipeline_value']:,.0f} ({summary['revenue']['pipeline_coverage']} of target)
+📋 Active Offers: {summary['revenue']['offers_in_hand']}
+💵 Average Offer: ${summary['revenue']['avg_offer_amount']:,.0f}
+
+{'=' * 50}
+📈 CONVERSION METRICS
+{'=' * 50}
+
+📨 Application → Interview: {summary['conversion']['application_to_interview']}
+🎤 Interview → Offer: {summary['conversion']['interview_to_offer']}
+📊 Overall Conversion: {summary['conversion']['overall']}
+📏 Industry Benchmark: {summary['conversion']['benchmark']}
+
+{'=' * 50}
+⚡ ACTIVITY TRACKER
+{'=' * 50}
+
+📝 This Week: {summary['activity']['applications_this_week']} applications
+📅 This Month: {summary['activity']['applications_this_month']} applications
+🎯 Weekly Target: {summary['activity']['target_per_week']}
+📈 Status: {"✅ ON TRACK" if summary['activity']['on_track'] else "⚠️ NEEDS ATTENTION"}
+📊 Average ATS Score: {summary['activity']['avg_ats_score']}
+
+{'=' * 50}
+💡 RECOMMENDATIONS
+{'=' * 50}
+
+"""
+        
+        for rec in summary['recommendations']:
+            email_body += f"{rec}\n"
+        
+        email_body += f"""
+{'=' * 50}
+📅 NEXT WEEK FOCUS
+{'=' * 50}
+
+1. {"Continue at current pace" if summary['activity']['on_track'] else "Increase application volume to 5+/week"}
+2. Focus on network warm intros for better conversion
+3. Schedule mock interviews to improve close rate
+4. Target {summary['revenue']['target_annual_salary']:,.0f}+ roles
+
+---
+Generated: {today.strftime('%Y-%m-%d %H:%M')}
+"""
+        
+        return {
+            "subject": email_subject,
+            "body": email_body,
+            "summary": summary,
+            "generated_at": datetime.now().isoformat()
+        }
+    
     def export_weekly_report(self) -> str:
         """Export weekly report"""
         summary = self.generate_executive_summary()

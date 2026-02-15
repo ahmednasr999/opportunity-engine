@@ -10,7 +10,12 @@
       "Cover letter generation",
       "Interview Q&A prediction",
       "Salary negotiation scripts",
-      "Real profile data integration"
+      "Real profile data integration",
+      "CV Comparison View (side-by-side)",
+      "Keyword Heatmap (visual overlay)",
+      "Template Gallery (3 templates)",
+      "Bullet Strength Analyzer",
+      "DOCX Export (mock)"
     ],
     "missing_features": [
       {
@@ -137,7 +142,12 @@
       "Interview question prep",
       "Timeline view",
       "Follow-up reminders",
-      "Status tracking"
+      "Status tracking",
+      "Interview Checklist (pre/post interview)",
+      "Salary Negotiation Log (track offers, counter-offers)",
+      "Offer Comparison Tool (side-by-side)",
+      "Source Effectiveness analytics",
+      "Job Auto-Scraper (mock)"
     ],
     "missing_features": [
       {
@@ -147,22 +157,6 @@
         "effort": "medium",
         "impact": "medium",
         "category": "Visualization"
-      },
-      {
-        "id": "jt_002",
-        "name": "Interview Checklist",
-        "description": "Per-job prep: research, questions, outfit",
-        "effort": "low",
-        "impact": "high",
-        "category": "Productivity"
-      },
-      {
-        "id": "jt_003",
-        "name": "Salary Negotiation Log",
-        "description": "Track offers, counter-offers, final numbers",
-        "effort": "low",
-        "impact": "high",
-        "category": "Finance"
       },
       {
         "id": "jt_004",
@@ -247,7 +241,10 @@
       "Optimal timing algorithm",
       "30-day content calendar",
       "Trending topic alerts",
-      "Engagement analytics tracking"
+      "Engagement analytics tracking",
+      "Hook Generator (50+ attention-grabbing opening lines)",
+      "Quote Image Generator",
+      "Viral Prediction (AI simulation)"
     ],
     "missing_features": [
       {
@@ -356,7 +353,11 @@
       "Warm intro pathfinding",
       "AI conversation starters",
       "Relationship scoring",
-      "News alerts for contacts"
+      "News alerts for contacts",
+      "Meeting Notes (track conversations)",
+      "Contact Groups (categorize contacts)",
+      "Cold Email Templates (5 proven templates)",
+      "Contact Heatmap visualization"
     ],
     "missing_features": [
       {
@@ -465,7 +466,9 @@
       "Smart targets",
       "Cohort analysis",
       "Pipeline visualization",
-      "Benchmarking"
+      "Benchmarking",
+      "Weekly Report Email (auto-generated summary)",
+      "Goal Setting Dashboard (monthly targets)"
     ],
     "missing_features": [
       {

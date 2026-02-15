@@ -231,6 +231,63 @@ Agree or disagree? Tell me why. 👇""",
                 tone="professional"
             )
         ]
+        
+        # HOOK GENERATOR - PHASE 1 FEATURE - Initialize in __init__
+        self.hook_templates = []
+        self.hook_variables = {}
+        self._init_hook_generator()
+    
+    def _init_hook_generator(self):
+        """Initialize hook generator templates"""
+        self.hook_templates = [
+            {"type": "question", "template": "What if I told you {surprising_statement}?", "engagement": "high"},
+            {"type": "question", "template": "What does {industry} look like in 2030? Here's my take:", "engagement": "high"},
+            {"type": "question", "template": "Why do {percentage}% of {industry} projects fail? {years} years later, I finally understand.", "engagement": "high"},
+            {"type": "question", "template": "The biggest mistake I see in {role}s? It's not what you think.", "engagement": "high"},
+            {"type": "question", "template": "How do you {common_task}? Most people do it wrong.", "engagement": "medium"},
+            {"type": "stat", "template": "{stat}% of {audience} don't know this about {topic}. You probably don't either.", "engagement": "high"},
+            {"type": "stat", "template": "I analyzed {number} {industry} leaders. Here's what the top {percentage}% have in common:", "engagement": "high"},
+            {"type": "stat", "template": "{years} ago, I made a ${loss} mistake. Here's what I'd do differently:", "engagement": "high"},
+            {"type": "story", "template": "I almost quit {industry} when {event}. I'm glad I didn't.", "engagement": "high"},
+            {"type": "story", "template": "The best career advice I ever got? From a {role} at {company}.", "engagement": "medium"},
+            {"type": "story", "template": "After {years} years in {industry}, here's what actually matters:", "engagement": "high"},
+            {"type": "contrarian", "template": "Unpopular opinion: {contrarian_statement}", "engagement": "high"},
+            {"type": "contrarian", "template": "Everyone says {common_belief}. They're wrong. Here's why:", "engagement": "high"},
+            {"type": "contrarian", "template": "Stop doing {common_mistake}. Instead, do this:", "engagement": "medium"},
+            {"type": "list", "template": "{number} things I wish I knew before {milestone}:", "engagement": "high"},
+            {"type": "list", "template": "{number} signs you're ready for {next_step}:", "engagement": "medium"},
+            {"type": "list", "template": "The {number} best {industry} strategies I've seen in {years} years:", "engagement": "high"},
+            {"type": "howto", "template": "How to {desired_outcome} in {timeframe}:", "engagement": "high"},
+            {"type": "howto", "template": "A step-by-step guide to {common_goal}:", "engagement": "high"},
+            {"type": "problem", "template": "If you're struggling with {problem}, you're not alone. Here's the fix:", "engagement": "high"},
+            {"type": "problem", "template": "The real reason you can't {desired_ability}? It's not what you think.", "engagement": "medium"},
+        ]
+        
+        self.hook_variables = {
+            "surprising_statement": ["most hospitals are sitting on data gold mines but can't extract value", "the biggest barrier to HealthTech isn't technology - it's culture"],
+            "industry": ["HealthTech", "healthcare", "digital transformation", "AI in healthcare"],
+            "percentage": ["70", "80", "90", "50"],
+            "topic": ["leadership", "digital transformation", "AI adoption", "change management"],
+            "role": ["CTO", "VP", "PM", "manager", "leader"],
+            "company": ["Google", "Microsoft", "Amazon", "a startup", "a Fortune 500"],
+            "common_task": ["interview candidates", "build teams", "prioritize projects", "handle conflict"],
+            "audience": ["founders", "engineers", "healthcare leaders", "recruiters"],
+            "stat": ["80", "90", "70", "60"],
+            "number": ["10", "5", "7", "3"],
+            "years": ["5", "10", "15", "20"],
+            "event": ["my startup failed", "I got fired", "I almost gave up"],
+            "milestone": ["becoming a VP", "starting my own company", "moving to leadership"],
+            "common_belief": ["you need more experience to advance", "networking is the key", "it's all about who you know"],
+            "common_mistake": ["sending cold emails", "networking without strategy", "applying to jobs blindly"],
+            "next_step": ["your next promotion", "leadership role", "bigger responsibilities"],
+            "desired_outcome": ["land your dream job", "negotiate a higher salary", "build a powerful network"],
+            "timeframe": ["30 days", "90 days", "6 months"],
+            "common_goal": ["networking", "job search", "salary negotiation"],
+            "problem": ["getting interviews", "building relationships", "staying motivated"],
+            "desired_ability": ["network effectively", "get referrals", "close opportunities"],
+            "loss": ["100K", "500K", "1M"],
+            "contrarian_statement": ["AI won't replace healthcare workers - it will replace those who don't adapt", "the best hire is rarely the most experienced candidate", "working harder is the worst career advice"]
+        }
     
     def _load_topics(self) -> Dict:
         """Load content topics"""
@@ -434,9 +491,61 @@ Agree or disagree? Tell me why. 👇""",
             "content": content,
             "template": edition_type,
             "subject": f"HealthTech AI Weekly - {today}",
-            "word_count": len(content.split()),
-            "character_count": len(content)
+            "generated_at": datetime.now().isoformat()
         }
+    
+    # ===== HOOK GENERATOR - PHASE 1 FEATURE =====
+    def generate_hooks(self, count: int = 5, hook_type: str = None, 
+                       industry: str = "HealthTech", role: str = "leader") -> List[Dict]:
+        """Generate attention-grabbing hooks for LinkedIn posts"""
+        import random
+        
+        hooks = []
+        available_hooks = self.hook_templates
+        
+        # Filter by type if specified
+        if hook_type:
+            available_hooks = [h for h in self.hook_templates if h['type'] == hook_type]
+        
+        # Generate hooks
+        for _ in range(count):
+            if not available_hooks:
+                break
+            
+            template = random.choice(available_hooks)
+            hook_text = template["template"]
+            
+            # Fill in variables
+            for key, values in self.hook_variables.items():
+                if "{" + key + "}" in hook_text and values:
+                    replacement = random.choice(values)
+                    hook_text = hook_text.replace("{" + key + "}", replacement)
+            
+            # Replace remaining placeholders with defaults
+            hook_text = hook_text.replace("{industry}", industry)
+            hook_text = hook_text.replace("{role}", role)
+            hook_text = hook_text.replace("{years}", str(random.randint(5, 20)))
+            hook_text = hook_text.replace("{percentage}", str(random.randint(30, 90)))
+            hook_text = hook_text.replace("{number}", str(random.randint(3, 10)))
+            hook_text = hook_text.replace("{timeframe}", random.choice(["30 days", "90 days", "6 months"]))
+            
+            hooks.append({
+                "hook": hook_text,
+                "type": template["type"],
+                "engagement": template["engagement"],
+                "ready_to_use": "{" not in hook_text
+            })
+        
+        return hooks
+    
+    def get_hook_templates_by_type(self) -> Dict[str, List[str]]:
+        """Get all hook templates grouped by type"""
+        by_type = {}
+        for hook in self.hook_templates:
+            if hook["type"] not in by_type:
+                by_type[hook["type"]] = []
+            by_type[hook["type"]].append(hook["template"])
+        return by_type
     
     def generate_content_calendar(self, days: int = 30) -> List[Dict]:
         """Generate a content calendar"""

@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from cv_optimizer import CVGenerator, ProfileDatabase, JDParser
 from job_tracker import JobTracker
+from network_mapper import NetworkMapper
 from content_factory import ContentFactory
 from second_brain import SecondBrain
 from network_mapper import NetworkMapper
@@ -562,6 +563,274 @@ def documents_view():
     docs = coordinator.documents
     cvs = coordinator.cvs
     return render_template("documents.html", documents=docs, cvs=cvs)
+
+# ===== NEW FEATURES API ROUTES =====
+
+# Interview Checklist Routes
+@app.route("/api/job/<job_id>/checklist", methods=["POST"])
+def create_interview_checklist(job_id):
+    """Create an interview checklist for a job"""
+    checklist = job_tracker.add_interview_checklist(job_id)
+    if checklist:
+        return jsonify({'status': 'success', 'checklist': asdict(checklist)})
+    return jsonify({'status': 'error', 'message': 'Job not found'}), 404
+
+@app.route("/api/job/<job_id>/checklist/<checklist_id>", methods=["GET"])
+def get_interview_checklist(job_id, checklist_id):
+    """Get an interview checklist"""
+    checklist = job_tracker.get_checklist(checklist_id)
+    if checklist:
+        return jsonify({'status': 'success', 'checklist': asdict(checklist)})
+    return jsonify({'status': 'error', 'message': 'Checklist not found'}), 404
+
+@app.route("/api/checklist/<checklist_id>/item", methods=["POST"])
+def update_checklist_item(checklist_id):
+    """Update a checklist item"""
+    data = request.json
+    job_tracker.update_checklist_item(
+        checklist_id, 
+        data.get('item_type'), 
+        data.get('item_index'), 
+        data.get('completed')
+    )
+    return jsonify({'status': 'success'})
+
+# Salary Negotiation Routes
+@app.route("/api/job/<job_id>/negotiation", methods=["POST"])
+def create_salary_negotiation(job_id):
+    """Create salary negotiation tracking for a job"""
+    data = request.json
+    negotiation = job_tracker.add_salary_negotiation(
+        job_id,
+        initial_offer=data.get('initial_offer', 0),
+        base_salary=data.get('base_salary', 0),
+        bonus=data.get('bonus', 0),
+        equity=data.get('equity', ''),
+        benefits=data.get('benefits', '')
+    )
+    if negotiation:
+        return jsonify({'status': 'success', 'negotiation': asdict(negotiation)})
+    return jsonify({'status': 'error', 'message': 'Job not found'}), 404
+
+@app.route("/api/negotiation/<negotiation_id>", methods=["GET"])
+def get_salary_negotiation(negotiation_id):
+    """Get salary negotiation"""
+    negotiation = job_tracker.get_negotiation(negotiation_id)
+    if negotiation:
+        return jsonify({'status': 'success', 'negotiation': asdict(negotiation)})
+    return jsonify({'status': 'error', 'message': 'Negotiation not found'}), 404
+
+@app.route("/api/negotiation/<negotiation_id>/counter", methods=["POST"])
+def add_counter_offer(negotiation_id):
+    """Add a counter offer"""
+    data = request.json
+    job_tracker.add_counter_offer(
+        negotiation_id,
+        data.get('amount', 0),
+        data.get('notes', '')
+    )
+    return jsonify({'status': 'success'})
+
+@app.route("/api/negotiation/<negotiation_id>/finalize", methods=["POST"])
+def finalize_negotiation(negotiation_id):
+    """Finalize the negotiation"""
+    data = request.json
+    job_tracker.finalize_offer(
+        negotiation_id,
+        data.get('final_amount', 0),
+        data.get('accepted', True)
+    )
+    return jsonify({'status': 'success'})
+
+# Hook Generator Routes
+@app.route("/api/content/hooks", methods=["GET"])
+def generate_hooks():
+    """Generate hooks for LinkedIn posts"""
+    count = request.args.get('count', 5, type=int)
+    hook_type = request.args.get('type', None)
+    industry = request.args.get('industry', 'HealthTech')
+    role = request.args.get('role', 'leader')
+    
+    hooks = content_factory.generate_hooks(count, hook_type, industry, role)
+    return jsonify({'status': 'success', 'hooks': hooks})
+
+# Meeting Notes Routes
+@app.route("/api/contact/<contact_id>/note", methods=["POST"])
+def add_meeting_note(contact_id):
+    """Add meeting notes for a contact"""
+    data = request.json
+    note = network_mapper.add_meeting_note(
+        contact_id,
+        title=data.get('title', ''),
+        content=data.get('content', ''),
+        key_points=data.get('key_points', []),
+        action_items=data.get('action_items', []),
+        sentiment=data.get('sentiment', 'positive')
+    )
+    if note:
+        return jsonify({'status': 'success', 'note': asdict(note)})
+    return jsonify({'status': 'error', 'message': 'Contact not found'}), 404
+
+@app.route("/api/contact/<contact_id>/notes", methods=["GET"])
+def get_meeting_notes(contact_id):
+    """Get all meeting notes for a contact"""
+    notes = network_mapper.get_meeting_notes(contact_id)
+    return jsonify({'status': 'success', 'notes': [asdict(n) for n in notes]})
+
+# Contact Groups Routes
+@app.route("/api/groups", methods=["GET"])
+def get_contact_groups():
+    """Get all contact groups"""
+    groups = network_mapper.get_contact_groups()
+    return jsonify({'status': 'success', 'groups': [asdict(g) for g in groups]})
+
+@app.route("/api/groups", methods=["POST"])
+def create_contact_group():
+    """Create a new contact group"""
+    data = request.json
+    group = network_mapper.add_contact_group(
+        name=data.get('name', ''),
+        description=data.get('description', ''),
+        color=data.get('color', '#3B82F6')
+    )
+    return jsonify({'status': 'success', 'group': asdict(group)})
+
+@app.route("/api/groups/<group_id>/contact/<contact_id>", methods=["POST"])
+def add_contact_to_group(group_id, contact_id):
+    """Add a contact to a group"""
+    network_mapper.add_contact_to_group(contact_id, group_id)
+    return jsonify({'status': 'success'})
+
+@app.route("/api/groups/<group_id>/contacts", methods=["GET"])
+def get_group_contacts(group_id):
+    """Get all contacts in a group"""
+    contacts = network_mapper.get_contacts_by_group(group_id)
+    return jsonify({'status': 'success', 'contacts': [asdict(c) for c in contacts]})
+
+# Cold Email Templates Routes
+@app.route("/api/templates/cold-email", methods=["GET"])
+def get_cold_email_templates():
+    """Get cold email templates"""
+    category = request.args.get('category', None)
+    templates = network_mapper.get_cold_email_templates(category)
+    return jsonify({'status': 'success', 'templates': templates})
+
+@app.route("/api/templates/cold-email/generate", methods=["POST"])
+def generate_cold_email():
+    """Generate a cold email from template"""
+    data = request.json
+    email = network_mapper.generate_cold_email(
+        template_name=data.get('template_name', ''),
+        variables=data.get('variables', {})
+    )
+    return jsonify({'status': 'success', 'email': email})
+
+# Weekly Report Email Route
+@app.route("/api/analytics/weekly-report", methods=["GET"])
+def get_weekly_report():
+    """Get weekly report email"""
+    report = analytics.generate_weekly_report_email()
+    return jsonify({'status': 'success', 'report': report})
+
+# ===== ADDITIONAL FEATURES ROUTES =====
+from src.additional_features import CVFeatures, ContentFeatures, NetworkFeatures, JobScraperFeatures
+
+cv_features = CVFeatures()
+content_features = ContentFeatures()
+network_features = NetworkFeatures()
+job_scraper = JobScraperFeatures()
+
+# CV Features
+@app.route("/api/cv/templates", methods=["GET"])
+def get_cv_templates():
+    """Get CV templates"""
+    templates = cv_features.get_templates()
+    return jsonify({'status': 'success', 'templates': templates})
+
+@app.route("/api/cv/compare", methods=["POST"])
+def compare_cvs():
+    """Compare two CVs"""
+    data = request.json
+    result = cv_features.compare_cvs(
+        data.get('cv1', {}),
+        data.get('cv2', {}),
+        data.get('job_requirements', {})
+    )
+    return jsonify({'status': 'success', 'comparison': result})
+
+@app.route("/api/cv/keyword-heatmap", methods=["POST"])
+def keyword_heatmap():
+    """Get keyword heatmap"""
+    data = request.json
+    result = cv_features.keyword_heatmap(
+        data.get('cv_text', ''),
+        data.get('job_text', '')
+    )
+    return jsonify({'status': 'success', 'heatmap': result})
+
+@app.route("/api/cv/bullet-strength", methods=["POST"])
+def bullet_strength():
+    """Analyze bullet strength"""
+    data = request.json
+    result = cv_features.analyze_bullet_strength(data.get('bullets', []))
+    return jsonify({'status': 'success', 'analysis': result})
+
+@app.route("/api/cv/export-docx", methods=["POST"])
+def export_cv_docx():
+    """Export CV to DOCX (mock)"""
+    return jsonify({
+        'status': 'success',
+        'message': 'DOCX export mock - would generate Word document',
+        'format': 'docx'
+    })
+
+# Content Features
+@app.route("/api/content/viral-predict", methods=["POST"])
+def predict_viral():
+    """Predict viral score for content"""
+    data = request.json
+    result = content_features.predict_viral_score(
+        data.get('content', ''),
+        data.get('topic', '')
+    )
+    return jsonify({'status': 'success', 'prediction': result})
+
+@app.route("/api/content/quote-image", methods=["POST"])
+def generate_quote_image():
+    """Generate quote image specs"""
+    data = request.json
+    result = content_features.generate_quote_image(
+        data.get('quote', ''),
+        data.get('author', ''),
+        data.get('template', 'modern')
+    )
+    return jsonify({'status': 'success', 'image_specs': result})
+
+# Network Features
+@app.route("/api/network/heatmap", methods=["POST"])
+def contact_heatmap():
+    """Generate contact heatmap"""
+    data = request.json
+    contacts = data.get('contacts', [])
+    result = network_features.generate_contact_heatmap(contacts)
+    return jsonify({'status': 'success', 'heatmap': result})
+
+# Job Scraper Features
+@app.route("/api/jobs/search", methods=["GET"])
+def search_jobs():
+    """Search jobs (mock)"""
+    keywords = request.args.get('keywords', '')
+    location = request.args.get('location', '')
+    results = job_scraper.search_jobs(keywords, location)
+    return jsonify({'status': 'success', 'jobs': results})
+
+@app.route("/api/linkedin/import", methods=["POST"])
+def linkedin_import():
+    """Simulate LinkedIn import"""
+    data = request.json
+    profile_url = data.get('profile_url', '')
+    result = job_scraper.import_from_linkedin(profile_url)
+    return jsonify(result)
 
 if __name__ == "__main__":
     print("🚀 Starting Mission Control...")

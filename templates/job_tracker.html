@@ -197,4 +197,187 @@
         </div>
     </form>
 </div>
+
+<!-- FEATURE: Interview Checklist Section -->
+<div class="card mt-4" style="border-left: 4px solid #8B5CF6;">
+    <div class="card-header">
+        <div class="card-title">
+            <i class="fas fa-clipboard-check" style="color: #8B5CF6;"></i> Interview Preparation Checklist
+        </div>
+    </div>
+    <div style="padding: 20px;">
+        <p class="text-secondary" style="margin-bottom: 20px;">
+            Pre-interview and post-interview tasks to ensure you're fully prepared
+        </p>
+        
+        <!-- Create/View Checklist -->
+        <div style="display: flex; gap: 16px; margin-bottom: 24px;">
+            <button class="btn btn-secondary btn-md" onclick="showCreateChecklistModal()">
+                <i class="fas fa-plus"></i> Create New Checklist
+            </button>
+        </div>
+        
+        <!-- Pre-Interview Checklist -->
+        <h4 style="margin-bottom: 16px; color: var(--text-primary);">
+            <i class="fas fa-clock" style="color: var(--brand);"></i> Pre-Interview Tasks
+        </h4>
+        <div style="display: grid; gap: 12px; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+                <input type="checkbox" id="task1" style="width: 20px; height: 20px;">
+                <label for="task1" style="flex: 1;">Research company culture and recent news</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+                <input type="checkbox" id="task2" style="width: 20px; height: 20px;">
+                <label for="task2" style="flex: 1;">Review job description and requirements</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+                <input type="checkbox" id="task3" style="width: 20px; height: 20px;">
+                <label for="task3" style="flex: 1;">Prepare STAR stories for common questions</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+                <input type="checkbox" id="task4" style="width: 20px; height: 20px;">
+                <label for="task4" style="flex: 1;">Prepare questions to ask interviewer</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+                <input type="checkbox" id="task5" style="width: 20px; height: 20px;">
+                <label for="task5" style="flex: 1;">Test video call/phone connection</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+                <input type="checkbox" id="task6" style="width: 20px; height: 20px;">
+                <label for="task6" style="flex: 1;">Plan outfit - dress one level above company culture</label>
+            </div>
+        </div>
+        
+        <!-- Post-Interview Checklist -->
+        <h4 style="margin-bottom: 16px; color: var(--text-primary);">
+            <i class="fas fa-check-circle" style="color: var(--success);"></i> Post-Interview Tasks
+        </h4>
+        <div style="display: grid; gap: 12px; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+                <input type="checkbox" id="post1" style="width: 20px; height: 20px;">
+                <label for="post1" style="flex: 1;">Send thank you email within 24 hours</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+                <input type="checkbox" id="post2" style="width: 20px; height: 20px;">
+                <label for="post2" style="flex: 1;">Note any questions you couldn't answer well</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+                <input type="checkbox" id="post3" style="width: 20px; height: 20px;">
+                <label for="post3" style="flex: 1;">Follow up on any promised materials</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+                <input type="checkbox" id="post4" style="width: 20px; height: 20px;">
+                <label for="post4" style="flex: 1;">Update interview notes with key takeaways</label>
+            </div>
+        </div>
+        
+        <!-- Questions to Ask -->
+        <h4 style="margin-bottom: 16px; color: var(--text-primary);">
+            <i class="fas fa-question-circle" style="color: #F59E0B;"></i> Questions to Ask Interviewer
+        </h4>
+        <div style="display: grid; gap: 8px; margin-bottom: 24px;">
+            <div style="padding: 12px; background: var(--bg-elevated); border-radius: 8px; border-left: 3px solid #F59E0B;">
+                What does success look like in this role after 90 days?
+            </div>
+            <div style="padding: 12px; background: var(--bg-elevated); border-radius: 8px; border-left: 3px solid #F59E0B;">
+                How does the team handle cross-functional collaboration?
+            </div>
+            <div style="padding: 12px; background: var(--bg-elevated); border-radius: 8px; border-left: 3px solid #F59E0B;">
+                What's the biggest challenge the team is facing?
+            </div>
+            <div style="padding: 12px; background: var(--bg-elevated); border-radius: 8px; border-left: 3px solid #F59E0B;">
+                How do you support professional development?
+            </div>
+            <div style="padding: 12px; background: var(--bg-elevated); border-radius: 8px; border-left: 3px solid #F59E0B;">
+                What's the team culture like?
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURE: Salary Negotiation Log Section -->
+<div class="card mt-4" style="border-left: 4px solid #10B981;">
+    <div class="card-header">
+        <div class="card-title">
+            <i class="fas fa-dollar-sign" style="color: #10B981;"></i> Salary Negotiation Tracker
+        </div>
+    </div>
+    <div style="padding: 20px;">
+        <p class="text-secondary" style="margin-bottom: 20px;">
+            Track offers, counter-offers, and final negotiation outcomes
+        </p>
+        
+        <!-- Add New Negotiation -->
+        <div style="display: flex; gap: 16px; margin-bottom: 24px;">
+            <button class="btn btn-secondary btn-md" onclick="showNegotiationModal()">
+                <i class="fas fa-plus"></i> Add Salary Negotiation
+            </button>
+        </div>
+        
+        <!-- Negotiation Form -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 20px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 20px;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Initial Offer ($)</label>
+                <input type="number" class="form-input" placeholder="e.g., 150000">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Base Salary ($)</label>
+                <input type="number" class="form-input" placeholder="e.g., 130000">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Bonus ($)</label>
+                <input type="number" class="form-input" placeholder="e.g., 20000">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Equity</label>
+                <input type="text" class="form-input" placeholder="e.g., 0.1% RSUs">
+            </div>
+        </div>
+        
+        <!-- Counter Offers -->
+        <h4 style="margin-bottom: 16px; color: var(--text-primary);">
+            <i class="fas fa-exchange-alt" style="color: #10B981;"></i> Counter Offers
+        </h4>
+        <div style="display: grid; gap: 12px; margin-bottom: 20px;">
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>Initial Offer</strong>
+                    <div class="text-muted" style="font-size: 13px;">Feb 10, 2026</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 20px; font-weight: 700;">$150,000</div>
+                    <span class="badge badge-gray">Pending</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Counter Button -->
+        <button class="btn btn-outline btn-sm" style="margin-bottom: 20px;">
+            <i class="fas fa-plus"></i> Add Counter Offer
+        </button>
+        
+        <!-- Negotiation Tips -->
+        <div style="padding: 16px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.3);">
+            <h5 style="margin-bottom: 12px; color: #10B981;">
+                <i class="fas fa-lightbulb"></i> Negotiation Tips
+            </h5>
+            <ul style="margin: 0; padding-left: 20px; color: var(--text-secondary);">
+                <li style="margin-bottom: 8px;">Always negotiate - most employers expect it</li>
+                <li style="margin-bottom: 8px;">Aim for 10-20% above initial offer</li>
+                <li style="margin-bottom: 8px;">Consider total compensation: base + bonus + equity + benefits</li>
+                <li style="margin-bottom: 8px;">Have a walk-away number in mind</li>
+                <li>Get everything in writing before accepting</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+function showCreateChecklistModal() {
+    alert('Create checklist for specific job - API integration needed');
+}
+function showNegotiationModal() {
+    alert('Add salary negotiation for specific job - API integration needed');
+}
+</script>
 {% endblock %}
