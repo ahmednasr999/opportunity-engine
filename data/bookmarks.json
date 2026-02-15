@@ -1,0 +1,17 @@
+[
+  {
+    "id": "bm-1",
+    "title": "OpenClaw Documentation - Getting Started",
+    "url": "https://docs.openclaw.ai/start/getting-started",
+    "category": "resource",
+    "notes": "Official docs for the platform running Opportunity Engine. Review Skills and Memory sections.",
+    "tags": [
+      "openclaw",
+      "docs",
+      "reference",
+      "platform"
+    ],
+    "date_added": "2026-02-15",
+    "created_at": "2026-02-15T05:19:29.024311"
+  }
+]
