@@ -934,18 +934,45 @@ LinkedIn: {self.profile.data['contact']['linkedin']}
         
         # Add job-specific emphasis
         sector = self.scorer._detect_sector(job.keywords)
+        job_lower = job.title.lower() + " " + job.raw_text.lower()
         
-        if sector == "HealthTech":
-            emphasis = (" with deep expertise in healthcare AI and hospital operations. "
-                       "Currently leading digital transformation at Saudi German Hospital Group.")
-        elif sector == "FinTech":
-            emphasis = (" with extensive FinTech background in digital banking and payment systems. "
-                       "Publisher of weekly FinTech newsletter with established industry following.")
+        # Build targeted emphasis based on job requirements
+        emphasis_parts = []
+        
+        # Healthcare emphasis
+        if "health" in job_lower or "clinical" in job_lower:
+            emphasis_parts.append("deep expertise in healthcare AI, machine learning, and hospital operations")
+        
+        # AI/ML emphasis
+        if "ai" in job_lower or "machine learning" in job_lower or "artificial intelligence" in job_lower:
+            emphasis_parts.append("proven track record implementing AI-driven clinical decision support and predictive analytics")
+        
+        # P&L/Budget emphasis
+        if "p&l" in job_lower or "budget" in job_lower or "$" in job.raw_text:
+            emphasis_parts.append("extensive P&L management experience with $50M+ technology budgets")
+        
+        # Telemedicine/virtual care
+        if "telemedicine" in job_lower or "virtual care" in job_lower or "digital health" in job_lower:
+            emphasis_parts.append("leader in digital health transformation and virtual care delivery")
+        
+        # Product/Operations
+        if "product" in job_lower:
+            emphasis_parts.append("product leadership from concept to commercialization")
+        
+        # Build final emphasis
+        if emphasis_parts:
+            emphasis = " with " + ", ".join(emphasis_parts[:2]) + ". "
         else:
-            emphasis = (" with proven track record across HealthTech and FinTech sectors. "
-                       "Combines technical expertise with strategic leadership.")
+            emphasis = " with proven track record across HealthTech and FinTech sectors. "
         
-        return base_summary + emphasis
+        # Add current context
+        emphasis += "Currently leading digital transformation initiatives at Saudi German Hospital Group (TopMed)."
+        
+        # Clean up any double periods
+        result = base_summary + emphasis
+        result = result.replace("..", ".").replace(". .", ". ")
+        
+        return result
     
     def _generate_competencies(self, job: JobRequirements) -> str:
         """Generate competencies prioritized for job"""
@@ -988,8 +1015,9 @@ LinkedIn: {self.profile.data['contact']['linkedin']}
         education = self.profile.data.get('education', [])
         if education:
             edu = education[0]
-            return f"{edu['degree']} - {edu['field']}\n{edu['institution']}"
-        return "MBA - Business Administration"
+            inst = edu.get('institution', 'Leading Business School')
+            return f"{edu['degree']} - {edu['field']}\n{inst}"
+        return "MBA - Business Administration\nLeading Business School"
     
     def _generate_suggestions_advanced(self, job: JobRequirements, ats_score: int, breakdown: Dict, feedback: List[str]) -> List[str]:
         """Generate detailed suggestions using new feedback system"""
