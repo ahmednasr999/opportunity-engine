@@ -3,133 +3,213 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1>Dashboard</h1>
-    <p class="text-secondary">Your executive job search command center</p>
+<!-- Page Header -->
+<div style="margin-bottom: 40px;">
+    <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em;">Dashboard</h1>
+    <p class="text-secondary" style="font-size: 18px; margin-bottom: 8px;">Welcome back, Ahmed</p>
+    <p class="text-muted" style="font-size: 13px;">Sunday, February 15, 2026</p>
 </div>
 
-<!-- Stats Grid -->
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-value">{{ stats.total_applications }}</div>
-        <div class="stat-label text-secondary">Total Applications</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-value" style="color: var(--success);">{{ stats.active_applications }}</div>
-        <div class="stat-label text-secondary">Active Pipeline</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-value" style="color: var(--warning);">{{ stats.interviews }}</div>
-        <div class="stat-label text-secondary">Interviews</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-value" style="color: var(--status-archived);">{{ "{:.0f}".format(stats.avg_ats_score) }}</div>
-        <div class="stat-label text-secondary">Avg ATS Score</div>
-    </div>
-</div>
-
-<!-- Quick Actions -->
-<div class="card mb-3">
-    <div class="flex flex-wrap gap-2">
-        <a href="/cv-optimizer" class="btn btn-primary btn-md">
-            <i class="fas fa-file-alt"></i> Optimize CV
-        </a>
-        <a href="/job-tracker" class="btn btn-secondary btn-md">
-            <i class="fas fa-tasks"></i> View Pipeline
-        </a>
-        <a href="/content-factory" class="btn btn-secondary btn-md">
-            <i class="fas fa-pen-fancy"></i> Generate Content
-        </a>
-        <a href="/network" class="btn btn-secondary btn-md">
-            <i class="fas fa-network-wired"></i> Network
-        </a>
-    </div>
-</div>
-
-<div class="grid-2">
-    <!-- Pipeline Overview -->
-    <div class="card card-hover">
-        <div class="card-header">
-            <div class="card-title">Pipeline Overview</div>
-            <a href="/job-tracker" class="btn btn-ghost btn-sm">View All</a>
-        </div>
-        
-        {% for status, jobs in pipeline.items() %}
-            {% if jobs %}
-                <div class="mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-secondary">{{ status }}</span>
-                        <span class="badge badge-blue">{{ jobs|length }}</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: {{ (jobs|length / stats.total_applications * 100) if stats.total_applications > 0 else 0 }}%;"></div>
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-        
-        {% if stats.total_applications == 0 %}
-            <div class="text-muted" style="text-align: center; padding: 2rem;">
-                <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                <p>No applications yet. <a href="/cv-optimizer" style="color: var(--brand);">Process your first job →</a></p>
+<!-- Quick Stats Grid -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
+    <!-- Active Pipeline -->
+    <div class="card" style="padding: 20px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <div style="width: 40px; height: 40px; background: rgba(37, 99, 235, 0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-spinner" style="color: var(--brand); font-size: 18px;"></i>
             </div>
-        {% endif %}
+            <span class="text-muted" style="font-size: 13px;">Active Pipeline</span>
+        </div>
+        <div style="font-size: 30px; font-weight: 700; margin-bottom: 8px;">{{ stats.active_applications }}</div>
+        <div style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--success);">
+            <i class="fas fa-arrow-up"></i>
+            <span>+{{ stats.active_applications }}</span>
+        </div>
     </div>
     
-    <!-- Follow-ups -->
-    <div class="card" style="border-color: var(--warning);">
-        <div class="card-header">
-            <div class="card-title">
-                <i class="fas fa-bell" style="color: var(--warning); margin-right: 0.5rem;"></i>
-                Follow-ups Needed
+    <!-- Job Applications -->
+    <div class="card" style="padding: 20px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <div style="width: 40px; height: 40px; background: rgba(234, 179, 8, 0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-briefcase" style="color: var(--warning); font-size: 18px;"></i>
             </div>
-            <a href="/job-tracker" class="btn btn-ghost btn-sm">View All</a>
+            <span class="text-muted" style="font-size: 13px;">Job Applications</span>
         </div>
-        
-        {% if follow_ups %}
-            {% for job in follow_ups[:5] %}
-                <div style="background: var(--bg-elevated); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; border-left: 3px solid var(--warning);">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <strong style="font-size: 14px;">{{ job.title }}</strong>
-                            <div class="text-muted" style="font-size: 13px;">{{ job.company }}</div>
-                        </div>
-                        <span class="badge badge-yellow">Follow Up</span>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div class="text-muted" style="text-align: center; padding: 2rem;">
-                <i class="fas fa-check-circle" style="font-size: 2rem; color: var(--success); margin-bottom: 1rem; opacity: 0.5;"></i>
-                <p>No follow-ups needed. You're up to date!</p>
+        <div style="font-size: 30px; font-weight: 700; margin-bottom: 8px;">{{ stats.total_applications }}</div>
+        <div style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--success);">
+            <i class="fas fa-arrow-up"></i>
+            <span>+{{ stats.total_applications }}</span>
+        </div>
+    </div>
+    
+    <!-- Interviews -->
+    <div class="card" style="padding: 20px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <div style="width: 40px; height: 40px; background: rgba(34, 197, 94, 0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-handshake" style="color: var(--success); font-size: 18px;"></i>
             </div>
-        {% endif %}
+            <span class="text-muted" style="font-size: 13px;">Interviews</span>
+        </div>
+        <div style="font-size: 30px; font-weight: 700; margin-bottom: 8px;">{{ stats.interviews }}</div>
+        <div style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--text-secondary);">
+            <i class="fas fa-minus"></i>
+            <span>0</span>
+        </div>
+    </div>
+    
+    <!-- Pending Follow-ups -->
+    <div class="card" style="padding: 20px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <div style="width: 40px; height: 40px; background: rgba(239, 68, 68, 0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-bell" style="color: var(--error); font-size: 18px;"></i>
+            </div>
+            <span class="text-muted" style="font-size: 13px;">Pending Follow-ups</span>
+        </div>
+        <div style="font-size: 30px; font-weight: 700; margin-bottom: 8px;">{{ follow_ups|length }}</div>
+        <div style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--error);">
+            <i class="fas fa-arrow-down"></i>
+            <span>-{{ follow_ups|length }}</span>
+        </div>
     </div>
 </div>
 
-<!-- Knowledge Base Stats -->
-<div class="card mt-3">
-    <div class="card-header">
-        <div class="card-title">Knowledge Base</div>
-        <a href="/second-brain" class="btn btn-ghost btn-sm">Search</a>
+<!-- Main Content - 2 Columns -->
+<div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px;">
+    <!-- Left Column -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        <!-- Recent Jobs -->
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <div style="background: var(--bg-elevated); border-bottom: 1px solid var(--border-subtle); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">Recent Jobs</span>
+                <a href="/job-tracker" class="btn btn-ghost btn-sm">View All</a>
+            </div>
+            <div>
+                {% for job in pipeline.get('Applied', [])[:5] %}
+                <div style="padding: 16px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background='transparent'">
+                    <div>
+                        <div style="font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px;">{{ job.title }}</div>
+                        <div class="text-muted" style="font-size: 13px;">{{ job.company }}</div>
+                    </div>
+                    <span class="badge badge-blue">{{ job.status }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Activity Feed -->
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <div style="background: var(--bg-elevated); border-bottom: 1px solid var(--border-subtle); padding: 12px 16px;">
+                <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">Recent Activity</span>
+            </div>
+            <div style="padding: 16px;">
+                <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                    <div style="width: 32px; height: 32px; background: rgba(37, 99, 235, 0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-file-alt" style="color: var(--brand); font-size: 14px;"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; margin-bottom: 4px;">Generated CV for VP Digital Transformation role</div>
+                        <div class="text-muted" style="font-size: 12px;">10 minutes ago</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                    <div style="width: 32px; height: 32px; background: rgba(34, 197, 94, 0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-plus" style="color: var(--success); font-size: 14px;"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; margin-bottom: 4px;">Added new job application</div>
+                        <div class="text-muted" style="font-size: 12px;">2 hours ago</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <div style="width: 32px; height: 32px; background: rgba(234, 179, 8, 0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-pen" style="color: var(--warning); font-size: 14px;"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; margin-bottom: 4px;">Created LinkedIn post about HealthTech AI</div>
+                        <div class="text-muted" style="font-size: 12px;">5 hours ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="grid-4">
-        <div style="text-align: center; padding: 1.5rem;">
-            <div style="font-size: 28px; font-weight: 600; margin-bottom: 4px;">{{ brain_stats.total_documents }}</div>
-            <div class="text-muted" style="font-size: 13px;">Documents</div>
+    
+    <!-- Right Column -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        <!-- System Status -->
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <div style="background: var(--bg-elevated); border-bottom: 1px solid var(--border-subtle); padding: 12px 16px;">
+                <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">System Status</span>
+            </div>
+            <div style="padding: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                    <div style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite;"></div>
+                    <div>
+                        <div style="font-size: 14px; font-weight: 500;">All Systems Operational</div>
+                        <div class="text-muted" style="font-size: 12px;">Last checked: Just now</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                    <div style="width: 8px; height: 8px; background: var(--success); border-radius: 50%;"></div>
+                    <div>
+                        <div style="font-size: 14px; font-weight: 500;">CV Optimizer</div>
+                        <div class="text-muted" style="font-size: 12px;">Ready</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                    <div style="width: 8px; height: 8px; background: var(--success); border-radius: 50%;"></div>
+                    <div>
+                        <div style="font-size: 14px; font-weight: 500;">Job Tracker</div>
+                        <div class="text-muted" style="font-size: 12px;">Ready</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 8px; height: 8px; background: var(--success); border-radius: 50%;"></div>
+                    <div>
+                        <div style="font-size: 14px; font-weight: 500;">Content Factory</div>
+                        <div class="text-muted" style="font-size: 12px;">Ready</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div style="text-align: center; padding: 1.5rem;">
-            <div style="font-size: 28px; font-weight: 600; margin-bottom: 4px; color: var(--success);">{{ brain_stats.unique_terms }}</div>
-            <div class="text-muted" style="font-size: 13px;">Unique Terms</div>
-        </div>
-        <div style="text-align: center; padding: 1.5rem;">
-            <div style="font-size: 28px; font-weight: 600; margin-bottom: 4px; color: var(--warning);">{{ stats.total_applications }}</div>
-            <div class="text-muted" style="font-size: 13px;">Jobs Tracked</div>
-        </div>
-        <div style="text-align: center; padding: 1.5rem;">
-            <div style="font-size: 28px; font-weight: 600; margin-bottom: 4px; color: var(--brand);">Ready</div>
-            <div class="text-muted" style="font-size: 13px;">System Status</div>
+        
+        <!-- Upcoming Tasks -->
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <div style="background: var(--bg-elevated); border-bottom: 1px solid var(--border-subtle); padding: 12px 16px;">
+                <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">Upcoming Tasks</span>
+            </div>
+            <div style="padding: 16px;">
+                {% if follow_ups %}
+                    {% for job in follow_ups[:3] %}
+                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;">
+                        <input type="checkbox" style="margin-top: 2px; width: 16px; height: 16px; accent-color: var(--brand);">
+                        <div style="flex: 1;">
+                            <div style="font-size: 14px; margin-bottom: 4px;">Follow up with {{ job.company }}</div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span class="badge badge-yellow">High</span>
+                                <span class="text-muted" style="font-size: 12px;">Today</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-muted" style="text-align: center; padding: 20px;">
+                        No pending tasks
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+</style>
+
+<!-- Floating Action Button -->
+<a href="/cv-optimizer" style="position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: var(--brand); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; box-shadow: var(--shadow-glow-blue); transition: all 200ms; text-decoration: none; z-index: 100;">
+    <i class="fas fa-plus"></i>
+</a>
 {% endblock %}
