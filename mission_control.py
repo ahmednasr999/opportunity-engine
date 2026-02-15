@@ -26,6 +26,7 @@ from bookmark_manager import BookmarkManager
 from search_aggregator import SearchAggregator
 from cv_pdf_generator import CVPDFGenerator
 from linkedin_importer import LinkedInJobImporter
+from ahmed_profile import AHMED_PROFILE, SECTOR_SUMMARIES
 
 app = Flask(__name__)
 
@@ -90,39 +91,47 @@ def cv_optimizer():
             with open(filepath, 'w') as f:
                 f.write(output)
             
-            # Generate PDF
+            # Generate PDF with Ahmed's real data
+            # Determine sector based on job title keywords
+            job_lower = title.lower()
+            if any(word in job_lower for word in ['health', 'medical', 'hospital', 'clinical', 'patient']):
+                summary = SECTOR_SUMMARIES['healthtech']
+            elif any(word in job_lower for word in ['fintech', 'bank', 'payment', 'financial']):
+                summary = SECTOR_SUMMARIES['fintech']
+            else:
+                summary = SECTOR_SUMMARIES['general']
+            
+            # Build experience section from real data
+            jobs = []
+            for exp in AHMED_PROFILE['experience'][:3]:  # Top 3 roles
+                achievements_text = " ".join(exp['achievements'][:3])  # Top 3 achievements
+                jobs.append({
+                    'title': exp['title'],
+                    'company': exp['company'],
+                    'dates': exp['dates'],
+                    'description': achievements_text
+                })
+            
             cv_data = {
                 'target_title': title,
                 'target_company': company,
                 'ats_score': tailored_cv.ats_score,
+                'profile': AHMED_PROFILE,
                 'sections': [
                     {
                         'type': 'summary',
                         'title': 'Professional Summary',
-                        'content': 'Results-driven technology executive with 20+ years of experience in digital transformation, healthcare technology, and operational leadership. Proven track record of delivering large-scale projects and driving innovation.'
+                        'content': summary
                     },
                     {
                         'type': 'experience',
                         'title': 'Professional Experience',
-                        'jobs': [
-                            {
-                                'title': 'Acting PMO Director',
-                                'company': 'Saudi German Hospital Group (TopMed)',
-                                'dates': '2020 - Present',
-                                'description': 'Leading digital transformation initiatives across healthcare network. Managing $50M+ project portfolio. Implemented AI-powered patient management systems reducing wait times by 35%.'
-                            },
-                            {
-                                'title': 'Senior Technology Consultant',
-                                'company': 'Healthcare Systems Inc.',
-                                'dates': '2015 - 2020',
-                                'description': 'Advised C-suite on technology strategy and digital transformation. Led implementation of EMR systems across 12 facilities. Achieved 99.9% uptime and $2M annual savings.'
-                            }
-                        ]
+                        'jobs': jobs
                     },
                     {
                         'type': 'skills',
                         'title': 'Core Competencies',
-                        'skills': ['Digital Transformation', 'Healthcare AI', 'Project Management', 'Strategic Planning', 'Team Leadership', 'EMR Implementation', 'Process Optimization', 'Budget Management', 'Stakeholder Engagement', 'Agile/Scrum']
+                        'skills': AHMED_PROFILE['core_competencies']
                     }
                 ]
             }

@@ -37,13 +37,19 @@ class CVPDFGenerator:
         ats_score = cv_data.get('ats_score', 0)
         job_title = cv_data.get('target_title', 'Executive Position')
         company = cv_data.get('target_company', 'Target Company')
+        profile = cv_data.get('profile', {})
+        
+        # Get contact info from profile
+        contact = profile.get('contact', {})
+        name = profile.get('name', 'Ahmed Nasr')
+        certifications = profile.get('certifications', '')
         
         html = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahmed Nasr - {job_title}</title>
+    <title>{name} - {job_title}</title>
     <style>
         @page {{
             size: A4;
@@ -75,26 +81,33 @@ class CVPDFGenerator:
         }}
         
         .name {{
-            font-size: 24pt;
+            font-size: 22pt;
             font-weight: 700;
             color: #1a1a1a;
             margin-bottom: 5px;
         }}
         
+        .certifications {{
+            font-size: 10pt;
+            color: #666;
+            margin-bottom: 5px;
+        }}
+        
         .title {{
-            font-size: 14pt;
+            font-size: 13pt;
             color: #2563eb;
             font-weight: 600;
             margin-bottom: 10px;
         }}
         
         .contact {{
-            font-size: 9pt;
+            font-size: 8.5pt;
             color: #666;
+            line-height: 1.6;
         }}
         
-        .contact span {{
-            margin: 0 10px;
+        .contact div {{
+            margin-bottom: 3px;
         }}
         
         .section {{
@@ -201,13 +214,13 @@ class CVPDFGenerator:
     <div class="ats-score no-print">ATS Score: {ats_score}/100</div>
     
     <div class="header">
-        <div class="name">Ahmed Nasr</div>
+        <div class="name">{name}</div>
+        <div class="certifications">{certifications}</div>
         <div class="title">{job_title}</div>
         <div class="contact">
-            <span>📧 ahmed.nasr@email.com</span>
-            <span>📱 +1 (555) 123-4567</span>
-            <span>💼 linkedin.com/in/ahmednasr</span>
-            <span>🌐 ahmednasr.com</span>
+            <div>📧 {contact.get('email', '')}</div>
+            <div>📱 {contact.get('uae', '')} | {contact.get('egypt', '')}</div>
+            <div>💼 {contact.get('linkedin', '')}</div>
         </div>
     </div>
 '''
