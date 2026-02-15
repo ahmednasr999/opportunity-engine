@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": "contact_1",
+    "name": "Sarah Johnson",
+    "company": "Google Health",
+    "title": "Director of Engineering",
+    "email": "sarah@example.com"
+  }
+]

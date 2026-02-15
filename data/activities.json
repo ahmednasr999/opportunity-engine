@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "id": "act_1",
+    "type": "job_added",
+    "description": "Added job: VP Digital Transformation at Google Health",
+    "timestamp": "2026-02-15T04:53:28.665616",
+    "related_id": "job_1"
+  },
+  {
+    "id": "act_2",
+    "type": "cv_generated",
+    "description": "Generated CV for VP Digital Transformation at Google Health",
+    "timestamp": "2026-02-15T04:53:28.666184",
+    "related_id": "cv_1"
+  },
+  {
+    "id": "act_3",
+    "type": "cv_linked",
+    "description": "Linked CV cv_1 to job job_1",
+    "timestamp": "2026-02-15T04:53:28.666726",
+    "related_id": "job_1"
+  }
+]

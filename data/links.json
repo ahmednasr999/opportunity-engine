@@ -1,1 +1,11 @@
-{"cv_job": [], "contact_job": [], "document_job": []}
+{
+  "cv_job": [
+    {
+      "cv_id": "cv_1",
+      "job_id": "job_1",
+      "linked_at": "2026-02-15T04:53:28.666591"
+    }
+  ],
+  "contact_job": [],
+  "document_job": []
+}

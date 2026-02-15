@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "id": "doc_cv_cv_1",
+    "title": "CV - VP Digital Transformation at Google Health",
+    "doc_type": "cv",
+    "content": "Ahmed Nasr - HealthTech leader with 20+ years experience...",
+    "metadata": {
+      "company": "Google Health",
+      "role": "VP Digital Transformation",
+      "ats_score": 92,
+      "source_cv_id": "cv_1"
+    },
+    "tags": [
+      "cv",
+      "generated",
+      "google_health"
+    ],
+    "date_added": "2026-02-15T04:53:28.666039"
+  }
+]

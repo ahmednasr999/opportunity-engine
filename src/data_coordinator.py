@@ -87,15 +87,16 @@ class DataCoordinator:
     
     def _index_in_second_brain(self, cv_record: Dict):
         """Add CV to 2nd Brain documents"""
+        content = cv_record.get('content_preview') or cv_record.get('cv_text', '')[:500] + '...'
         doc = {
             'id': f"doc_cv_{cv_record['id']}",
             'title': f"CV - {cv_record['title']} at {cv_record['company']}",
             'doc_type': 'cv',
-            'content': cv_record['content_preview'],
+            'content': content,
             'metadata': {
                 'company': cv_record['company'],
                 'role': cv_record['title'],
-                'ats_score': cv_record['ats_score'],
+                'ats_score': cv_record.get('ats_score', 0),
                 'source_cv_id': cv_record['id']
             },
             'tags': ['cv', 'generated', cv_record['company'].lower().replace(' ', '_')],

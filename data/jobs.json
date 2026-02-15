@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "job_1",
+    "company": "Google Health",
+    "title": "VP Digital Transformation",
+    "date_applied": "2026-02-15T10:00:00",
+    "status": "applied",
+    "registered_at": "2026-02-15T04:53:28.665348",
+    "linked_cv_id": "cv_1"
+  }
+]
