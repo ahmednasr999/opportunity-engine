@@ -269,5 +269,5 @@ class CVPDFGenerator:
         # Generate HTML first
         html_path = self.generate_html_cv(cv_data, filename)
         
-        # Return path with instructions
-        return html_path
+        # Return just the filename (not full path) for URL construction
+        return os.path.basename(html_path)
