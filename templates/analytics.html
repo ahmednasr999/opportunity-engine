@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📊 Analytics Dashboard</h1>
+    <p>Track your revenue pipeline and conversion metrics.</p>
+</div>
+
+<!-- Revenue Metrics -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">💰 Revenue Pipeline</div>
+    </div>
+    <div class="stats-grid" style="margin-top: 1rem;">
+        <div class="stat-card">
+            <div class="stat-value" style="color: #10b981;">${{ "{:,.0f}".format(revenue.weighted_pipeline_value) }}</div>
+            <div class="stat-label">Weighted Pipeline</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${{ "{:,.0f}".format(revenue.target_salary) }}</div>
+            <div class="stat-label">Target Salary</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color: #f59e0b;">{{ "{:.0f}".format(revenue.progress_to_target) }}%</div>
+            <div class="stat-label">Progress to Goal</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color: #8b5cf6;">{{ revenue.offers }}</div>
+            <div class="stat-label">Offers in Hand</div>
+        </div>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div style="margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span>Progress to ${{ "{:,.0f}".format(revenue.target_salary) }} target</span>
+            <span>{{ "{:.0f}".format(revenue.progress_to_target) }}%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ revenue.progress_to_target }}%; background: {% if revenue.progress_to_target >= 100 %}#10b981{% elif revenue.progress_to_target >= 50 %}#f59e0b{% else %}#3b82f6{% endif %};"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Conversion Funnel -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">📈 Conversion Funnel</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 1rem;">
+        <div style="text-align: center; padding: 1rem; background: #0f172a; border-radius: 8px;">
+            <div style="font-size: 2rem; font-weight: bold; color: #3b82f6;">{{ "{:.1f}".format(funnel.application_to_screen) }}%</div>
+            <div class="text-muted">App → Screen</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #0f172a; border-radius: 8px;">
+            <div style="font-size: 2rem; font-weight: bold; color: #3b82f6;">{{ "{:.1f}".format(funnel.screen_to_interview) }}%</div>
+            <div class="text-muted">Screen → Interview</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #0f172a; border-radius: 8px;">
+            <div style="font-size: 2rem; font-weight: bold; color: #3b82f6;">{{ "{:.1f}".format(funnel.interview_to_offer) }}%</div>
+            <div class="text-muted">Interview → Offer</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #0f172a; border-radius: 8px;">
+            <div style="font-size: 2rem; font-weight: bold; color: #10b981;">{{ "{:.1f}".format(funnel.overall_conversion) }}%</div>
+            <div class="text-muted">Overall</div>
+        </div>
+    </div>
+    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #334155; font-size: 0.9rem; color: #64748b;">
+        Benchmark: Industry average is 2-5% overall conversion
+    </div>
+</div>
+
+<!-- Activity Metrics -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">📊 Activity This Week</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1rem;">
+        <div style="text-align: center; padding: 1rem;">
+            <div style="font-size: 2.5rem; font-weight: bold; color: {% if activity.applications_this_week >= 5 %}#10b981{% else %}#f59e0b{% endif %};">{{ activity.applications_this_week }}</div>
+            <div class="text-muted">Applications</div>
+            <div style="font-size: 0.8rem; color: #64748b;">Target: 5/week</div>
+        </div>
+        <div style="text-align: center; padding: 1rem;">
+            <div style="font-size: 2.5rem; font-weight: bold; color: {% if activity.avg_ats_score >= 80 %}#10b981{% else %}#f59e0b{% endif %};">{{ "{:.0f}".format(activity.avg_ats_score) }}</div>
+            <div class="text-muted">Avg ATS Score</div>
+            <div style="font-size: 0.8rem; color: #64748b;">Target: 90+</div>
+        </div>
+        <div style="text-align: center; padding: 1rem;">
+            <div style="font-size: 2.5rem; font-weight: bold; color: #3b82f6;">{{ activity.applications_this_month }}</div>
+            <div class="text-muted">This Month</div>
+            <div style="font-size: 0.8rem; color: #64748b;">Total apps</div>
+        </div>
+    </div>
+</div>
+
+<!-- Recommendations -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">💡 Recommendations</div>
+    </div>
+    {% if activity.applications_this_week < 5 %}
+    <div style="padding: 1rem; background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; margin-bottom: 0.75rem;">
+        <strong>🟡 LOW VOLUME:</strong> Only {{ activity.applications_this_week }} applications this week. Target: 5+
+    </div>
+    {% endif %}
+    
+    {% if activity.avg_ats_score < 80 %}
+    <div style="padding: 1rem; background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; margin-bottom: 0.75rem;">
+        <strong>🟡 ATS SCORES:</strong> Average {{ "{:.0f}".format(activity.avg_ats_score) }}/100. Review CV optimization for better keyword matching.
+    </div>
+    {% endif %}
+    
+    {% if funnel.application_to_screen < 15 %}
+    <div style="padding: 1rem; background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; margin-bottom: 0.75rem;">
+        <strong>🟡 CONVERSION:</strong> Low response rate ({{ "{:.1f}".format(funnel.application_to_screen) }}%). Consider using Network Mapper for warm intros.
+    </div>
+    {% endif %}
+    
+    {% if revenue.weighted_pipeline_value < revenue.target_salary * 0.5 %}
+    <div style="padding: 1rem; background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; margin-bottom: 0.75rem;">
+        <strong>🔴 PIPELINE:</strong> Weighted value ${{ "{:,.0f}".format(revenue.weighted_pipeline_value) }} is below target coverage. Need more high-value opportunities.
+    </div>
+    {% endif %}
+    
+    {% if revenue.offers > 0 %}
+    <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; margin-bottom: 0.75rem;">
+        <strong>🎉 OFFERS:</strong> You have {{ revenue.offers }} offer(s) in hand! Negotiate aggressively.
+    </div>
+    {% endif %}
+    
+    {% if activity.applications_this_week >= 5 and activity.avg_ats_score >= 80 %}
+    <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981;">
+        <strong>🟢 ON TRACK:</strong> Good application volume and ATS scores. Keep the momentum!
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

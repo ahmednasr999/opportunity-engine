@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Calendar{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📅 Calendar</h1>
+    <p>Schedule interviews and track deadlines.</p>
+</div>
+
+<!-- Add Interview Form -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">🤝 Schedule Interview</div>
+    </div>
+    <form method="POST" action="/calendar/add-interview">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+            <div class="form-group">
+                <label class="form-label">Company</label>
+                <input type="text" name="company" class="form-input" placeholder="Company name" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Role</label>
+                <input type="text" name="role" class="form-input" placeholder="Job title" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="date" name="date" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Time</label>
+                <input type="time" name="time" class="form-input" required>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 1rem;">
+            <label class="form-label">Location / Video Link</label>
+            <input type="text" name="location" class="form-input" placeholder="e.g., Zoom link or office address">
+        </div>
+        <div style="margin-top: 1.5rem;">
+            <button type="submit" class="btn btn-primary">Schedule Interview</button>
+        </div>
+    </form>
+</div>
+
+<!-- Upcoming Events -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">📋 Upcoming Events (Next 14 Days)</div>
+    </div>
+    
+    {% if events %}
+        {% set current_date = '' %}
+        {% for event in events %}
+            {% set event_date = event.start_time[:10] %}
+            {% if event_date != current_date %}
+                {% set current_date = event_date %}
+                <div style="margin-top: 1.5rem; margin-bottom: 0.75rem; font-weight: 600; color: #94a3b8; border-bottom: 1px solid #334155; padding-bottom: 0.5rem;">
+                    {{ event_date }}
+                </div>
+            {% endif %}
+            
+            <div style="background: #0f172a; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; border-left: 4px solid {% if event.event_type == 'interview' %}#10b981{% elif event.event_type == 'deadline' %}#f59e0b{% else %}#3b82f6{% endif %};">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            {% if event.event_type == 'interview' %}🤝{% endif %}
+                            {% if event.event_type == 'deadline' %}⏰{% endif %}
+                            {% if event.event_type == 'follow_up' %}📧{% endif %}
+                            {% if event.event_type == 'reminder' %}📋{% endif %}
+                            <strong>{{ event.title }}</strong>
+                        </div>
+                        <div class="text-muted" style="font-size: 0.9rem; margin-top: 0.25rem;">
+                            {{ event.start_time[11:16] }} - {{ event.end_time[11:16] }}
+                        </div>
+                        {% if event.location %}
+                            <div class="text-muted" style="font-size: 0.85rem; margin-top: 0.25rem;">
+                                📍 {{ event.location }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <span class="badge badge-blue">{{ event.event_type.title() }}</span>
+                </div>
+                {% if event.description %}
+                    <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #64748b;">
+                        {{ event.description[:100] }}{% if event.description|length > 100 %}...{% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-muted" style="text-align: center; padding: 3rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📅</div>
+            <p>No upcoming events scheduled.</p>
+            <p style="font-size: 0.9rem;">Add your first interview using the form above.</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Tips -->
+<div class="card">
+    <div class="card-title">💡 Interview Tips</div>
+    <ul style="margin-left: 1.5rem; color: #cbd5e1; line-height: 2;">
+        <li><strong>1 day before:</strong> Review job description, prepare questions</li>
+        <li><strong>1 hour before:</strong> Test video/audio, have CV ready</li>
+        <li><strong>During:</strong> Take notes, ask about next steps</li>
+        <li><strong>2 hours after:</strong> Send thank you email to all interviewers</li>
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,182 @@
+{
+  "triggers": [
+    {
+      "id": "trg_1771122347_0",
+      "name": "Auto-CV Generation",
+      "condition": "job_added",
+      "action": "generate_cv",
+      "params": {
+        "auto_save": true
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122347_1",
+      "name": "Low ATS Alert",
+      "condition": "ats_score_low",
+      "action": "send_notification",
+      "params": {
+        "message": "ATS score below 75 - review CV optimization suggestions",
+        "priority": "high"
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122347_2",
+      "name": "High Priority Job Alert",
+      "condition": "high_priority_job",
+      "action": "suggest_network_outreach",
+      "params": {},
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122347_3",
+      "name": "Content Generation",
+      "condition": "ats_score_low",
+      "action": "create_content",
+      "params": {
+        "topic": "healthtech_ai"
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122347_4",
+      "name": "Weekly Analytics",
+      "condition": "weekly_check",
+      "action": "export_analytics",
+      "params": {
+        "email": false
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122369_5",
+      "name": "Auto-CV Generation",
+      "condition": "job_added",
+      "action": "generate_cv",
+      "params": {
+        "auto_save": true
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122369_6",
+      "name": "Low ATS Alert",
+      "condition": "ats_score_low",
+      "action": "send_notification",
+      "params": {
+        "message": "ATS score below 75 - review CV optimization suggestions",
+        "priority": "high"
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122369_7",
+      "name": "High Priority Job Alert",
+      "condition": "high_priority_job",
+      "action": "suggest_network_outreach",
+      "params": {},
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122369_8",
+      "name": "Content Generation",
+      "condition": "ats_score_low",
+      "action": "create_content",
+      "params": {
+        "topic": "healthtech_ai"
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122369_9",
+      "name": "Weekly Analytics",
+      "condition": "weekly_check",
+      "action": "export_analytics",
+      "params": {
+        "email": false
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122369_10",
+      "name": "Auto-CV Generation",
+      "condition": "job_added",
+      "action": "generate_cv",
+      "params": {
+        "auto_save": true
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122369_11",
+      "name": "Low ATS Alert",
+      "condition": "ats_score_low",
+      "action": "send_notification",
+      "params": {
+        "message": "ATS score below 75 - review CV optimization suggestions",
+        "priority": "high"
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122369_12",
+      "name": "High Priority Job Alert",
+      "condition": "high_priority_job",
+      "action": "suggest_network_outreach",
+      "params": {},
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122369_13",
+      "name": "Content Generation",
+      "condition": "ats_score_low",
+      "action": "create_content",
+      "params": {
+        "topic": "healthtech_ai"
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    },
+    {
+      "id": "trg_1771122369_14",
+      "name": "Weekly Analytics",
+      "condition": "weekly_check",
+      "action": "export_analytics",
+      "params": {
+        "email": false
+      },
+      "enabled": true,
+      "last_run": "",
+      "run_count": 0
+    }
+  ],
+  "updated_at": "2026-02-15T02:26:09.308178"
+}

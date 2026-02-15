@@ -17,6 +17,10 @@ from cv_optimizer import CVGenerator, ProfileDatabase, JDParser
 from job_tracker import JobTracker
 from content_factory import ContentFactory
 from second_brain import SecondBrain
+from network_mapper import NetworkMapper
+from analytics_dashboard import AnalyticsDashboard
+from calendar_integration import CalendarIntegration
+from notification_hub import NotificationHub
 
 app = Flask(__name__)
 
@@ -26,6 +30,10 @@ cv_generator = CVGenerator(profile_db)
 job_tracker = JobTracker()
 content_factory = ContentFactory()
 brain = SecondBrain()
+network_mapper = NetworkMapper()
+analytics = AnalyticsDashboard()
+calendar = CalendarIntegration()
+notifications = NotificationHub()
 
 @app.route("/")
 def dashboard():
@@ -167,12 +175,76 @@ def second_brain_view():
                           query=query,
                           stats=stats)
 
+@app.route("/network")
+def network_view():
+    """Network Mapper page"""
+    stats = network_mapper.get_stats()
+    follow_ups = network_mapper.get_follow_ups()
+    suggestions = network_mapper.suggest_outreach()
+    contacts = list(network_mapper.contacts.values())
+    return render_template("network_mapper.html",
+                          stats=stats,
+                          follow_ups=follow_ups,
+                          suggestions=suggestions,
+                          contacts=contacts)
+
+@app.route("/network/add", methods=["POST"])
+def add_contact():
+    """Add a new contact"""
+    name = request.form.get("name", "")
+    title = request.form.get("title", "")
+    company = request.form.get("company", "")
+    contact_type = request.form.get("contact_type", "peer")
+    sector = request.form.get("sector", "")
+    email = request.form.get("email", "")
+    linkedin = request.form.get("linkedin", "")
+    
+    if name and title and company:
+        network_mapper.add_contact(name, title, company, contact_type, sector, email, linkedin)
+    
+    return redirect(url_for("network_view"))
+
+@app.route("/analytics")
+def analytics_view():
+    """Analytics Dashboard"""
+    jobs_file = Path("/root/.openclaw/workspace/tools/cv-optimizer/data/job_applications.json")
+    jobs = []
+    if jobs_file.exists():
+        with open(jobs_file, 'r') as f:
+            jobs = json.load(f)
+    
+    revenue = analytics.calculate_revenue_metrics(jobs)
+    funnel = analytics.calculate_conversion_funnel(jobs)
+    activity = analytics.calculate_activity_metrics(jobs)
+    
+    return render_template("analytics.html",
+                          revenue=revenue,
+                          funnel=funnel,
+                          activity=activity)
+
+@app.route("/calendar")
+def calendar_view():
+    """Calendar view"""
+    upcoming = calendar.get_upcoming_events(14)
+    return render_template("calendar.html", events=upcoming)
+
+@app.route("/notifications")
+def notifications_view():
+    """Notifications page"""
+    unread = notifications.get_unread()
+    stats = notifications.get_stats()
+    return render_template("notifications.html",
+                          notifications=unread,
+                          stats=stats)
+
 @app.route("/api/stats")
 def api_stats():
     """API endpoint for stats"""
     return jsonify({
         "jobs": job_tracker.get_stats(),
-        "brain": brain.get_stats()
+        "brain": brain.get_stats(),
+        "network": network_mapper.get_stats(),
+        "notifications": notifications.get_stats()
     })
 
 if __name__ == "__main__":

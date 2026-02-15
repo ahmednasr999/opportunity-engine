@@ -283,7 +283,7 @@ def calendar_view():
     upcoming = calendar.get_upcoming_events(14)
     return render_template("calendar.html", events=upcoming)
 
-@app.route("/calendar/add-interview", methods=[["POST"]])
+@app.route("/calendar/add-interview", methods=["POST"])
 def add_interview():
     """Add interview to calendar"""
     company = request.form.get("company", "")

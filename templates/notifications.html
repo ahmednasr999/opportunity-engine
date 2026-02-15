@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🔔 Notifications</h1>
+    <p>Smart alerts and reminders.</p>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="stat-card">
+        <div class="stat-value" style="color: #3b82f6;">{{ stats.unread }}</div>
+        <div class="stat-label">Unread</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value" style="color: #f59e0b;">{{ stats.action_required }}</div>
+        <div class="stat-label">Action Required</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total }}</div>
+        <div class="stat-label">Total</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value" style="color: {% if stats.dnd_active %}#ef4444{% else %}#10b981{% endif %};">
+            {{ "On" if stats.dnd_active else "Off" }}
+        </div>
+        <div class="stat-label">DND Status</div>
+    </div>
+</div>
+
+<!-- Action Required -->
+{% if stats.action_required > 0 %}
+<div class="card" style="border: 2px solid #f59e0b;">
+    <div class="card-header">
+        <div class="card-title">⚠️ Action Required</div>
+    </div>
+    {% for notif in notifications %}
+        {% if notif.action_required %}
+        <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; padding: 1rem; margin-bottom: 0.75rem; border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>{{ notif.title }}</strong>
+                    <div class="text-muted" style="font-size: 0.9rem;">{{ notif.message }}</div>
+                </div>
+                <a href="/notifications/mark-read/{{ notif.id }}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Mark Done</a>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- All Notifications -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">📋 Recent Notifications</div>
+    </div>
+    
+    {% if notifications %}
+        {% for notif in notifications %}
+        <div style="background: #0f172a; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; {% if not notif.read %}border-left: 4px solid #3b82f6;{% endif %}">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div style="display: flex; gap: 0.75rem; align-items: start;">
+                    <span style="font-size: 1.2rem;">
+                        {% if notif.priority == 'critical' %}🔴{% endif %}
+                        {% if notif.priority == 'high' %}🟠{% endif %}
+                        {% if notif.priority == 'normal' %}🔵{% endif %}
+                        {% if notif.priority == 'low' %}⚪{% endif %}
+                    </span>
+                    <div>
+                        <strong>{{ notif.title }}</strong>
+                        <div class="text-muted" style="font-size: 0.9rem; margin-top: 0.25rem;">{{ notif.message }}</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.5rem;">
+                            {{ notif.timestamp[:16] }} | {{ notif.source }}
+                        </div>
+                    </div>
+                </div>
+                {% if not notif.read %}
+                <a href="/notifications/mark-read/{{ notif.id }}" class="btn btn-secondary" style="padding: 0.25rem 0.75rem; font-size: 0.8rem;">Mark Read</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-muted" style="text-align: center; padding: 3rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+            <p>No notifications!</p>
+            <p style="font-size: 0.9rem;">You're all caught up.</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- By Category -->
+<div class="card">
+    <div class="card-title">📊 By Category</div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem;">
+        <div style="text-align: center; padding: 1rem; background: #0f172a; border-radius: 8px;">
+            <div style="font-size: 1.5rem; font-weight: bold; color: #3b82f6;">{{ stats.by_category.get('job', 0) }}</div>
+            <div class="text-muted" style="font-size: 0.85rem;">Jobs</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #0f172a; border-radius: 8px;">
+            <div style="font-size: 1.5rem; font-weight: bold; color: #8b5cf6;">{{ stats.by_category.get('network', 0) }}</div>
+            <div class="text-muted" style="font-size: 0.85rem;">Network</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #0f172a; border-radius: 8px;">
+            <div style="font-size: 1.5rem; font-weight: bold; color: #10b981;">{{ stats.by_category.get('content', 0) }}</div>
+            <div class="text-muted" style="font-size: 0.85rem;">Content</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #0f172a; border-radius: 8px;">
+            <div style="font-size: 1.5rem; font-weight: bold; color: #64748b;">{{ stats.by_category.get('system', 0) }}</div>
+            <div class="text-muted" style="font-size: 0.85rem;">System</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
