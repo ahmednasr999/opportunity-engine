@@ -1,118 +1,88 @@
 {% extends "base.html" %}
 
-{% block title %}Analytics Dashboard{% endblock %}
+{% block title %}Analytics{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1><i class="fas fa-chart-line" style="color: var(--primary);"></i> Analytics Dashboard</h1>
-    <p>Track your revenue pipeline and conversion metrics.</p>
+<!-- Page Header -->
+<div style="margin-bottom: 32px;">
+    <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 8px;">Analytics</h1>
+    <p class="text-secondary">Track your revenue pipeline and conversion metrics</p>
 </div>
 
-<!-- Revenue Metrics -->
+<!-- Revenue Stats -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Pipeline Value</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--success);">${{ "{:,.0f}".format(revenue.weighted_pipeline_value) }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Target Salary</div>
+        <div style="font-size: 28px; font-weight: 700;">${{ "{:,.0f}".format(revenue.target_salary) }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Progress</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--warning);">{{ "{:.0f}".format(revenue.progress_to_target) }}%</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Offers</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--brand);">{{ revenue.offers }}</div>
+    </div>
+</div>
+
+<!-- Progress Bar -->
 <div class="card mb-4">
     <div class="card-header">
-        <div class="card-title"><i class="fas fa-dollar-sign" style="color: var(--success);"></i> Revenue Pipeline</div>
+        <div class="card-title">Progress to ${{ "{:,.0f}".format(revenue.target_salary) }} Goal</div>
     </div>
-    <div class="stats-grid" style="margin-bottom: 2rem;">
-        <div class="stat-card" style="background: linear-gradient(145deg, var(--bg-card), rgba(16, 185, 129, 0.1));">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
-                <div>
-                    <div class="stat-value" style="color: var(--success);">${{ "{:,.0f}".format(revenue.weighted_pipeline_value) }}</div>
-                    <div class="stat-label">Weighted Pipeline</div>
-                </div>
-                <i class="fas fa-wallet" style="font-size: 2rem; color: var(--success); opacity: 0.5;"></i>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
-                <div>
-                    <div class="stat-value">${{ "{:,.0f}".format(revenue.target_salary) }}</div>
-                    <div class="stat-label">Target Salary</div>
-                </div>
-                <i class="fas fa-bullseye" style="font-size: 2rem; color: var(--primary); opacity: 0.5;"></i>
-            </div>
-        </div>
-        <div class="stat-card" style="background: linear-gradient(145deg, var(--bg-card), rgba(245, 158, 11, 0.1));">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
-                <div>
-                    <div class="stat-value" style="color: var(--warning);">{{ "{:.0f}".format(revenue.progress_to_target) }}%</div>
-                    <div class="stat-label">Progress to Goal</div>
-                </div>
-                <i class="fas fa-percentage" style="font-size: 2rem; color: var(--warning); opacity: 0.5;"></i>
-            </div>
-        </div>
-        <div class="stat-card" style="background: linear-gradient(145deg, var(--bg-card), rgba(139, 92, 246, 0.1));">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
-                <div>
-                    <div class="stat-value" style="color: #8b5cf6;">{{ revenue.offers }}</div>
-                    <div class="stat-label">Offers in Hand</div>
-                </div>
-                <i class="fas fa-trophy" style="font-size: 2rem; color: #8b5cf6; opacity: 0.5;"></i>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Progress Bar -->
-    <div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-            <span class="text-secondary">Progress to ${{ "{:,.0f}".format(revenue.target_salary) }} target</span>
-            <span style="font-weight: 600; color: {% if revenue.progress_to_target >= 100 %}var(--success){% elif revenue.progress_to_target >= 50 %}var(--warning){% else %}var(--primary){% endif %};">{{ "{:.0f}".format(revenue.progress_to_target) }}%</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: {{ revenue.progress_to_target }}%; background: {% if revenue.progress_to_target >= 100 %}linear-gradient(90deg, var(--success), #34d399){% elif revenue.progress_to_target >= 50 %}linear-gradient(90deg, var(--warning), #fbbf24){% else %}linear-gradient(90deg, var(--primary), var(--secondary)){% endif %};"></div>
-        </div>
+    <div class="progress-bar" style="height: 12px;">
+        <div class="progress-fill" style="width: {{ revenue.progress_to_target }}%;"></div>
     </div>
 </div>
 
-<div class="grid-2">
+<!-- Two Columns -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
     <!-- Conversion Funnel -->
     <div class="card">
         <div class="card-header">
-            <div class="card-title"><i class="fas fa-filter" style="color: var(--info);"></i> Conversion Funnel</div>
+            <div class="card-title">Conversion Funnel</div>
         </div>
-        <div class="grid-2" style="margin-top: 1rem;">
-            <div style="text-align: center; padding: 1.5rem; background: var(--bg-dark); border-radius: var(--radius-lg);">
-                <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">{{ "{:.1f}".format(funnel.application_to_screen) }}%</div>
-                <div class="text-secondary">App → Screen</div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+            <div style="text-align: center; padding: 24px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="font-size: 32px; font-weight: 700; color: var(--brand); margin-bottom: 8px;">{{ "{:.1f}".format(funnel.application_to_screen) }}%</div>
+                <div class="text-muted" style="font-size: 13px;">App → Screen</div>
             </div>
-            <div style="text-align: center; padding: 1.5rem; background: var(--bg-dark); border-radius: var(--radius-lg);">
-                <div style="font-size: 2.5rem; font-weight: 700; color: var(--info); margin-bottom: 0.5rem;">{{ "{:.1f}".format(funnel.screen_to_interview) }}%</div>
-                <div class="text-secondary">Screen → Interview</div>
+            <div style="text-align: center; padding: 24px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="font-size: 32px; font-weight: 700; color: var(--info); margin-bottom: 8px;">{{ "{:.1f}".format(funnel.screen_to_interview) }}%</div>
+                <div class="text-muted" style="font-size: 13px;">Screen → Interview</div>
             </div>
-            <div style="text-align: center; padding: 1.5rem; background: var(--bg-dark); border-radius: var(--radius-lg);">
-                <div style="font-size: 2.5rem; font-weight: 700; color: var(--warning); margin-bottom: 0.5rem;">{{ "{:.1f}".format(funnel.interview_to_offer) }}%</div>
-                <div class="text-secondary">Interview → Offer</div>
+            <div style="text-align: center; padding: 24px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="font-size: 32px; font-weight: 700; color: var(--warning); margin-bottom: 8px;">{{ "{:.1f}".format(funnel.interview_to_offer) }}%</div>
+                <div class="text-muted" style="font-size: 13px;">Interview → Offer</div>
             </div>
-            <div style="text-align: center; padding: 1.5rem; background: var(--bg-dark); border-radius: var(--radius-lg);">
-                <div style="font-size: 2.5rem; font-weight: 700; color: var(--success); margin-bottom: 0.5rem;">{{ "{:.1f}".format(funnel.overall_conversion) }}%</div>
-                <div class="text-secondary">Overall</div>
+            <div style="text-align: center; padding: 24px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="font-size: 32px; font-weight: 700; color: var(--success); margin-bottom: 8px;">{{ "{:.1f}".format(funnel.overall_conversion) }}%</div>
+                <div class="text-muted" style="font-size: 13px;">Overall</div>
             </div>
-        </div>
-        <div class="mt-4" style="padding: 1rem; background: var(--bg-dark); border-radius: var(--radius); font-size: 0.9rem; color: var(--text-secondary);">
-            <i class="fas fa-info-circle"></i> Industry benchmark: 2-5% overall conversion
         </div>
     </div>
     
-    <!-- Activity Metrics -->
+    <!-- Activity -->
     <div class="card">
         <div class="card-header">
-            <div class="card-title"><i class="fas fa-calendar-week" style="color: var(--secondary);"></i> Activity This Week</div>
+            <div class="card-title">This Week</div>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
-            <div style="text-align: center; padding: 1.5rem; background: var(--bg-dark); border-radius: var(--radius-lg); border: 2px solid {% if activity.applications_this_week >= 5 %}var(--success){% else %}var(--warning){% endif %};">
-                <div style="font-size: 2.5rem; font-weight: 700; color: {% if activity.applications_this_week >= 5 %}var(--success){% else %}var(--warning){% endif %}; margin-bottom: 0.5rem;">{{ activity.applications_this_week }}</div>
-                <div class="text-secondary">Applications</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Target: 5/week</div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+            <div style="text-align: center; padding: 20px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="font-size: 32px; font-weight: 700; color: {% if activity.applications_this_week >= 5 %}var(--success){% else %}var(--warning){% endif %}; margin-bottom: 8px;">{{ activity.applications_this_week }}</div>
+                <div class="text-muted" style="font-size: 13px;">Applications</div>
             </div>
-            <div style="text-align: center; padding: 1.5rem; background: var(--bg-dark); border-radius: var(--radius-lg); border: 2px solid {% if activity.avg_ats_score >= 80 %}var(--success){% else %}var(--warning){% endif %};">
-                <div style="font-size: 2.5rem; font-weight: 700; color: {% if activity.avg_ats_score >= 80 %}var(--success){% else %}var(--warning){% endif %}; margin-bottom: 0.5rem;">{{ "{:.0f}".format(activity.avg_ats_score) }}</div>
-                <div class="text-secondary">Avg ATS</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Target: 90+</div>
+            <div style="text-align: center; padding: 20px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="font-size: 32px; font-weight: 700; color: {% if activity.avg_ats_score >= 80 %}var(--success){% else %}var(--warning){% endif %}; margin-bottom: 8px;">{{ "{:.0f}".format(activity.avg_ats_score) }}</div>
+                <div class="text-muted" style="font-size: 13px;">Avg ATS</div>
             </div>
-            <div style="text-align: center; padding: 1.5rem; background: var(--bg-dark); border-radius: var(--radius-lg);">
-                <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">{{ activity.applications_this_month }}</div>
-                <div class="text-secondary">This Month</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Total apps</div>
+            <div style="text-align: center; padding: 20px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="font-size: 32px; font-weight: 700; color: var(--brand); margin-bottom: 8px;">{{ activity.applications_this_month }}</div>
+                <div class="text-muted" style="font-size: 13px;">This Month</div>
             </div>
         </div>
     </div>
@@ -121,41 +91,23 @@
 <!-- Recommendations -->
 <div class="card mt-4">
     <div class="card-header">
-        <div class="card-title"><i class="fas fa-lightbulb" style="color: var(--warning);"></i> Recommendations</div>
+        <div class="card-title"><i class="fas fa-lightbulb"></i> Recommendations</div>
     </div>
     {% if activity.applications_this_week < 5 %}
-    <div style="padding: 1rem; background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--warning); border-radius: var(--radius); margin-bottom: 0.75rem;">
-        <strong><i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i> LOW VOLUME:</strong> Only {{ activity.applications_this_week }} applications this week. Target: 5+
+    <div style="padding: 16px; background: rgba(234, 179, 8, 0.1); border-left: 4px solid var(--warning); border-radius: 8px; margin-bottom: 12px;">
+        <strong style="color: var(--warning);">Low Volume:</strong> Only {{ activity.applications_this_week }} apps this week. Target: 5+
     </div>
     {% endif %}
     
     {% if activity.avg_ats_score < 80 %}
-    <div style="padding: 1rem; background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--warning); border-radius: var(--radius); margin-bottom: 0.75rem;">
-        <strong><i class="fas fa-chart-bar" style="color: var(--warning);"></i> ATS SCORES:</strong> Average {{ "{:.0f}".format(activity.avg_ats_score) }}/100. Review CV optimization.
-    </div>
-    {% endif %}
-    
-    {% if funnel.application_to_screen < 15 %}
-    <div style="padding: 1rem; background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--warning); border-radius: var(--radius); margin-bottom: 0.75rem;">
-        <strong><i class="fas fa-percentage" style="color: var(--warning);"></i> CONVERSION:</strong> Low response rate ({{ "{:.1f}".format(funnel.application_to_screen) }}%). Use Network for warm intros.
-    </div>
-    {% endif %}
-    
-    {% if revenue.weighted_pipeline_value < revenue.target_salary * 0.5 %}
-    <div style="padding: 1rem; background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--danger); border-radius: var(--radius); margin-bottom: 0.75rem;">
-        <strong><i class="fas fa-dollar-sign" style="color: var(--danger);"></i> PIPELINE:</strong> Weighted value ${{ "{:,.0f}".format(revenue.weighted_pipeline_value) }} is below target coverage.
+    <div style="padding: 16px; background: rgba(234, 179, 8, 0.1); border-left: 4px solid var(--warning); border-radius: 8px; margin-bottom: 12px;">
+        <strong style="color: var(--warning);">ATS Scores:</strong> Average {{ "{:.0f}".format(activity.avg_ats_score) }}/100. Review CV optimization.
     </div>
     {% endif %}
     
     {% if revenue.offers > 0 %}
-    <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--success); border-radius: var(--radius); margin-bottom: 0.75rem;">
-        <strong><i class="fas fa-trophy" style="color: var(--success);"></i> OFFERS:</strong> You have {{ revenue.offers }} offer(s) in hand! Negotiate aggressively.
-    </div>
-    {% endif %}
-    
-    {% if activity.applications_this_week >= 5 and activity.avg_ats_score >= 80 %}
-    <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--success); border-radius: var(--radius);">
-        <strong><i class="fas fa-check-circle" style="color: var(--success);"></i> ON TRACK:</strong> Good application volume and ATS scores. Keep the momentum!
+    <div style="padding: 16px; background: rgba(34, 197, 94, 0.1); border-left: 4px solid var(--success); border-radius: 8px;">
+        <strong style="color: var(--success);">Offers:</strong> You have {{ revenue.offers }} offer(s)! Negotiate aggressively.
     </div>
     {% endif %}
 </div>

@@ -3,51 +3,50 @@
 {% block title %}Calendar{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1><i class="fas fa-calendar-alt" style="color: var(--primary);"></i> Calendar</h1>
-    <p>Schedule interviews and track deadlines.</p>
+<!-- Page Header -->
+<div style="margin-bottom: 32px;">
+    <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 8px;">Calendar</h1>
+    <p class="text-secondary">Schedule interviews and track deadlines</p>
 </div>
 
-<!-- Add Interview Form -->
+<!-- Add Interview -->
 <div class="card mb-4">
     <div class="card-header">
         <div class="card-title"><i class="fas fa-plus-circle"></i> Schedule Interview</div>
     </div>
     <form method="POST" action="/calendar/add-interview">
-        <div class="grid-4">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
             <div class="form-group">
-                <label class="form-label"><i class="fas fa-building"></i> Company</label>
+                <label class="form-label">Company</label>
                 <input type="text" name="company" class="form-input" placeholder="Company name" required>
             </div>
             <div class="form-group">
-                <label class="form-label"><i class="fas fa-briefcase"></i> Role</label>
+                <label class="form-label">Role</label>
                 <input type="text" name="role" class="form-input" placeholder="Job title" required>
             </div>
             <div class="form-group">
-                <label class="form-label"><i class="fas fa-calendar"></i> Date</label>
+                <label class="form-label">Date</label>
                 <input type="date" name="date" class="form-input" required>
             </div>
             <div class="form-group">
-                <label class="form-label"><i class="fas fa-clock"></i> Time</label>
+                <label class="form-label">Time</label>
                 <input type="time" name="time" class="form-input" required>
             </div>
         </div>
-        <div class="form-group mt-4">
-            <label class="form-label"><i class="fas fa-map-marker-alt"></i> Location / Video Link</label>
-            <input type="text" name="location" class="form-input" placeholder="e.g., Zoom link or office address">
+        <div class="form-group mt-3">
+            <label class="form-label">Location / Video Link</label>
+            <input type="text" name="location" class="form-input" placeholder="Zoom link or office address">
         </div>
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-calendar-check"></i> Schedule Interview
-            </button>
-        </div>
+        <button type="submit" class="btn btn-primary btn-md">
+            <i class="fas fa-calendar-check"></i> Schedule Interview
+        </button>
     </form>
 </div>
 
 <!-- Upcoming Events -->
 <div class="card">
     <div class="card-header">
-        <div class="card-title"><i class="fas fa-list"></i> Upcoming Events (Next 14 Days)</div>
+        <div class="card-title">Upcoming Events</div>
     </div>
     
     {% if events %}
@@ -56,80 +55,32 @@
             {% set event_date = event.start_time[:10] %}
             {% if event_date != current_date %}
                 {% set current_date = event_date %}
-                <div style="margin-top: 1.5rem; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-secondary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                    <i class="fas fa-calendar-day"></i> {{ event_date }}
+                <div style="margin-top: 24px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle);">
+                    <span class="text-secondary" style="font-size: 14px; font-weight: 500;">{{ event_date }}</span>
                 </div>
             {% endif %}
             
-            <div style="background: var(--bg-dark); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 0.75rem; border-left: 4px solid {% if event.event_type == 'interview' %}var(--success){% elif event.event_type == 'deadline' %}var(--warning){% else %}var(--primary){% endif %};">
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 12px; border-left: 4px solid {% if event.event_type == 'interview' %}var(--success){% elif event.event_type == 'deadline' %}var(--warning){% else %}var(--brand){% endif %};">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                            {% if event.event_type == 'interview' %}<i class="fas fa-handshake" style="color: var(--success);"></i>{% endif %}
-                            {% if event.event_type == 'deadline' %}<i class="fas fa-clock" style="color: var(--warning);"></i>{% endif %}
-                            {% if event.event_type == 'follow_up' %}<i class="fas fa-envelope" style="color: var(--primary);"></i>{% endif %}
-                            {% if event.event_type == 'reminder' %}<i class="fas fa-bell" style="color: var(--info);"></i>{% endif %}
-                            <strong style="font-size: 1.1rem;">{{ event.title }}</strong>
-                        </div>
-                        <div class="text-muted" style="font-size: 0.9rem;">
+                        <div style="font-weight: 600; margin-bottom: 4px;">{{ event.title }}</div>
+                        <div class="text-muted" style="font-size: 13px;">
                             <i class="fas fa-clock"></i> {{ event.start_time[11:16] }} - {{ event.end_time[11:16] }}
+                            {% if event.location %}
+                                <span style="margin-left: 16px;"><i class="fas fa-map-marker-alt"></i> {{ event.location }}</span>
+                            {% endif %}
                         </div>
-                        {% if event.location %}
-                            <div class="text-muted" style="font-size: 0.85rem; margin-top: 0.5rem;">
-                                <i class="fas fa-map-marker-alt"></i> {{ event.location }}
-                            </div>
-                        {% endif %}
                     </div>
                     <span class="badge {% if event.event_type == 'interview' %}badge-green{% elif event.event_type == 'deadline' %}badge-yellow{% else %}badge-blue{% endif %}">{{ event.event_type.title() }}</span>
                 </div>
-                {% if event.description %}
-                    <div style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); padding-top: 0.75rem; border-top: 1px solid var(--border);">
-                        {{ event.description[:120] }}{% if event.description|length > 120 %}...{% endif %}
-                    </div>
-                {% endif %}
             </div>
         {% endfor %}
     {% else %}
-        <div class="text-muted" style="text-align: center; padding: 4rem;">
-            <i class="fas fa-calendar" style="font-size: 4rem; margin-bottom: 1.5rem; opacity: 0.3;"></i>
-            <p>No upcoming events scheduled.</p>
-            <p style="font-size: 0.9rem;">Add your first interview using the form above.</p>
+        <div class="text-muted" style="text-align: center; padding: 60px 20px;">
+            <i class="fas fa-calendar" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+            <p>No upcoming events</p>
+            <p style="font-size: 13px;">Schedule your first interview above</p>
         </div>
     {% endif %}
-</div>
-
-<!-- Tips -->
-<div class="card mt-4">
-    <div class="card-title"><i class="fas fa-lightbulb" style="color: var(--warning);"></i> Interview Tips</div>
-    <div class="grid-2 mt-4">
-        <div style="padding: 1.25rem; background: var(--bg-dark); border-radius: var(--radius); display: flex; align-items: start; gap: 1rem;">
-            <i class="fas fa-calendar-day" style="font-size: 1.5rem; color: var(--primary);"></i>
-            <div>
-                <strong>1 Day Before</strong>
-                <div class="text-muted" style="font-size: 0.9rem;">Review job description, prepare questions</div>
-            </div>
-        </div>
-        <div style="padding: 1.25rem; background: var(--bg-dark); border-radius: var(--radius); display: flex; align-items: start; gap: 1rem;">
-            <i class="fas fa-hourglass-start" style="font-size: 1.5rem; color: var(--info);"></i>
-            <div>
-                <strong>1 Hour Before</strong>
-                <div class="text-muted" style="font-size: 0.9rem;">Test video/audio, have CV ready</div>
-            </div>
-        </div>
-        <div style="padding: 1.25rem; background: var(--bg-dark); border-radius: var(--radius); display: flex; align-items: start; gap: 1rem;">
-            <i class="fas fa-comments" style="font-size: 1.5rem; color: var(--warning);"></i>
-            <div>
-                <strong>During</strong>
-                <div class="text-muted" style="font-size: 0.9rem;">Take notes, ask about next steps</div>
-            </div>
-        </div>
-        <div style="padding: 1.25rem; background: var(--bg-dark); border-radius: var(--radius); display: flex; align-items: start; gap: 1rem;">
-            <i class="fas fa-envelope" style="font-size: 1.5rem; color: var(--success);"></i>
-            <div>
-                <strong>2 Hours After</strong>
-                <div class="text-muted" style="font-size: 0.9rem;">Send thank you email to interviewers</div>
-            </div>
-        </div>
-    </div>
 </div>
 {% endblock %}

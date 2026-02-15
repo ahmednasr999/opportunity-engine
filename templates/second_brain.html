@@ -1,35 +1,32 @@
 {% extends "base.html" %}
 
-{% block title %}2nd Brain{% endblock %}
+{% block title %}Knowledge{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1><i class="fas fa-brain" style="color: var(--primary);"></i> 2nd Brain</h1>
-    <p>Search across all your CVs, job postings, notes, and knowledge.</p>
+<!-- Page Header -->
+<div style="margin-bottom: 32px;">
+    <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 8px;">Knowledge</h1>
+    <p class="text-secondary">Search across all your CVs, job postings, and documents</p>
 </div>
 
-<!-- Search Box -->
+<!-- Search -->
 <div class="card mb-4">
-    <div class="card-header">
-        <div class="card-title"><i class="fas fa-search"></i> Search</div>
-    </div>
     <form method="POST" action="/second-brain">
-        <div style="display: flex; gap: 1rem; align-items: end; flex-wrap: wrap;">
-            <div class="form-group" style="flex: 2; min-width: 300px;">
-                <label class="form-label"><i class="fas fa-keyboard"></i> Search Query</label>
-                <input type="text" name="query" class="form-input" placeholder="e.g., AI healthcare, project management, digital transformation..." value="{{ query }}" required>
+        <div style="display: flex; gap: 16px; align-items: end;">
+            <div class="form-group" style="flex: 2;">
+                <label class="form-label">Search Query</label>
+                <input type="text" name="query" class="form-input" placeholder="e.g., AI healthcare, project management..." value="{{ query }}" required>
             </div>
-            <div class="form-group" style="flex: 1; min-width: 200px;">
-                <label class="form-label"><i class="fas fa-filter"></i> Document Type</label>
+            <div class="form-group" style="flex: 1;">
+                <label class="form-label">Document Type</label>
                 <select name="doc_type" class="form-select">
                     <option value="">All Types</option>
                     <option value="cv">CVs</option>
                     <option value="job_posting">Job Postings</option>
-                    <option value="note">Notes</option>
                 </select>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" style="height: 46px;">
+                <button type="submit" class="btn btn-primary btn-md">
                     <i class="fas fa-search"></i> Search
                 </button>
             </div>
@@ -38,151 +35,79 @@
 </div>
 
 <!-- Stats -->
-<div class="stats-grid mb-4">
-    <div class="stat-card">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value">{{ stats.total_documents }}</div>
-                <div class="stat-label">Documents</div>
-            </div>
-            <i class="fas fa-file-alt" style="font-size: 2rem; color: var(--primary); opacity: 0.5;"></i>
-        </div>
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Documents</div>
+        <div style="font-size: 32px; font-weight: 700;">{{ stats.total_documents }}</div>
     </div>
-    <div class="stat-card">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value" style="color: var(--success);">{{ stats.unique_terms }}</div>
-                <div class="stat-label">Unique Terms</div>
-            </div>
-            <i class="fas fa-tags" style="font-size: 2rem; color: var(--success); opacity: 0.5;"></i>
-        </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Unique Terms</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--success);">{{ stats.unique_terms }}</div>
     </div>
-    <div class="stat-card">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value" style="color: var(--warning);">{{ stats.by_type.get('cv', 0) }}</div>
-                <div class="stat-label">CVs</div>
-            </div>
-            <i class="fas fa-id-card" style="font-size: 2rem; color: var(--warning); opacity: 0.5;"></i>
-        </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">CVs</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--warning);">{{ stats.by_type.get('cv', 0) }}</div>
     </div>
-    <div class="stat-card">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value" style="color: #8b5cf6;">{{ stats.by_type.get('job_posting', 0) }}</div>
-                <div class="stat-label">Job Postings</div>
-            </div>
-            <i class="fas fa-briefcase" style="font-size: 2rem; color: #8b5cf6; opacity: 0.5;"></i>
-        </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Job Postings</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--brand);">{{ stats.by_type.get('job_posting', 0) }}</div>
     </div>
 </div>
 
-<!-- Search Results -->
+<!-- Results -->
 {% if results is not none %}
 <div class="card mb-4">
     <div class="card-header">
-        <div class="card-title"><i class="fas fa-list-ul"></i> Search Results for "{{ query }}"</div>
+        <div class="card-title">Search Results: "{{ query }}"</div>
         <span class="badge badge-blue">{{ results|length }} found</span>
     </div>
     
     {% if results %}
         {% for result in results %}
-        <div style="background: var(--bg-dark); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; border-left: 4px solid var(--primary);">
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
-                <div>
-                    <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--text-primary);">{{ result.document.title }}</h3>
-                    <div style="display: flex; gap: 0.75rem; align-items: center;">
-                        <span class="badge badge-green"><i class="fas fa-file"></i> {{ result.document.doc_type }}</span>
-                        <span class="text-muted" style="font-size: 0.85rem;"><i class="fas fa-percentage"></i> Relevance: {{ "%.2f"|format(result.score) }}</span>
-                    </div>
-                </div>
+        <div style="padding: 20px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 12px; border-left: 4px solid var(--brand);">
+            <div style="margin-bottom: 12px;">
+                <strong style="font-size: 16px;">{{ result.document.title }}</strong>
+                <span class="badge badge-green" style="margin-left: 12px;">{{ result.document.doc_type }}</span>
             </div>
-            
-            <div style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 1rem; font-size: 0.95rem;">
-                {{ result.excerpt }}
-            </div>
-            
-            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                {% for term in result.matched_terms[:8] %}
-                    <span style="background: rgba(99, 102, 241, 0.15); color: var(--primary-light); padding: 0.35rem 0.75rem; border-radius: 100px; font-size: 0.8rem; font-weight: 500;">
-                        <i class="fas fa-tag" style="font-size: 0.7rem; margin-right: 0.25rem;"></i>{{ term }}
-                    </span>
+            <div class="text-secondary" style="margin-bottom: 12px; line-height: 1.6;">{{ result.excerpt }}</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                {% for term in result.matched_terms[:6] %}
+                    <span style="padding: 4px 12px; background: rgba(37, 99, 235, 0.15); color: var(--brand-light); border-radius: 100px; font-size: 12px;">{{ term }}</span>
                 {% endfor %}
             </div>
         </div>
         {% endfor %}
     {% else %}
-        <div class="text-muted" style="text-align: center; padding: 4rem;">
-            <i class="fas fa-search" style="font-size: 4rem; margin-bottom: 1.5rem; opacity: 0.3;"></i>
-            <p style="font-size: 1.2rem;">No results found for "{{ query }}"</p>
-            <p>Try different keywords or check spelling</p>
+        <div class="text-muted" style="text-align: center; padding: 60px 20px;">
+            <i class="fas fa-search" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+            <p>No results found for "{{ query }}"</p>
         </div>
     {% endif %}
 </div>
 {% endif %}
 
 <!-- Quick Searches -->
-<div class="card mb-4">
-    <div class="card-title"><i class="fas fa-bolt" style="color: var(--warning);"></i> Quick Searches</div>
-    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem;">
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Quick Searches</div>
+    </div>
+    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
         <form method="POST" action="/second-brain" style="display: inline;">
             <input type="hidden" name="query" value="AI healthcare">
-            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-robot"></i> AI healthcare</button>
+            <button type="submit" class="btn btn-secondary btn-sm">AI healthcare</button>
         </form>
         <form method="POST" action="/second-brain" style="display: inline;">
             <input type="hidden" name="query" value="project management">
-            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-tasks"></i> Project management</button>
+            <button type="submit" class="btn btn-secondary btn-sm">Project management</button>
         </form>
         <form method="POST" action="/second-brain" style="display: inline;">
             <input type="hidden" name="query" value="digital transformation">
-            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-sync"></i> Digital transformation</button>
-        </form>
-        <form method="POST" action="/second-brain" style="display: inline;">
-            <input type="hidden" name="query" value="PMO leadership">
-            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-users-cog"></i> PMO leadership</button>
+            <button type="submit" class="btn btn-secondary btn-sm">Digital transformation</button>
         </form>
         <form method="POST" action="/second-brain" style="display: inline;">
             <input type="hidden" name="query" value="HealthTech">
-            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-heartbeat"></i> HealthTech</button>
+            <button type="submit" class="btn btn-secondary btn-sm">HealthTech</button>
         </form>
-        <form method="POST" action="/second-brain" style="display: inline;">
-            <input type="hidden" name="query" value="FinTech">
-            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-coins"></i> FinTech</button>
-        </form>
-    </div>
-</div>
-
-<!-- How It Works -->
-<div class="grid-3">
-    <div class="card">
-        <div class="card-title"><i class="fas fa-database" style="color: var(--primary);"></i> What Gets Indexed</div>
-        <ul style="margin-left: 1.5rem; color: var(--text-secondary); line-height: 2.2;">
-            <li><i class="fas fa-check" style="color: var(--success); margin-right: 0.5rem;"></i>Your CVs and profiles</li>
-            <li><i class="fas fa-check" style="color: var(--success); margin-right: 0.5rem;"></i>Job postings you process</li>
-            <li><i class="fas fa-check" style="color: var(--success); margin-right: 0.5rem;"></i>Generated content</li>
-            <li><i class="fas fa-check" style="color: var(--success); margin-right: 0.5rem;"></i>Personal notes</li>
-            <li><i class="fas fa-check" style="color: var(--success); margin-right: 0.5rem;"></i>Application history</li>
-        </ul>
-    </div>
-    
-    <div class="card">
-        <div class="card-title"><i class="fas fa-cogs" style="color: var(--info);"></i> How Search Works</div>
-        <ul style="margin-left: 1.5rem; color: var(--text-secondary); line-height: 2.2;">
-            <li><i class="fas fa-brain" style="color: var(--info); margin-right: 0.5rem;"></i>Semantic keyword matching</li>
-            <li><i class="fas fa-chart-bar" style="color: var(--info); margin-right: 0.5rem;"></i>Relevance scoring</li>
-            <li><i class="fas fa-eye" style="color: var(--info); margin-right: 0.5rem;"></i>Context-aware excerpts</li>
-            <li><i class="fas fa-project-diagram" style="color: var(--info); margin-right: 0.5rem;"></i>Cross-document connections</li>
-        </ul>
-    </div>
-    
-    <div class="card">
-        <div class="card-title"><i class="fas fa-lightbulb" style="color: var(--warning);"></i> Use Cases</div>
-        <ul style="margin-left: 1.5rem; color: var(--text-secondary); line-height: 2.2;">
-            <li><i class="fas fa-comments" style="color: var(--warning); margin-right: 0.5rem;"></i>Find talking points before interviews</li>
-            <li><i class="fas fa-search" style="color: var(--warning); margin-right: 0.5rem;"></i>Discover patterns across jobs</li>
-            <li><i class="fas fa-history" style="color: var(--warning); margin-right: 0.5rem;"></i>Recall past achievements</li>
-            <li><i class="fas fa-balance-scale" style="color: var(--warning); margin-right: 0.5rem;"></i>Compare job requirements</li>
-        </ul>
     </div>
 </div>
 {% endblock %}

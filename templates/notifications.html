@@ -3,68 +3,49 @@
 {% block title %}Notifications{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1><i class="fas fa-bell" style="color: var(--primary);"></i> Notifications</h1>
-    <p>Smart alerts and reminders.</p>
+<!-- Page Header -->
+<div style="margin-bottom: 32px;">
+    <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 8px;">Notifications</h1>
+    <p class="text-secondary">Smart alerts and reminders</p>
 </div>
 
 <!-- Stats -->
-<div class="stats-grid">
-    <div class="stat-card" style="background: linear-gradient(145deg, var(--bg-card), rgba(59, 130, 246, 0.1));">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value" style="color: var(--info);">{{ stats.unread }}</div>
-                <div class="stat-label">Unread</div>
-            </div>
-            <i class="fas fa-envelope" style="font-size: 2rem; color: var(--info); opacity: 0.5;"></i>
-        </div>
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Unread</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--info);">{{ stats.unread }}</div>
     </div>
-    <div class="stat-card" style="background: linear-gradient(145deg, var(--bg-card), rgba(245, 158, 11, 0.1));">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value" style="color: var(--warning);">{{ stats.action_required }}</div>
-                <div class="stat-label">Action Required</div>
-            </div>
-            <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: var(--warning); opacity: 0.5;"></i>
-        </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Action Required</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--warning);">{{ stats.action_required }}</div>
     </div>
-    <div class="stat-card">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value">{{ stats.total }}</div>
-                <div class="stat-label">Total</div>
-            </div>
-            <i class="fas fa-inbox" style="font-size: 2rem; color: var(--primary); opacity: 0.5;"></i>
-        </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Total</div>
+        <div style="font-size: 32px; font-weight: 700;">{{ stats.total }}</div>
     </div>
-    <div class="stat-card" style="background: linear-gradient(145deg, var(--bg-card), {% if stats.dnd_active %}rgba(239, 68, 68, 0.1){% else %}rgba(16, 185, 129, 0.1){% endif %});">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value" style="color: {% if stats.dnd_active %}var(--danger){% else %}var(--success){% endif %};">{{ "On" if stats.dnd_active else "Off" }}</div>
-                <div class="stat-label">DND Status</div>
-            </div>
-            <i class="fas fa-moon" style="font-size: 2rem; color: {% if stats.dnd_active %}var(--danger){% else %}var(--success){% endif %}; opacity: 0.5;"></i>
-        </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">DND Status</div>
+        <div style="font-size: 32px; font-weight: 700; color: {% if stats.dnd_active %}var(--error){% else %}var(--success){% endif %};">{{ "On" if stats.dnd_active else "Off" }}</div>
     </div>
 </div>
 
 <!-- Action Required -->
 {% if stats.action_required > 0 %}
-<div class="card mb-4" style="border: 2px solid var(--warning);">
+<div class="card mb-4" style="border-color: var(--warning);">
     <div class="card-header">
-        <div class="card-title"><i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i> Action Required</div>
+        <div class="card-title" style="color: var(--warning);">
+            <i class="fas fa-exclamation-triangle"></i> Action Required
+        </div>
     </div>
     {% for notif in notifications %}
         {% if notif.action_required %}
-        <div style="background: rgba(245, 158, 11, 0.05); border-left: 4px solid var(--warning); padding: 1.25rem; margin-bottom: 0.75rem; border-radius: var(--radius);">
+        <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <strong style="font-size: 1.1rem;">{{ notif.title }}</strong>
-                    <div class="text-muted" style="margin-top: 0.5rem;">{{ notif.message }}</div>
+                    <strong>{{ notif.title }}</strong>
+                    <div class="text-muted" style="margin-top: 4px;">{{ notif.message }}</div>
                 </div>
-                <a href="/notifications/mark-read/{{ notif.id }}" class="btn btn-success" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-                    <i class="fas fa-check"></i> Mark Done
-                </a>
+                <a href="/notifications/mark-read/{{ notif.id }}" class="btn btn-success btn-sm">Mark Done</a>
             </div>
         </div>
         {% endif %}
@@ -72,72 +53,41 @@
 </div>
 {% endif %}
 
-<!-- All Notifications -->
+<!-- Recent Notifications -->
 <div class="card">
     <div class="card-header">
-        <div class="card-title"><i class="fas fa-list"></i> Recent Notifications</div>
+        <div class="card-title">Recent Notifications</div>
     </div>
     
     {% if notifications %}
-        {% for notif in notifications %}
-        <div style="background: var(--bg-dark); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 0.75rem; {% if not notif.read %}border-left: 4px solid var(--primary);{% endif %}">
+        {% for notif in notifications[:10] %}
+        <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 12px; {% if not notif.read %}border-left: 4px solid var(--brand);{% endif %}">
             <div style="display: flex; justify-content: space-between; align-items: start;">
-                <div style="display: flex; gap: 1rem; align-items: start;">
-                    <span style="font-size: 1.5rem;">
-                        {% if notif.priority == 'critical' %}<i class="fas fa-exclamation-circle" style="color: var(--danger);"></i>{% endif %}
+                <div style="display: flex; gap: 12px; align-items: start;">
+                    <span style="font-size: 18px;">
+                        {% if notif.priority == 'critical' %}<i class="fas fa-exclamation-circle" style="color: var(--error);"></i>{% endif %}
                         {% if notif.priority == 'high' %}<i class="fas fa-arrow-up" style="color: var(--warning);"></i>{% endif %}
                         {% if notif.priority == 'normal' %}<i class="fas fa-info-circle" style="color: var(--info);"></i>{% endif %}
                         {% if notif.priority == 'low' %}<i class="fas fa-minus-circle" style="color: var(--text-muted);"></i>{% endif %}
                     </span>
                     <div>
-                        <strong style="font-size: 1.05rem;">{{ notif.title }}</strong>
-                        <div class="text-muted" style="margin-top: 0.5rem;">{{ notif.message }}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem;">
-                            <i class="fas fa-clock"></i> {{ notif.timestamp[:16] }} | <i class="fas fa-source"></i> {{ notif.source }}
-                        </div>
+                        <strong style="font-size: 15px;">{{ notif.title }}</strong>
+                        <div class="text-muted" style="margin-top: 4px; font-size: 13px;">{{ notif.message }}</div>
+                        <div class="text-muted" style="font-size: 12px; margin-top: 8px;">{{ notif.timestamp[:16] }}</div>
                     </div>
                 </div>
                 {% if not notif.read %}
-                <a href="/notifications/mark-read/{{ notif.id }}" class="btn btn-secondary" style="padding: 0.4rem 0.75rem; font-size: 0.8rem;">
-                    <i class="fas fa-check"></i> Read
-                </a>
+                <a href="/notifications/mark-read/{{ notif.id }}" class="btn btn-ghost btn-sm">Mark Read</a>
                 {% endif %}
             </div>
         </div>
         {% endfor %}
     {% else %}
-        <div class="text-muted" style="text-align: center; padding: 4rem;">
-            <i class="fas fa-check-double" style="font-size: 4rem; color: var(--success); margin-bottom: 1.5rem; opacity: 0.5;"></i>
-            <p style="font-size: 1.2rem;">All caught up!</p>
-            <p>No notifications to show.</p>
+        <div class="text-muted" style="text-align: center; padding: 60px 20px;">
+            <i class="fas fa-check-double" style="font-size: 48px; color: var(--success); margin-bottom: 16px; opacity: 0.5;"></i>
+            <p style="font-size: 18px;">All caught up!</p>
+            <p style="font-size: 13px;">No notifications to show</p>
         </div>
     {% endif %}
-</div>
-
-<!-- By Category -->
-<div class="card mt-4">
-    <div class="card-title"><i class="fas fa-chart-pie"></i> By Category</div>
-    <div class="grid-4 mt-4">
-        <div style="text-align: center; padding: 1.5rem; background: var(--bg-dark); border-radius: var(--radius-lg);">
-            <i class="fas fa-briefcase" style="font-size: 2rem; color: var(--info); margin-bottom: 0.5rem;"></i>
-            <div style="font-size: 1.75rem; font-weight: 700;">{{ stats.by_category.get('job', 0) }}</div>
-            <div class="text-muted">Jobs</div>
-        </div>
-        <div style="text-align: center; padding: 1.5rem; background: var(--bg-dark); border-radius: var(--radius-lg);">
-            <i class="fas fa-network-wired" style="font-size: 2rem; color: #8b5cf6; margin-bottom: 0.5rem;"></i>
-            <div style="font-size: 1.75rem; font-weight: 700;">{{ stats.by_category.get('network', 0) }}</div>
-            <div class="text-muted">Network</div>
-        </div>
-        <div style="text-align: center; padding: 1.5rem; background: var(--bg-dark); border-radius: var(--radius-lg);">
-            <i class="fas fa-pen" style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"></i>
-            <div style="font-size: 1.75rem; font-weight: 700;">{{ stats.by_category.get('content', 0) }}</div>
-            <div class="text-muted">Content</div>
-        </div>
-        <div style="text-align: center; padding: 1.5rem; background: var(--bg-dark); border-radius: var(--radius-lg);">
-            <i class="fas fa-cog" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 0.5rem;"></i>
-            <div style="font-size: 1.75rem; font-weight: 700;">{{ stats.by_category.get('system', 0) }}</div>
-            <div class="text-muted">System</div>
-        </div>
-    </div>
 </div>
 {% endblock %}
