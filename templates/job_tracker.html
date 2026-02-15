@@ -38,17 +38,22 @@
         </div>
         <div style="padding: 16px;">
             {% for job in pipeline.get('Applied', []) %}
-            <div style="background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; margin-bottom: 12px; cursor: grab; transition: all 200ms;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                <div style="font-weight: 600; margin-bottom: 4px;">{{ job.title }}</div>
-                <div class="text-muted" style="font-size: 13px; margin-bottom: 12px;">{{ job.company }}</div>
-                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                    <span class="badge badge-blue">{{ job.sector }}</span>
+            <a href="/job-tracker" style="text-decoration: none; color: inherit; display: block;">
+                <div style="background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 200ms;" onmouseover="this.style.transform='translateY(-2px)'; this.style.borderColor='var(--brand)'" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--border-subtle)'">
+                    <div style="font-weight: 600; margin-bottom: 4px;">{{ job.title }}</div>
+                    <div class="text-muted" style="font-size: 13px; margin-bottom: 12px;">{{ job.company }}</div>
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <span class="badge badge-blue">{{ job.sector }}</span>
+                    </div>
+                    <div class="progress-bar" style="margin-bottom: 8px;">
+                        <div class="progress-fill" style="width: {{ job.ats_score }}%; background: var(--status-ideas);"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="text-muted" style="font-size: 12px;">ATS: {{ job.ats_score }}/100</div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-muted); font-size: 12px;"></i>
+                    </div>
                 </div>
-                <div class="progress-bar" style="margin-bottom: 8px;">
-                    <div class="progress-fill" style="width: {{ job.ats_score }}%; background: var(--status-ideas);"></div>
-                </div>
-                <div class="text-muted" style="font-size: 12px;">ATS: {{ job.ats_score }}/100</div>
-            </div>
+            </a>
             {% endfor %}
             {% if not pipeline.get('Applied', []) %}
             <div class="text-muted" style="text-align: center; padding: 40px 20px;">
