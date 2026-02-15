@@ -21,6 +21,9 @@ from network_mapper import NetworkMapper
 from analytics_dashboard import AnalyticsDashboard
 from calendar_integration import CalendarIntegration
 from notification_hub import NotificationHub
+from expense_tracker import ExpenseTracker
+from bookmark_manager import BookmarkManager
+from search_aggregator import SearchAggregator
 
 app = Flask(__name__)
 
@@ -34,6 +37,9 @@ network_mapper = NetworkMapper()
 analytics = AnalyticsDashboard()
 calendar = CalendarIntegration()
 notifications = NotificationHub()
+expense_tracker = ExpenseTracker()
+bookmark_manager = BookmarkManager()
+search_aggregator = SearchAggregator()
 
 @app.route("/")
 def dashboard():
@@ -246,6 +252,66 @@ def api_stats():
         "network": network_mapper.get_stats(),
         "notifications": notifications.get_stats()
     })
+
+# ===== EXPENSE TRACKER ROUTES =====
+@app.route("/expenses")
+def expenses_view():
+    """Expense Tracker page"""
+    expenses = expense_tracker.get_expenses()
+    summary = expense_tracker.get_summary()
+    return render_template("expenses.html", expenses=expenses, summary=summary)
+
+@app.route("/expenses/add", methods=["POST"])
+def add_expense():
+    """Add a new expense"""
+    amount = request.form.get("amount", 0)
+    category = request.form.get("category", "Other")
+    description = request.form.get("description", "")
+    date = request.form.get("date")
+    is_job_related = request.form.get("is_job_related") == "true"
+    
+    if amount and description:
+        expense_tracker.add_expense(float(amount), category, description, date, is_job_related)
+    
+    return redirect(url_for("expenses_view"))
+
+# ===== BOOKMARK MANAGER ROUTES =====
+@app.route("/bookmarks")
+def bookmarks_view():
+    """Bookmark Manager page"""
+    bookmarks = bookmark_manager.get_bookmarks()
+    stats = bookmark_manager.get_stats()
+    return render_template("bookmarks.html", bookmarks=bookmarks, stats=stats)
+
+@app.route("/bookmarks/add", methods=["POST"])
+def add_bookmark():
+    """Add a new bookmark"""
+    title = request.form.get("title", "")
+    url = request.form.get("url", "")
+    category = request.form.get("category", "other")
+    notes = request.form.get("notes", "")
+    tags_str = request.form.get("tags", "")
+    tags = [t.strip() for t in tags_str.split(",") if t.strip()]
+    
+    if title and url:
+        bookmark_manager.add_bookmark(title, url, category, notes, tags)
+    
+    return redirect(url_for("bookmarks_view"))
+
+# ===== SEARCH AGGREGATOR ROUTES =====
+@app.route("/search", methods=["GET", "POST"])
+def search_view():
+    """Unified search page"""
+    results = None
+    query = ""
+    
+    if request.method == "POST":
+        query = request.form.get("query", "")
+        if query:
+            results = search_aggregator.search_all(query)
+    
+    stats = search_aggregator.get_stats()
+    return render_template("search.html", results=results, query=query, stats=stats)
 
 if __name__ == "__main__":
     print("🚀 Starting Mission Control...")

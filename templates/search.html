@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div style="margin-bottom: 32px;">
+    <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 8px;">Search</h1>
+    <p class="text-secondary">Search across all your data</p>
+</div>
+
+<!-- Stats -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Jobs</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--brand);">{{ stats.jobs }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Contacts</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--success);">{{ stats.contacts }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Bookmarks</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--warning);">{{ stats.bookmarks }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">CVs</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--info);">{{ stats.cvs }}</div>
+    </div>
+</div>
+
+<!-- Search Box -->
+<div class="card mb-4">
+    <form method="POST" action="/search">
+        <div style="display: flex; gap: 16px; align-items: end;">
+            <div class="form-group" style="flex: 1;">
+                <label class="form-label">Search Everything</label>
+                <input type="text" name="query" class="form-input" placeholder="Search jobs, contacts, bookmarks, expenses..." value="{{ query }}" required style="font-size: 18px; padding: 16px;">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Search Results -->
+{% if results %}
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+    <!-- Jobs -->
+    {% if results.jobs %}
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title"><i class="fas fa-briefcase"></i> Jobs ({{ results.jobs|length }})</div>
+        </div>
+        {% for item in results.jobs %}
+        <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 12px;">
+            <div style="font-weight: 600;">{{ item.title }}</div>
+            <span class="badge {% if item.status == 'offer' %}badge-green{% elif item.status == 'interview' %}badge-blue{% else %}badge-gray{% endif %}">{{ item.status }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Contacts -->
+    {% if results.contacts %}
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title"><i class="fas fa-users"></i> Contacts ({{ results.contacts|length }})</div>
+        </div>
+        {% for item in results.contacts %}
+        <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 12px;">
+            <div style="font-weight: 600;">{{ item.title }}</div>
+            <div class="text-muted" style="font-size: 13px;">{{ item.subtitle }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Bookmarks -->
+    {% if results.bookmarks %}
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title"><i class="fas fa-bookmark"></i> Bookmarks ({{ results.bookmarks|length }})</div>
+        </div>
+        {% for item in results.bookmarks %}
+        <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 12px;">
+            <div style="font-weight: 600; margin-bottom: 4px;">{{ item.title }}</div>
+            <span class="badge badge-blue">{{ item.category }}</span>
+            <a href="{{ item.url }}" target="_blank" class="btn btn-ghost btn-sm" style="margin-left: 8px;">
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Expenses -->
+    {% if results.expenses %}
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title"><i class="fas fa-receipt"></i> Expenses ({{ results.expenses|length }})</div>
+        </div>
+        {% for item in results.expenses %}
+        <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="font-weight: 600;">{{ item.title }}</div>
+                <div class="text-muted" style="font-size: 13px;">{{ item.date }}</div>
+            </div>
+            <div style="font-weight: 700; color: var(--brand);">${{ "%.2f"|format(item.amount) }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- CVs -->
+    {% if results.cvs %}
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title"><i class="fas fa-file-alt"></i> CVs ({{ results.cvs|length }})</div>
+        </div>
+        {% for item in results.cvs %}
+        <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 12px;">
+            <div style="font-weight: 600;">{{ item.title }}</div>
+            <div style="margin-top: 8px;">
+                <span class="badge {% if item.ats_score >= 90 %}badge-green{% elif item.ats_score >= 75 %}badge-blue{% else %}badge-yellow{% endif %}">
+                    ATS: {{ item.ats_score }}/100
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if query and not results.jobs and not results.contacts and not results.bookmarks and not results.expenses and not results.cvs %}
+<div class="card">
+    <div class="text-muted" style="text-align: center; padding: 60px 20px;">
+        <i class="fas fa-search" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+        <p>No results found for "{{ query }}"</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

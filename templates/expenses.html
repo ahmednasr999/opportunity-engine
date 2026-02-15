@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Expenses{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div style="margin-bottom: 32px;">
+    <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 8px;">Expenses</h1>
+    <p class="text-secondary">Track job search and personal expenses</p>
+</div>
+
+<!-- Stats -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Total Spent</div>
+        <div style="font-size: 28px; font-weight: 700;">${{ "%.2f"|format(summary.total_spent) }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Job Related</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--brand);">${{ "%.2f"|format(summary.job_related) }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">This Month</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--warning);">${{ "%.2f"|format(summary.this_month) }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Transactions</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--success);">{{ summary.expense_count }}</div>
+    </div>
+</div>
+
+<!-- Add Expense -->
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-plus-circle"></i> Add Expense</div>
+    </div>
+    <form method="POST" action="/expenses/add">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+            <div class="form-group">
+                <label class="form-label">Amount ($)</label>
+                <input type="number" name="amount" step="0.01" class="form-input" placeholder="0.00" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-select">
+                    <option value="Travel">Travel</option>
+                    <option value="Software">Software</option>
+                    <option value="Course">Course</option>
+                    <option value="Networking">Networking</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="date" name="date" class="form-input" required>
+            </div>
+            <div class="form-group" style="display: flex; align-items: end;">
+                <label class="form-label" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" name="is_job_related" value="true" style="width: 20px; height: 20px; accent-color: var(--brand);">
+                    <span>Job Related</span>
+                </label>
+            </div>
+        </div>
+        <div class="form-group mt-3">
+            <label class="form-label">Description</label>
+            <input type="text" name="description" class="form-input" placeholder="e.g., LinkedIn Premium subscription" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-md">
+            <i class="fas fa-plus"></i> Add Expense
+        </button>
+    </form>
+</div>
+
+<!-- Recent Expenses -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Recent Expenses</div>
+    </div>
+    
+    {% if expenses %}
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            {% for exp in expenses[:10] %}
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">{{ exp.description }}</div>
+                    <div class="text-muted" style="font-size: 13px;">
+                        <span class="badge badge-blue">{{ exp.category }}</span>
+                        {% if exp.is_job_related %}
+                            <span class="badge badge-green" style="margin-left: 8px;">Job Related</span>
+                        {% endif %}
+                        <span style="margin-left: 8px;">{{ exp.date }}</span>
+                    </div>
+                </div>
+                <div style="font-size: 20px; font-weight: 700; color: {% if exp.is_job_related %}var(--brand){% else %}var(--text-secondary){% endif %};">
+                    ${{ "%.2f"|format(exp.amount) }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-muted" style="text-align: center; padding: 60px 20px;">
+            <i class="fas fa-receipt" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+            <p>No expenses yet</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

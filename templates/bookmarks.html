@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Bookmarks{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div style="margin-bottom: 32px;">
+    <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 8px;">Bookmarks</h1>
+    <p class="text-secondary">Save jobs, articles, and resources</p>
+</div>
+
+<!-- Stats -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Total Bookmarks</div>
+        <div style="font-size: 32px; font-weight: 700;">{{ stats.total }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Jobs Saved</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--brand);">{{ stats.by_category.job }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Articles</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--success);">{{ stats.by_category.article }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">This Week</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--warning);">{{ stats.recent }}</div>
+    </div>
+</div>
+
+<!-- Add Bookmark -->
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-plus-circle"></i> Add Bookmark</div>
+    </div>
+    <form method="POST" action="/bookmarks/add">
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+                <label class="form-label">Title</label>
+                <input type="text" name="title" class="form-input" placeholder="Bookmark title" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-select">
+                    <option value="job">Job</option>
+                    <option value="article">Article</option>
+                    <option value="contact">Contact</option>
+                    <option value="company">Company</option>
+                    <option value="resource">Resource</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Tags (comma separated)</label>
+                <input type="text" name="tags" class="form-input" placeholder="e.g., healthtech, ai">
+            </div>
+        </div>
+        <div class="form-group mt-3">
+            <label class="form-label">URL</label>
+            <input type="url" name="url" class="form-input" placeholder="https://..." required>
+        </div>
+        <div class="form-group mt-3">
+            <label class="form-label">Notes</label>
+            <textarea name="notes" class="form-textarea" placeholder="Why this is important..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-md">
+            <i class="fas fa-bookmark"></i> Save Bookmark
+        </button>
+    </form>
+</div>
+
+<!-- Bookmarks Grid -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Your Bookmarks</div>
+    </div>
+    
+    {% if bookmarks %}
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+            {% for bm in bookmarks %}
+            <div style="padding: 20px; background: var(--bg-elevated); border-radius: 8px; border-left: 4px solid var(--brand);">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                    <strong style="font-size: 16px;">{{ bm.title }}</strong>
+                    <a href="{{ bm.url }}" target="_blank" class="btn btn-ghost btn-sm">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <div class="text-muted" style="font-size: 13px; margin-bottom: 8px; word-break: break-all;">{{ bm.url[:60] }}{% if bm.url|length > 60 %}...{% endif %}</div>
+                <div style="margin-bottom: 8px;">
+                    <span class="badge badge-blue">{{ bm.category }}</span>
+                </div>
+                {% if bm.tags %}
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    {% for tag in bm.tags %}
+                        <span style="padding: 2px 8px; background: var(--bg-primary); border-radius: 4px; font-size: 11px; color: var(--text-secondary);">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-muted" style="text-align: center; padding: 60px 20px;">
+            <i class="fas fa-bookmark" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+            <p>No bookmarks yet</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
