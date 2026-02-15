@@ -171,11 +171,33 @@
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
             padding: 24px;
+            transition: all 200ms ease;
         }
         
         .card-hover:hover {
             border-color: var(--border-default);
             background: var(--bg-hover);
+            transform: scale(1.02);
+        }
+        
+        /* Status Card Variants */
+        .card-status-ideas {
+            border: 2px solid var(--status-ideas);
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.15);
+        }
+        
+        .card-status-building {
+            border: 2px solid var(--status-building);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
+        }
+        
+        .card-status-live {
+            border: 2px solid var(--status-live);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+        }
+        
+        .card-status-archived {
+            border: 2px solid var(--status-archived);
         }
         
         .card-header {
