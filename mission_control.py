@@ -1195,12 +1195,12 @@ def get_relationship_timeline(contact):
     result = relationship_timeline.get_timeline(contact)
     return jsonify({"status": "success", "timeline": result})
 
-@app.route("/api/network/meeting-notes", methods=["GET"])
-def get_meeting_notes():
+@app.route("/api/network/meeting-notes/all", methods=["GET"])
+def get_all_meeting_notes():
     return jsonify({"status": "success", "notes": meeting_notes.get_all()})
 
-@app.route("/api/network/meeting-notes", methods=["POST"])
-def add_meeting_note():
+@app.route("/api/network/meeting-notes/add", methods=["POST"])
+def create_meeting_note():
     result = meeting_notes.add(request.json or {})
     return jsonify({"status": "success", "note": result})
 
@@ -1208,12 +1208,12 @@ def add_meeting_note():
 def get_followup_streaks():
     return jsonify({"status": "success", "streaks": followup_streak.calculate()})
 
-@app.route("/api/network/groups", methods=["GET"])
-def get_contact_groups():
+@app.route("/api/network/groups/all", methods=["GET"])
+def get_network_groups():
     return jsonify({"status": "success", "groups": contact_groups.get_all()})
 
-@app.route("/api/network/groups", methods=["POST"])
-def create_contact_group():
+@app.route("/api/network/groups/add", methods=["POST"])
+def add_network_group():
     data = request.json or {}
     result = contact_groups.create(data.get("name", ""), data.get("color", "#4299e1"))
     return jsonify({"status": "success", "group": result})
@@ -1257,8 +1257,8 @@ def add_voice_memo():
     result = voice_memos.add(data.get("contact", ""), data.get("transcript", ""), data.get("duration", 60))
     return jsonify({"status": "success", "memo": result})
 
-@app.route("/api/network/cold-email-templates", methods=["GET"])
-def get_cold_email_templates():
+@app.route("/api/network/cold-email-templates/all", methods=["GET"])
+def get_network_email_templates():
     return jsonify({"status": "success", "templates": cold_email_templates.get_templates()})
 
 # ============================================================
@@ -1317,8 +1317,8 @@ def get_hashtag_recommendations():
 def get_content_recycling():
     return jsonify({"status": "success", "suggestions": content_recycling.suggest()})
 
-@app.route("/api/content/hooks", methods=["POST"])
-def generate_hooks():
+@app.route("/api/content/hooks/generate", methods=["POST"])
+def create_hooks():
     data = request.json or {}
     result = hook_generator.generate(data.get("topic", ""), data.get("count", 5))
     return jsonify({"status": "success", "hooks": result})
@@ -1374,8 +1374,8 @@ def get_salary_trends():
 def get_time_to_offer():
     return jsonify({"status": "success", "analytics": time_to_offer.analyze()})
 
-@app.route("/api/analytics/weekly-report", methods=["GET"])
-def get_weekly_report():
+@app.route("/api/analytics/weekly-report/current", methods=["GET"])
+def get_current_weekly_report():
     return jsonify({"status": "success", "report": weekly_report.generate()})
 
 @app.route("/api/analytics/goals", methods=["GET"])
