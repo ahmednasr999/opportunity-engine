@@ -374,12 +374,18 @@ def import_linkedin():
     return redirect(url_for("cv_optimizer"))
 
 # ===== PDF DOWNLOAD ROUTE =====
-@app.route("/cv-optimizer/download-pdf/<path:filename>")
-def download_pdf(filename):
-    """Download generated PDF CV"""
-    from flask import send_from_directory
+@app.route("/cv-optimizer/view-cv/<path:filename>")
+def view_cv(filename):
+    """View generated CV HTML in browser (user can print to PDF)"""
     output_dir = Path("/root/.openclaw/workspace/tools/cv-optimizer/output")
-    return send_from_directory(output_dir, filename)
+    file_path = output_dir / filename
+    
+    if file_path.exists():
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        return content
+    else:
+        return "File not found", 404
 
 if __name__ == "__main__":
     print("🚀 Starting Mission Control...")

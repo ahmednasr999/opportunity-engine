@@ -68,8 +68,8 @@
             </div>
             <div style="display: flex; flex-direction: column; gap: 12px;">
                 {% if result.pdf_filename %}
-                <a href="/cv-optimizer/download-pdf/{{ result.pdf_filename }}" target="_blank" class="btn btn-success btn-lg" style="text-align: center;">
-                    <i class="fas fa-file-pdf"></i> Download PDF (Print-Ready)
+                <a href="/cv-optimizer/view-cv/{{ result.pdf_filename }}" target="_blank" class="btn btn-success btn-lg" style="text-align: center;">
+                    <i class="fas fa-file-pdf"></i> View Print-Ready CV
                 </a>
                 {% endif %}
                 <button onclick="copyCV()" class="btn btn-secondary btn-lg">
