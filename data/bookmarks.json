@@ -13,5 +13,98 @@
     ],
     "date_added": "2026-02-15",
     "created_at": "2026-02-15T05:19:29.024311"
+  },
+  {
+    "id": "bm-2",
+    "title": "ClawHub - OpenClaw Skill Marketplace",
+    "url": "https://clawhub.ai",
+    "category": "resource",
+    "notes": "Official skill marketplace. 48+ pre-built skills. Browse: github, notion, weather, himalaya. Can also publish Opportunity Engine as skill.",
+    "tags": [
+      "clawhub",
+      "skills",
+      "marketplace",
+      "tools"
+    ],
+    "date_added": "2026-02-15",
+    "created_at": "2026-02-15T05:31:38.861002"
+  },
+  {
+    "id": "bm-3",
+    "title": "Installed Skill: github - GitHub CLI",
+    "url": "https://clawhub.ai/s/github",
+    "category": "other",
+    "notes": "Manage GitHub repos, issues, PRs. Requires: gh auth login",
+    "tags": [
+      "skill",
+      "github",
+      "cli",
+      "installed"
+    ],
+    "date_added": "2026-02-15",
+    "created_at": "2026-02-15T05:34:18.492958"
+  },
+  {
+    "id": "bm-4",
+    "title": "Installed Skill: notion - Notion CLI",
+    "url": "https://clawhub.ai/s/notion",
+    "category": "other",
+    "notes": "Create/manage Notion pages and databases. Requires: NOTION_TOKEN",
+    "tags": [
+      "skill",
+      "notion",
+      "cli",
+      "installed"
+    ],
+    "date_added": "2026-02-15",
+    "created_at": "2026-02-15T05:34:18.493229"
+  },
+  {
+    "id": "bm-5",
+    "title": "Installed Skill: himalaya - Email CLI",
+    "url": "https://clawhub.ai/s/himalaya",
+    "category": "other",
+    "notes": "Email management via IMAP/SMTP. Requires: Email credentials",
+    "tags": [
+      "skill",
+      "himalaya",
+      "email",
+      "cli",
+      "installed"
+    ],
+    "date_added": "2026-02-15",
+    "created_at": "2026-02-15T05:34:18.493756"
+  },
+  {
+    "id": "bm-6",
+    "title": "WebClaw - Next.js AI Starter Template",
+    "url": "https://github.com/ibelick/webclaw",
+    "category": "resource",
+    "notes": "Next.js 14 + TypeScript + Tailwind + shadcn/ui starter for AI apps. Reference for potential Opportunity Engine rebuild in React.",
+    "tags": [
+      "webclaw",
+      "nextjs",
+      "template",
+      "react",
+      "reference"
+    ],
+    "date_added": "2026-02-15",
+    "created_at": "2026-02-15T05:39:40.464140"
+  },
+  {
+    "id": "bm-7",
+    "title": "CRITICAL: OpenClaw Update Recovery Guide",
+    "url": "file:///root/.openclaw/workspace/UPDATE_RECOVERY_GUIDE.md",
+    "category": "other",
+    "notes": "EMERGENCY: Step-by-step recovery if OpenClaw update breaks. Pre-update checklist, recovery scenarios, nuclear rollback option.",
+    "tags": [
+      "emergency",
+      "recovery",
+      "update",
+      "critical",
+      "reference"
+    ],
+    "date_added": "2026-02-15",
+    "created_at": "2026-02-15T05:46:04.931420"
   }
 ]
