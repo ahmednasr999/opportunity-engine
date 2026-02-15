@@ -39,6 +39,7 @@ from chat_brain import ChatBrain
 from data_coordinator import coordinator
 from product_manager import product_manager
 from pdf_exporter import pdf_exporter
+from job_finder import job_finder
 
 # Phase 4-9 imports
 from phase4_cv_enhancements import (CVVersionHistory, ReadingTimeEstimator, CVHealthTimeline,
@@ -179,6 +180,12 @@ def dashboard():
                           pipeline=pipeline,
                           follow_ups=follow_ups,
                           brain_stats=brain_stats)
+
+@app.route("/job-finder")
+def job_finder_page():
+    """Job Auto-Find page"""
+    stats = job_finder.get_stats()
+    return render_template("job_finder.html", stats=stats)
 
 @app.route("/cv-optimizer", methods=["GET", "POST"])
 def cv_optimizer():
@@ -1534,6 +1541,107 @@ def export_cover_letter_pdf():
         return send_file(output_path, as_attachment=True, download_name=f"{data.get('name', 'Cover').replace(' ', '_')}_Cover_Letter.pdf")
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+# Job Finder Routes
+@app.route("/api/jobs/search", methods=["POST"])
+def search_jobs():
+    """Search for jobs on LinkedIn and Indeed"""
+    data = request.json or {}
+    role = data.get('role', 'VP Healthcare AI')
+    source = data.get('source', 'all')  # linkedin, indeed, all
+    
+    results = []
+    
+    if source in ['linkedin', 'all']:
+        results.extend(job_finder.search_linkedin(role))
+    if source in ['indeed', 'all']:
+        results.extend(job_finder.search_indeed(role))
+    
+    return jsonify({
+        "status": "success",
+        "jobs_found": len(results),
+        "jobs": [j.to_dict() for j in results]
+    })
+
+@app.route("/api/jobs/filter", methods=["POST"])
+def filter_jobs():
+    """Filter jobs by criteria"""
+    data = request.json or {}
+    min_salary = data.get('min_salary', 150000)
+    sectors = data.get('sectors', ['healthcare', 'healthtech', 'digital health'])
+    remote_ok = data.get('remote_ok', True)
+    
+    filtered = job_finder.filter_jobs(min_salary, sectors, remote_ok)
+    
+    return jsonify({
+        "status": "success",
+        "filtered_count": len(filtered),
+        "jobs": [j.to_dict() for j in filtered]
+    })
+
+@app.route("/api/jobs/match", methods=["POST"])
+def match_jobs_to_cv():
+    """Match jobs to CV and score them"""
+    data = request.json or {}
+    cv_data = data.get('cv_data', {})
+    
+    matched = job_finder.match_jobs_to_cvs(cv_data)
+    
+    return jsonify({
+        "status": "success",
+        "matched_count": len(matched),
+        "jobs": [j.to_dict() for j in matched[:10]]
+    })
+
+@app.route("/api/jobs/<job_id>", methods=["GET"])
+def get_job(job_id):
+    """Get a specific job by ID"""
+    for job in job_finder.found_jobs:
+        if job.id == job_id:
+            return jsonify({"status": "success", "job": job.to_dict()})
+    return jsonify({"status": "error", "message": "Job not found"}), 404
+
+@app.route("/api/jobs/stats", methods=["GET"])
+def get_jobs_stats():
+    """Get job finder statistics"""
+    stats = job_finder.get_stats()
+    return jsonify({"status": "success", "stats": stats})
+
+@app.route("/api/jobs/apply", methods=["POST"])
+def apply_to_job():
+    """Generate application for a job"""
+    data = request.json or {}
+    job_id = data.get('job_id')
+    cv_data = data.get('cv_data', {})
+    cover_letter = data.get('cover_letter', '')
+    
+    # Find job
+    job = None
+    for j in job_finder.found_jobs:
+        if j.id == job_id:
+            job = j
+            break
+    
+    if not job:
+        return jsonify({"status": "error", "message": "Job not found"}), 404
+    
+    # Generate application
+    application = job_finder.generate_application(job, cv_data, cover_letter)
+    
+    return jsonify({
+        "status": "success",
+        "application": application
+    })
+
+@app.route("/api/jobs/applications", methods=["GET"])
+def get_applications():
+    """Get all generated applications"""
+    return jsonify({
+        "status": "success",
+        "applications": job_finder.applications,
+        "total": len(job_finder.applications)
+    })
 
 
 if __name__ == "__main__":
