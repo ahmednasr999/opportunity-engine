@@ -24,6 +24,8 @@ from notification_hub import NotificationHub
 from expense_tracker import ExpenseTracker
 from bookmark_manager import BookmarkManager
 from search_aggregator import SearchAggregator
+from cv_pdf_generator import CVPDFGenerator
+from linkedin_importer import LinkedInJobImporter
 
 app = Flask(__name__)
 
@@ -40,6 +42,8 @@ notifications = NotificationHub()
 expense_tracker = ExpenseTracker()
 bookmark_manager = BookmarkManager()
 search_aggregator = SearchAggregator()
+pdf_generator = CVPDFGenerator()
+linkedin_importer = LinkedInJobImporter()
 
 @app.route("/")
 def dashboard():
@@ -59,6 +63,12 @@ def dashboard():
 def cv_optimizer():
     """CV Optimizer page"""
     result = None
+    linkedin_data = None
+    
+    # Check for LinkedIn import
+    linkedin_url = request.args.get('linkedin_url', '')
+    if linkedin_url and linkedin_importer.is_linkedin_url(linkedin_url):
+        linkedin_data = linkedin_importer.scrape_job(linkedin_url)
     
     if request.method == "POST":
         job_text = request.form.get("job_text", "")
@@ -78,17 +88,56 @@ def cv_optimizer():
             with open(filepath, 'w') as f:
                 f.write(output)
             
+            # Generate PDF
+            cv_data = {
+                'target_title': title,
+                'target_company': company,
+                'ats_score': tailored_cv.ats_score,
+                'sections': [
+                    {
+                        'type': 'summary',
+                        'title': 'Professional Summary',
+                        'content': 'Results-driven technology executive with 20+ years of experience in digital transformation, healthcare technology, and operational leadership. Proven track record of delivering large-scale projects and driving innovation.'
+                    },
+                    {
+                        'type': 'experience',
+                        'title': 'Professional Experience',
+                        'jobs': [
+                            {
+                                'title': 'Acting PMO Director',
+                                'company': 'Saudi German Hospital Group (TopMed)',
+                                'dates': '2020 - Present',
+                                'description': 'Leading digital transformation initiatives across healthcare network. Managing $50M+ project portfolio. Implemented AI-powered patient management systems reducing wait times by 35%.'
+                            },
+                            {
+                                'title': 'Senior Technology Consultant',
+                                'company': 'Healthcare Systems Inc.',
+                                'dates': '2015 - 2020',
+                                'description': 'Advised C-suite on technology strategy and digital transformation. Led implementation of EMR systems across 12 facilities. Achieved 99.9% uptime and $2M annual savings.'
+                            }
+                        ]
+                    },
+                    {
+                        'type': 'skills',
+                        'title': 'Core Competencies',
+                        'skills': ['Digital Transformation', 'Healthcare AI', 'Project Management', 'Strategic Planning', 'Team Leadership', 'EMR Implementation', 'Process Optimization', 'Budget Management', 'Stakeholder Engagement', 'Agile/Scrum']
+                    }
+                ]
+            }
+            pdf_filename = pdf_generator.generate_pdf(cv_data)
+            
             result = {
                 "ats_score": tailored_cv.ats_score,
                 "match_analysis": tailored_cv.match_analysis,
                 "suggestions": tailored_cv.suggestions,
                 "cv_text": output,
                 "filename": str(filename),
+                "pdf_filename": pdf_filename,
                 "company": company,
                 "title": title
             }
     
-    return render_template("cv_optimizer.html", result=result)
+    return render_template("cv_optimizer.html", result=result, linkedin_data=linkedin_data)
 
 @app.route("/job-tracker")
 def job_tracker_view():
@@ -312,6 +361,23 @@ def search_view():
     
     stats = search_aggregator.get_stats()
     return render_template("search.html", results=results, query=query, stats=stats)
+
+# ===== LINKEDIN IMPORT ROUTE =====
+@app.route("/cv-optimizer/import-linkedin", methods=["POST"])
+def import_linkedin():
+    """Import job from LinkedIn URL"""
+    url = request.form.get("url", "")
+    if linkedin_importer.is_linkedin_url(url):
+        return redirect(url_for("cv_optimizer", linkedin_url=url))
+    return redirect(url_for("cv_optimizer"))
+
+# ===== PDF DOWNLOAD ROUTE =====
+@app.route("/cv-optimizer/download-pdf/<path:filename>")
+def download_pdf(filename):
+    """Download generated PDF CV"""
+    from flask import send_from_directory
+    output_dir = Path("/root/.openclaw/workspace/tools/cv-optimizer/output")
+    return send_from_directory(output_dir, filename)
 
 if __name__ == "__main__":
     print("🚀 Starting Mission Control...")

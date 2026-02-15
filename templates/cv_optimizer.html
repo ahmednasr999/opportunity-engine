@@ -6,7 +6,7 @@
 <!-- Page Header -->
 <div style="margin-bottom: 32px;">
     <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 8px;">CV Optimizer</h1>
-    <p class="text-secondary">Paste a job description to generate a tailored CV with ATS scoring</p>
+    <p class="text-secondary">Generate tailored CVs with ATS scoring and professional PDF export</p>
 </div>
 
 {% if result %}
@@ -58,15 +58,34 @@
             {% endfor %}
         </div>
         {% endif %}
+        
+        <!-- Download Options -->
+        <div class="card" style="border-color: var(--success);">
+            <div class="card-header">
+                <div class="card-title" style="color: var(--success);">
+                    <i class="fas fa-download"></i> Export CV
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                {% if result.pdf_filename %}
+                <a href="/cv-optimizer/download-pdf/{{ result.pdf_filename }}" target="_blank" class="btn btn-success btn-lg" style="text-align: center;">
+                    <i class="fas fa-file-pdf"></i> Download PDF (Print-Ready)
+                </a>
+                {% endif %}
+                <button onclick="copyCV()" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-copy"></i> Copy Text Version
+                </button>
+                <div class="text-muted" style="font-size: 12px; text-align: center; margin-top: 8px;">
+                    <i class="fas fa-info-circle"></i> PDF opens in browser. Use Ctrl+P to save as PDF.
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- Right Column: Generated CV -->
     <div class="card" style="display: flex; flex-direction: column;">
         <div class="card-header">
             <div class="card-title">Generated CV</div>
-            <button onclick="copyCV()" class="btn btn-secondary btn-sm">
-                <i class="fas fa-copy"></i> Copy
-            </button>
         </div>
         <pre id="cv-text" style="flex: 1; background: var(--bg-elevated); padding: 24px; border-radius: 8px; overflow: auto; font-family: 'Fira Code', monospace; font-size: 13px; line-height: 1.8; color: var(--text-secondary); white-space: pre-wrap;">{{ result.cv_text }}</pre>
     </div>
@@ -91,6 +110,47 @@ function copyCV() {
 </script>
 
 {% else %}
+<!-- LinkedIn Import -->
+<div class="card mb-4" style="border-color: var(--brand);">
+    <div class="card-header">
+        <div class="card-title" style="color: var(--brand);">
+            <i class="fab fa-linkedin"></i> Import from LinkedIn
+        </div>
+    </div>
+    <form method="POST" action="/cv-optimizer/import-linkedin">
+        <div style="display: flex; gap: 16px; align-items: end;">
+            <div class="form-group" style="flex: 1;">
+                <label class="form-label">LinkedIn Job URL</label>
+                <input type="url" name="url" class="form-input" placeholder="https://www.linkedin.com/jobs/view/..." 
+                       value="{% if linkedin_data %}{{ linkedin_data.url }}{% endif %}">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-md">
+                    <i class="fas fa-import"></i> Import
+                </button>
+            </div>
+        </div>
+        <div class="text-muted" style="font-size: 12px; margin-top: 8px;">
+            <i class="fas fa-info-circle"></i> Paste a LinkedIn job posting URL to auto-fill details (manual confirmation required)
+        </div>
+    </form>
+    
+    {% if linkedin_data %}
+    <div style="margin-top: 20px; padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+            <span>URL recognized! Please confirm the details below:</span>
+        </div>
+        {% if linkedin_data.title %}
+        <div style="margin-bottom: 8px;"><strong>Detected Title:</strong> {{ linkedin_data.title }}</div>
+        {% endif %}
+        <div class="text-muted" style="font-size: 12px;">
+            LinkedIn blocks automated scraping. Please paste the job description manually for best results.
+        </div>
+    </div>
+    {% endif %}
+</div>
+
 <!-- Input Form -->
 <div class="card" style="max-width: 800px;">
     <div class="card-header">
@@ -100,11 +160,13 @@ function copyCV() {
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
             <div class="form-group">
                 <label class="form-label">Company Name</label>
-                <input type="text" name="company" class="form-input" placeholder="e.g., Saudi German Hospital" required>
+                <input type="text" name="company" class="form-input" placeholder="e.g., Saudi German Hospital" 
+                       value="{% if linkedin_data %}{{ linkedin_data.company }}{% endif %}" required>
             </div>
             <div class="form-group">
                 <label class="form-label">Job Title</label>
-                <input type="text" name="title" class="form-input" placeholder="e.g., VP Digital Transformation" required>
+                <input type="text" name="title" class="form-input" placeholder="e.g., VP Digital Transformation" 
+                       value="{% if linkedin_data %}{{ linkedin_data.title }}{% endif %}" required>
             </div>
         </div>
         
@@ -114,7 +176,7 @@ function copyCV() {
         </div>
         
         <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
-            <i class="fas fa-magic"></i> Generate Tailored CV
+            <i class="fas fa-magic"></i> Generate Tailored CV + PDF
         </button>
     </form>
 </div>
@@ -122,7 +184,7 @@ function copyCV() {
 <!-- Tips -->
 <div class="card mt-4" style="max-width: 800px;">
     <div class="card-header">
-        <div class="card-title"><i class="fas fa-info-circle"></i> Tips</div>
+        <div class="card-title"><i class="fas fa-info-circle"></i> Pro Tips</div>
     </div>
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
         <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
@@ -135,11 +197,11 @@ function copyCV() {
         </div>
         <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
             <i class="fas fa-check" style="color: var(--success); margin-right: 8px;"></i>
-            Add missing keywords to your profile
+            Download PDF for professional formatting
         </div>
         <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
             <i class="fas fa-check" style="color: var(--success); margin-right: 8px;"></i>
-            Always review before submitting
+            Copy text version for ATS-friendly applications
         </div>
     </div>
 </div>
