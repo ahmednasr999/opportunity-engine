@@ -44,12 +44,7 @@
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Unique Terms</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--success);">{{ stats.unique_terms }}</div>
     </div>
-    <div class="card" style="padding: 20px; cursor: pointer;" onclick="document.getElementById('show-all-cvs').click()">
-        <form method="POST" action="/second-brain" style="display: none;">
-            <input type="hidden" name="query" value="CV">
-            <input type="hidden" name="doc_type" value="cv">
-            <button type="submit" id="show-all-cvs"></button>
-        </form>
+    <div class="card" style="padding: 20px; cursor: pointer;" onclick="showAllCVs()">
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">CVs (Click to view all)</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--warning);">{{ stats.by_type.get('cv', 0) }}</div>
     </div>
@@ -114,21 +109,28 @@
     </div>
     <div style="display: flex; gap: 12px; flex-wrap: wrap;">
         <form method="POST" action="/second-brain" style="display: inline;">
-            <input type="hidden" name="query" value="AI healthcare">
-            <button type="submit" class="btn btn-secondary btn-sm">AI healthcare</button>
-        </form>
-        <form method="POST" action="/second-brain" style="display: inline;">
-            <input type="hidden" name="query" value="project management">
-            <button type="submit" class="btn btn-secondary btn-sm">Project management</button>
+            <input type="hidden" name="query" value="Ahmed Nasr healthcare">
+            <button type="submit" class="btn btn-secondary btn-sm">My CVs</button>
         </form>
         <form method="POST" action="/second-brain" style="display: inline;">
             <input type="hidden" name="query" value="digital transformation">
             <button type="submit" class="btn btn-secondary btn-sm">Digital transformation</button>
         </form>
         <form method="POST" action="/second-brain" style="display: inline;">
-            <input type="hidden" name="query" value="HealthTech">
-            <button type="submit" class="btn btn-secondary btn-sm">HealthTech</button>
+            <input type="hidden" name="query" value="healthcare AI">
+            <button type="submit" class="btn btn-secondary btn-sm">Healthcare AI</button>
+        </form>
+        <form method="POST" action="/second-brain" style="display: inline;">
+            <input type="hidden" name="query" value="HCA Tempus Teladoc">
+            <button type="submit" class="btn btn-secondary btn-sm">Job Applications</button>
         </form>
     </div>
 </div>
+
+<script>
+function showAllCVs() {
+    // Submit the My CVs form
+    document.querySelector('form input[value="Ahmed Nasr healthcare"]').parentElement.submit();
+}
+</script>
 {% endblock %}
