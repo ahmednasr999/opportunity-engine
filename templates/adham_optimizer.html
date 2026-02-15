@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADHAM ATS Optimizer - Opportunity Engine</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <style>
+        .optimizer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        .optimizer-header {
+            margin-bottom: 32px;
+        }
+        
+        .optimizer-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .optimizer-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .input-panel {
+            background: var(--bg-surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .input-field {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .input-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .input-field input,
+        .input-field textarea,
+        .input-field select {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .input-field textarea {
+            min-height: 200px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+        
+        .results-panel {
+            display: none;
+            background: var(--bg-surface);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .results-panel.visible {
+            display: block;
+        }
+        
+        .score-display {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .score-card {
+            flex: 1;
+            min-width: 150px;
+            background: var(--bg-surface);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .score-value {
+            font-size: 36px;
+            font-weight: 700;
+        }
+        
+        .score-value.original {
+            color: var(--text-secondary);
+        }
+        
+        .score-value.optimized {
+            color: #22c55e;
+        }
+        
+        .score-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        
+        .score-improvement {
+            font-size: 14px;
+            color: #22c55e;
+            font-weight: 600;
+        }
+        
+        .gaps-section {
+            margin-bottom: 24px;
+        }
+        
+        .gaps-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .gaps-title.critical {
+            color: #ef4444;
+        }
+        
+        .gaps-title.high {
+            color: #f97316;
+        }
+        
+        .gaps-title.medium {
+            color: #eab308;
+        }
+        
+        .gap-item {
+            background: var(--bg-surface);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--border-subtle);
+        }
+        
+        .gap-item.critical {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        .gap-item.high {
+            border-left-color: #f97316;
+            background: rgba(249, 115, 22, 0.1);
+        }
+        
+        .gap-item.medium {
+            border-left-color: #eab308;
+            background: rgba(234, 179, 8, 0.1);
+        }
+        
+        .gap-keyword {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .gap-frequency {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-left: 8px;
+        }
+        
+        .gap-strategy {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        .improvements-list {
+            margin-bottom: 24px;
+        }
+        
+        .improvement-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            color: #22c55e;
+        }
+        
+        .download-section {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .loading {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+        }
+        
+        .loading.visible {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-subtle);
+            border-top-color: var(--brand);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 16px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .preview-section {
+            margin-top: 24px;
+            background: var(--bg-surface);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .preview-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        
+        .preview-content {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    {% extends "base.html" %}
+    
+    {% block content %}
+    <div class="optimizer-container">
+        <div class="optimizer-header">
+            <h1 class="optimizer-title">🎯 ADHAM ATS Optimizer</h1>
+            <p class="optimizer-subtitle">Automated CV & cover letter optimization for any job posting</p>
+        </div>
+        
+        <!-- Input Panel -->
+        <div class="input-panel">
+            <div class="input-row">
+                <div class="input-field">
+                    <label>Job Title</label>
+                    <input type="text" id="job-title" placeholder="e.g., CTO Smart Metering Programme">
+                </div>
+                <div class="input-field">
+                    <label>Company</label>
+                    <input type="text" id="company" placeholder="e.g., Talan">
+                </div>
+            </div>
+            
+            <div class="input-field">
+                <label>Job Posting (Paste full job description)</label>
+                <textarea id="job-posting" placeholder="Paste the complete job posting here including requirements, responsibilities, and qualifications..."></textarea>
+            </div>
+            
+            <div class="input-row" style="margin-top: 16px;">
+                <button onclick="analyzeJob()" class="btn btn-secondary">
+                    <i class="fas fa-search"></i> Analyze Only
+                </button>
+                <button onclick="optimizeJob()" class="btn btn-primary">
+                    <i class="fas fa-magic"></i> Analyze & Optimize
+                </button>
+                <button onclick="clearForm()" class="btn btn-secondary">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+            </div>
+        </div>
+        
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <span style="color: var(--text-secondary);">Analyzing and optimizing...</span>
+        </div>
+        
+        <!-- Results Panel -->
+        <div class="results-panel" id="results">
+            <!-- Score Display -->
+            <div class="score-display">
+                <div class="score-card">
+                    <div class="score-value original" id="original-score">0</div>
+                    <div class="score-label">Original Score</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-value optimized" id="optimized-score">0</div>
+                    <div class="score-label">Optimized Score</div>
+                    <div class="score-improvement" id="score-improvement">+0 points</div>
+                </div>
+            </div>
+            
+            <!-- Improvements -->
+            <div class="improvements-list" id="improvements"></div>
+            
+            <!-- Critical Gaps -->
+            <div class="gaps-section" id="critical-gaps-section" style="display: none;">
+                <div class="gaps-title critical">🚨 Critical Gaps (Auto-Rejection Risk)</div>
+                <div id="critical-gaps"></div>
+            </div>
+            
+            <!-- High Priority Gaps -->
+            <div class="gaps-section" id="high-priority-section" style="display: none;">
+                <div class="gaps-title high">⚠️ High Priority Gaps (10-15 points)</div>
+                <div id="high-priority-gaps"></div>
+            </div>
+            
+            <!-- Medium Priority Gaps -->
+            <div class="gaps-section" id="medium-priority-section" style="display: none;">
+                <div class="gaps-title medium">📋 Medium Priority Gaps (5-10 points)</div>
+                <div id="medium-priority-gaps"></div>
+            </div>
+            
+            <!-- Download Section -->
+            <div class="download-section" id="download-section" style="display: none;">
+                <a id="cv-download" class="btn btn-success" download>
+                    <i class="fas fa-file-pdf"></i> Download Optimized CV
+                </a>
+                <a id="cl-download" class="btn btn-success" download>
+                    <i class="fas fa-file-alt"></i> Download Cover Letter
+                </a>
+            </div>
+            
+            <!-- Preview -->
+            <div class="preview-section" id="preview-section" style="display: none;">
+                <div class="preview-title">Cover Letter Preview</div>
+                <div class="preview-content" id="cover-letter-preview"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function analyzeJob() {
+            const jobPosting = document.getElementById('job-posting').value;
+            const jobTitle = document.getElementById('job-title').value || 'Position';
+            const company = document.getElementById('company').value || 'Company';
+            
+            if (!jobPosting.trim()) {
+                showToast('Please paste a job posting', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const response = await fetch('/api/adham/analyze', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        job_posting: jobPosting,
+                        job_title: jobTitle,
+                        company: company
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    displayAnalysis(data.analysis);
+                } else {
+                    showToast('Error: ' + data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function optimizeJob() {
+            const jobPosting = document.getElementById('job-posting').value;
+            const jobTitle = document.getElementById('job-title').value || 'Position';
+            const company = document.getElementById('company').value || 'Company';
+            
+            if (!jobPosting.trim()) {
+                showToast('Please paste a job posting', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const response = await fetch('/api/adham/optimize', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        job_posting: jobPosting,
+                        job_title: jobTitle,
+                        company: company
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    displayOptimization(data.result);
+                } else {
+                    showToast('Error: ' + data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        function displayAnalysis(analysis) {
+            document.getElementById('results').classList.add('visible');
+            
+            // Score
+            document.getElementById('original-score').textContent = analysis.score;
+            document.getElementById('optimized-score').textContent = analysis.projected_new_score;
+            document.getElementById('score-improvement').textContent = 
+                `+${analysis.projected_new_score - analysis.score} points`;
+            
+            // Critical gaps
+            if (analysis.critical_gaps && analysis.critical_gaps.length > 0) {
+                document.getElementById('critical-gaps-section').style.display = 'block';
+                document.getElementById('critical-gaps').innerHTML = 
+                    analysis.critical_gaps.map(g => `<div class="gap-item critical">${g}</div>`).join('');
+            }
+            
+            // High priority gaps
+            if (analysis.high_priority_gaps && analysis.high_priority_gaps.length > 0) {
+                document.getElementById('high-priority-section').style.display = 'block';
+                document.getElementById('high-priority-gaps').innerHTML = 
+                    analysis.high_priority_gaps.map(g => `
+                        <div class="gap-item high">
+                            <span class="gap-keyword">'${g.keyword}'</span>
+                            <span class="gap-frequency">(${g.frequency}x in job)</span>
+                            <div class="gap-strategy">${g.strategy}</div>
+                        </div>
+                    `).join('');
+            }
+            
+            // Medium priority gaps
+            if (analysis.medium_priority_gaps && analysis.medium_priority_gaps.length > 0) {
+                document.getElementById('medium-priority-section').style.display = 'block';
+                document.getElementById('medium-priority-gaps').innerHTML = 
+                    analysis.medium_priority_gaps.map(g => `
+                        <div class="gap-item medium">
+                            <span class="gap-keyword">'${g.keyword}'</span>
+                            <span class="gap-frequency">(${g.frequency}x in job)</span>
+                            <div class="gap-strategy">${g.strategy}</div>
+                        </div>
+                    `).join('');
+            }
+            
+            showToast(`Analysis complete! Score: ${analysis.score}/100`, 'success');
+        }
+        
+        function displayOptimization(result) {
+            displayAnalysis(result);
+            
+            // Improvements
+            if (result.improvements && result.improvements.length > 0) {
+                document.getElementById('improvements').innerHTML = 
+                    result.improvements.map(imp => `
+                        <div class="improvement-item">
+                            <i class="fas fa-check-circle"></i> ${imp}
+                        </div>
+                    `).join('');
+            }
+            
+            // Download links
+            if (result.cv_pdf_url) {
+                document.getElementById('cv-download').href = result.cv_pdf_url;
+                document.getElementById('cv-download').style.display = 'inline-flex';
+            }
+            
+            if (result.cover_letter_pdf_url) {
+                document.getElementById('cl-download').href = result.cover_letter_pdf_url;
+                document.getElementById('cl-download').style.display = 'inline-flex';
+            }
+            
+            // Preview
+            if (result.cover_letter) {
+                document.getElementById('cover-letter-preview').textContent = result.cover_letter;
+                document.getElementById('preview-section').style.display = 'block';
+            }
+            
+            document.getElementById('download-section').style.display = 'flex';
+            showToast(`Optimization complete! Score: ${result.original_score} → ${result.optimized_score}`, 'success');
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loading').classList.toggle('visible', show);
+            document.getElementById('results').classList.toggle('visible', false);
+        }
+        
+        function clearForm() {
+            document.getElementById('job-title').value = '';
+            document.getElementById('company').value = '';
+            document.getElementById('job-posting').value = '';
+            document.getElementById('results').classList.remove('visible');
+            document.getElementById('critical-gaps-section').style.display = 'none';
+            document.getElementById('high-priority-section').style.display = 'none';
+            document.getElementById('medium-priority-section').style.display = 'none';
+            document.getElementById('download-section').style.display = 'none';
+            document.getElementById('preview-section').style.display = 'none';
+        }
+    </script>
+    {% endblock %}

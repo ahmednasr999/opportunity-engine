@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 """
 PDF Export System - Generate professional PDFs from CVs and cover letters
-Uses WeasyPrint for HTML-to-PDF conversion
+Uses Jinja2 + WeasyPrint for HTML-to-PDF conversion
 """
 
 import os
 from datetime import datetime
 from typing import Dict, Optional
-from weasyprint import HTML, CSS
-from weasyprint.text.fonts import FontConfiguration
+from jinja2 import Template
+from weasyprint import HTML
 
-# Professional CV Template with modern styling
+# Professional CV Template with Jinja2
 CV_TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{{name}} - {{title}}</title>
+    <title>{{name}} - {{headline}}</title>
     <style>
         @page {
             size: A4;
@@ -190,18 +190,6 @@ CV_TEMPLATE = """
             font-size: 10pt;
         }
         
-        .ats-score {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #1a365d;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 9pt;
-            font-weight: 600;
-        }
-        
         .two-column {
             display: flex;
             gap: 30px;
@@ -217,10 +205,10 @@ CV_TEMPLATE = """
         <div class="name">{{name}}</div>
         <div class="title">{{headline}}</div>
         <div class="contact">
-            <span class="contact-item">{{location}}</span>
-            <span class="contact-item">{{phone}}</span>
-            <span class="contact-item">{{email}}</span>
-            <span class="contact-item">{{linkedin}}</span>
+            {% if location %}<span class="contact-item">{{location}}</span>{% endif %}
+            {% if phone %}<span class="contact-item">{{phone}}</span>{% endif %}
+            {% if email %}<span class="contact-item">{{email}}</span>{% endif %}
+            {% if linkedin %}<span class="contact-item">{{linkedin}}</span>{% endif %}
         </div>
     </div>
     
@@ -229,62 +217,70 @@ CV_TEMPLATE = """
         <div class="summary">{{summary}}</div>
     </div>
     
+    {% if skills %}
     <div class="section">
         <div class="section-title">Core Competencies</div>
         <div class="skills-grid">
-            {{#each skills}}
-            <span class="skill-tag">{{this}}</span>
-            {{/each}}
+            {% for skill in skills %}
+            <span class="skill-tag">{{skill}}</span>
+            {% endfor %}
         </div>
     </div>
+    {% endif %}
     
+    {% if experience %}
     <div class="section">
         <div class="section-title">Professional Experience</div>
-        {{#each experience}}
+        {% for exp in experience %}
         <div class="experience-item">
             <div class="exp-header">
                 <div>
-                    <span class="exp-title">{{title}}</span> | 
-                    <span class="exp-company">{{company}}</span>
+                    <span class="exp-title">{{exp.title}}</span> | 
+                    <span class="exp-company">{{exp.company}}</span>
                 </div>
-                <span class="exp-date">{{date}}</span>
+                <span class="exp-date">{{exp.date}}</span>
             </div>
-            <div class="exp-location">{{location}}</div>
+            <div class="exp-location">{{exp.location}}</div>
             <div class="exp-description">
                 <ul>
-                    {{#each bullets}}
-                    <li>{{this}}</li>
-                    {{/each}}
+                    {% for bullet in exp.bullets %}
+                    <li>{{bullet}}</li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>
-        {{/each}}
+        {% endfor %}
     </div>
+    {% endif %}
     
     <div class="two-column">
+        {% if education %}
         <div class="column">
             <div class="section">
                 <div class="section-title">Education</div>
-                {{#each education}}
+                {% for edu in education %}
                 <div class="education-item">
-                    <div class="edu-degree">{{degree}}</div>
-                    <div class="edu-school">{{school}}</div>
-                    <div class="edu-year">{{year}}</div>
+                    <div class="edu-degree">{{edu.degree}}</div>
+                    <div class="edu-school">{{edu.school}}</div>
+                    <div class="edu-year">{{edu.year}}</div>
                 </div>
-                {{/each}}
+                {% endfor %}
             </div>
         </div>
+        {% endif %}
         
+        {% if certifications %}
         <div class="column">
             <div class="section">
                 <div class="section-title">Certifications</div>
                 <div class="cert-list">
-                    {{#each certifications}}
-                    <span class="cert-item">{{this}}</span>
-                    {{/each}}
+                    {% for cert in certifications %}
+                    <span class="cert-item">{{cert}}</span>
+                    {% endfor %}
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 </body>
 </html>
@@ -361,6 +357,10 @@ COVER_LETTER_TEMPLATE = """
             margin-top: 40px;
             font-weight: 600;
         }
+        
+        .body-text p {
+            margin-bottom: 12px;
+        }
     </style>
 </head>
 <body>
@@ -368,27 +368,32 @@ COVER_LETTER_TEMPLATE = """
         <div class="sender-info">
             <div class="sender-name">{{name}}</div>
             <div class="sender-contact">
-                {{address}}<br>
-                {{phone}} | {{email}}<br>
-                {{linkedin}}
+                {% if address %}{{address}}<br>{% endif %}
+                {% if phone %}{{phone}}<br>{% endif %}
+                {% if email %}{{email}}<br>{% endif %}
+                {% if linkedin %}{{linkedin}}{% endif %}
             </div>
         </div>
         
         <div class="date">{{date}}</div>
         
+        {% if company %}
         <div class="recipient">
             Hiring Manager<br>
             {{company}}<br>
-            {{company_address}}
+            {% if company_address %}{{company_address}}{% endif %}
         </div>
+        {% endif %}
         
         <div class="salutation">Dear Hiring Manager,</div>
     </div>
     
-    <div class="body-text">{{body}}</div>
+    <div class="body-text">
+        {{body}}
+    </div>
     
     <div class="closing">
-        <p>Thank you for considering my application. I look forward to discussing how my experience in {{highlight}} can contribute to {{company}}'s continued success.</p>
+        <p>Thank you for considering my application. I look forward to discussing how my experience in {{highlight}} can contribute to {% if company %}{{company}}{% endif %}'s continued success.</p>
     </div>
     
     <div class="signature">
@@ -407,15 +412,16 @@ class PDFExporter:
         os.makedirs(output_dir, exist_ok=True)
     
     def generate_cv_pdf(self, cv_data: Dict, filename: str = None) -> str:
-        """Generate PDF from CV data"""
+        """Generate PDF from CV data using Jinja2"""
         
-        # Build HTML from template
-        html_content = self._build_cv_html(cv_data)
+        # Build HTML from template using Jinja2
+        template = Template(CV_TEMPLATE)
+        html_content = template.render(**cv_data)
         
         # Generate filename
         if not filename:
             safe_name = cv_data.get('name', 'CV').replace(' ', '_')
-            safe_company = cv_data.get('target_company', 'Generic').replace(' ', '_')
+            safe_company = cv_data.get('company', 'Generic').replace(' ', '_')
             filename = f"{safe_name}_{safe_company}_CV.pdf"
         
         output_path = os.path.join(self.output_dir, filename)
@@ -426,10 +432,15 @@ class PDFExporter:
         return output_path
     
     def generate_cover_letter_pdf(self, letter_data: Dict, filename: str = None) -> str:
-        """Generate PDF from cover letter data"""
+        """Generate PDF from cover letter data using Jinja2"""
         
-        # Build HTML from template
-        html_content = self._build_cover_letter_html(letter_data)
+        # Build HTML from template using Jinja2
+        template = Template(COVER_LETTER_TEMPLATE)
+        
+        # Format date
+        letter_data['date'] = letter_data.get('date', datetime.now().strftime('%B %d, %Y'))
+        
+        html_content = template.render(**letter_data)
         
         # Generate filename
         if not filename:
@@ -443,97 +454,6 @@ class PDFExporter:
         HTML(string=html_content).write_pdf(output_path)
         
         return output_path
-    
-    def _build_cv_html(self, data: Dict) -> str:
-        """Build CV HTML from template"""
-        
-        # Simple template substitution (not using Handlebars for simplicity)
-        html = CV_TEMPLATE
-        
-        # Replace basic fields
-        html = html.replace('{{name}}', data.get('name', 'Your Name'))
-        html = html.replace('{{headline}}', data.get('headline', 'Professional Title'))
-        html = html.replace('{{location}}', data.get('location', 'City, Country'))
-        html = html.replace('{{phone}}', data.get('phone', ''))
-        html = html.replace('{{email}}', data.get('email', ''))
-        html = html.replace('{{linkedin}}', data.get('linkedin', ''))
-        html = html.replace('{{summary}}', data.get('summary', ''))
-        
-        # Replace skills
-        skills = data.get('skills', [])
-        skills_html = '\n'.join([f'<span class="skill-tag">{skill}</span>' for skill in skills])
-        # Simple handlebars replacement
-        html = self._replace_section(html, '{{#each skills}}', '{{/each}}', skills_html)
-        
-        # Replace experience
-        experience = data.get('experience', [])
-        exp_html = ''
-        for exp in experience:
-            exp_html += f'''
-            <div class="experience-item">
-                <div class="exp-header">
-                    <div>
-                        <span class="exp-title">{exp.get('title', '')}</span> | 
-                        <span class="exp-company">{exp.get('company', '')}</span>
-                    </div>
-                    <span class="exp-date">{exp.get('date', '')}</span>
-                </div>
-                <div class="exp-location">{exp.get('location', '')}</div>
-                <div class="exp-description">
-                    <ul>
-                        {''.join([f'<li>{b}</li>' for b in exp.get('bullets', [])])}
-                    </ul>
-                </div>
-            </div>
-            '''
-        html = self._replace_section(html, '{{#each experience}}', '{{/each}}', exp_html)
-        
-        # Replace education
-        education = data.get('education', [])
-        edu_html = ''
-        for edu in education:
-            edu_html += f'''
-            <div class="education-item">
-                <div class="edu-degree">{edu.get('degree', '')}</div>
-                <div class="edu-school">{edu.get('school', '')}</div>
-                <div class="edu-year">{edu.get('year', '')}</div>
-            </div>
-            '''
-        html = self._replace_section(html, '{{#each education}}', '{{/each}}', edu_html)
-        
-        # Replace certifications
-        certs = data.get('certifications', [])
-        certs_html = '\n'.join([f'<span class="cert-item">{cert}</span>' for cert in certs])
-        html = self._replace_section(html, '{{#each certifications}}', '{{/each}}', certs_html)
-        
-        return html
-    
-    def _build_cover_letter_html(self, data: Dict) -> str:
-        """Build cover letter HTML from template"""
-        
-        html = COVER_LETTER_TEMPLATE
-        
-        html = html.replace('{{name}}', data.get('name', 'Your Name'))
-        html = html.replace('{{address}}', data.get('address', ''))
-        html = html.replace('{{phone}}', data.get('phone', ''))
-        html = html.replace('{{email}}', data.get('email', ''))
-        html = html.replace('{{linkedin}}', data.get('linkedin', ''))
-        html = html.replace('{{date}}', data.get('date', datetime.now().strftime('%B %d, %Y')))
-        html = html.replace('{{company}}', data.get('company', 'Company Name'))
-        html = html.replace('{{company_address}}', data.get('company_address', ''))
-        html = html.replace('{{body}}', data.get('body', '').replace('\n', '</p><p class="body-text">'))
-        html = html.replace('{{highlight}}', data.get('highlight', 'healthcare operations'))
-        
-        return html
-    
-    def _replace_section(self, html: str, start_tag: str, end_tag: str, content: str) -> str:
-        """Replace a template section with content"""
-        start_idx = html.find(start_tag)
-        end_idx = html.find(end_tag)
-        
-        if start_idx != -1 and end_idx != -1:
-            return html[:start_idx] + content + html[end_idx + len(end_tag):]
-        return html
 
 
 # Singleton for easy import
@@ -577,5 +497,5 @@ if __name__ == "__main__":
         "certifications": ["PMP", "ITIL", "Six Sigma Green Belt", "Prosci Change Management"]
     }
     
-    output = pdf_exporter.generate_cv_pdf(test_cv, "test_cv.pdf")
+    output = pdf_exporter.generate_cv_pdf(test_cv, "test_cv_fixed.pdf")
     print(f"Test CV PDF generated: {output}")

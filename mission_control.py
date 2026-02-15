@@ -40,6 +40,8 @@ from data_coordinator import coordinator
 from product_manager import product_manager
 from pdf_exporter import pdf_exporter
 from job_finder import job_finder
+from adham_analyzer import adham_analyzer
+from adham_optimizer import adham_optimizer
 
 # Phase 4-9 imports
 from phase4_cv_enhancements import (CVVersionHistory, ReadingTimeEstimator, CVHealthTimeline,
@@ -186,6 +188,11 @@ def job_finder_page():
     """Job Auto-Find page"""
     stats = job_finder.get_stats()
     return render_template("job_finder.html", stats=stats)
+
+@app.route("/adham-optimizer")
+def adham_optimizer_page():
+    """ADHAM ATS Optimizer page"""
+    return render_template("adham_optimizer.html")
 
 @app.route("/cv-optimizer", methods=["GET", "POST"])
 def cv_optimizer():
@@ -1545,7 +1552,7 @@ def export_cover_letter_pdf():
 
 # Job Finder Routes
 @app.route("/api/jobs/search", methods=["POST"])
-def search_jobs():
+def api_search_jobs():
     """Search for jobs on LinkedIn and Indeed"""
     data = request.json or {}
     role = data.get('role', 'VP Healthcare AI')
@@ -1642,6 +1649,87 @@ def get_applications():
         "applications": job_finder.applications,
         "total": len(job_finder.applications)
     })
+
+
+# ADHAM ATS Optimizer Routes
+@app.route("/api/adham/analyze", methods=["POST"])
+def adham_analyze():
+    """Analyze CV against job posting using ADHAM"""
+    data = request.json or {}
+    job_posting = data.get('job_posting', '')
+    job_title = data.get('job_title', 'Position')
+    company = data.get('company', 'Company')
+    
+    try:
+        # Build CV text from profile
+        from cv_optimizer import ProfileDatabase
+        profile = ProfileDatabase()
+        cv_text = _build_cv_text_from_profile(profile.data)
+        
+        # Run ADHAM analysis
+        analysis = adham_analyzer.analyze(job_posting, cv_text, profile.data)
+        
+        return jsonify({
+            "status": "success",
+            "analysis": {
+                "score": analysis.score,
+                "score_breakdown": analysis.score_breakdown,
+                "critical_gaps": analysis.critical_gaps,
+                "high_priority_gaps": analysis.high_priority_gaps,
+                "medium_priority_gaps": analysis.medium_priority_gaps,
+                "low_priority_gaps": analysis.low_priority_gaps,
+                "projected_new_score": analysis.projected_new_score,
+                "recommendations": analysis.recommendations
+            }
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route("/api/adham/optimize", methods=["POST"])
+def adham_optimize():
+    """Automatically optimize CV and cover letter for a job"""
+    data = request.json or {}
+    job_posting = data.get('job_posting', '')
+    job_title = data.get('job_title', 'Position')
+    company = data.get('company', 'Company')
+    
+    try:
+        # Run automated optimization
+        result = adham_optimizer.optimize(job_posting, job_title, company)
+        
+        return jsonify({
+            "status": "success",
+            "result": {
+                "original_score": result.original_score,
+                "optimized_score": result.optimized_score,
+                "improvements": result.improvements,
+                "recommendations": result.recommendations,
+                "cv_pdf_url": f"/static/{result.optimized_cv_pdf.split('/')[-1]}",
+                "cover_letter_pdf_url": f"/static/{result.cover_letter_pdf.split('/')[-1]}",
+                "optimized_cv_text": result.optimized_cv_text[:3000],
+                "cover_letter": result.cover_letter[:2000]
+            }
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+def _build_cv_text_from_profile(profile: Dict) -> str:
+    """Build CV text from profile for analysis"""
+    cv_text = f"{profile.get('name', '')}\n{profile.get('title', '')}\n\n"
+    cv_text += f"SUMMARY\n{profile.get('summary', '')}\n\n"
+    
+    for exp in profile.get('experience', []):
+        cv_text += f"{exp.get('title', '')} at {exp.get('company', '')}\n"
+        for ach in exp.get('achievements', []):
+            cv_text += f"- {ach}\n"
+    
+    cv_text += "\nCERTIFICATIONS\n"
+    for cert in profile.get('certifications', []):
+        cv_text += f"- {cert}\n"
+    
+    return cv_text
 
 
 if __name__ == "__main__":
