@@ -1,0 +1,43 @@
+Ahmed Nasr
+ahmednasr999@gmail.com | +971 50 281 4490 | linkedin.com/in/ahmednasr
+
+[Date]
+
+Hiring Manager
+Teladoc Health
+
+Dear Hiring Manager,
+
+Virtual care isn't the future—it's the present. Having led digital health 
+transformation and telemedicine initiatives at Saudi German Hospital Group, I 
+understand both the technical infrastructure and operational complexity required 
+to deliver care at scale to millions of patients.
+
+At SGH (TopMed), I have driven measurable improvements in digital health:
+• Implemented AI-driven telemedicine and clinical decision support systems
+• Reduced operational processing time by 40% using AI/ML and predictive analytics
+• Manage $25M+ P&L across regional hospitals serving 500K+ patients
+• Delivered 25% efficiency gains through virtual care and operational excellence
+• Ensure HIPAA compliance and secure technology infrastructure
+
+My experience at Intel and Microsoft provided the enterprise-scale foundation 
+to build platforms serving 90M+ users, while my current role at SGH has given me 
+hands-on healthcare operations expertise. I bring:
+
+• Telemedicine and virtual care platform leadership
+• AI/ML implementation (Health Catalyst, TensorFlow, Python)
+• Large-scale operations ($25M+ P&L, multi-region teams)
+• HIPAA compliance and healthcare regulatory expertise
+• Proven ability to scale digital health initiatives
+
+The opportunity to bring this expertise to Teladoc's mission of making virtual 
+care accessible to 90M+ patients genuinely excites me. I am available for a 
+conversation at your convenience.
+
+Thank you for your consideration.
+
+Sincerely,
+
+Ahmed Nasr, MBA, PMP
+PMO & AI Automation Leader
+
