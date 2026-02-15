@@ -162,6 +162,45 @@
             background: var(--bg-hover);
         }
         
+        /* Dropdown Navigation */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 8px 0;
+            min-width: 180px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            list-style: none;
+        }
+        
+        .nav-dropdown:hover .nav-dropdown-menu,
+        .nav-dropdown-menu:hover {
+            display: block;
+        }
+        
+        .nav-dropdown-menu li {
+            margin: 0;
+        }
+        
+        .nav-dropdown-menu a {
+            padding: 10px 16px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        
+        .nav-dropdown-menu a:hover {
+            background: var(--bg-hover);
+        }
+        
         /* Main Content */
         .main-content {
             max-width: 1400px;
@@ -458,20 +497,38 @@
                 2nd Brain
             </a>
             <ul class="nav-links">
+                <!-- Core -->
                 <li><a href="/" {% if request.path == '/' %}class="active"{% endif %}><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="/cv-optimizer" {% if request.path == '/cv-optimizer' %}class="active"{% endif %}><i class="fas fa-file-alt"></i> CV Optimizer</a></li>
-                <li><a href="/job-tracker" {% if request.path == '/job-tracker' %}class="active"{% endif %}><i class="fas fa-tasks"></i> Job Tracker</a></li>
-                <li><a href="/network" {% if request.path == '/network' %}class="active"{% endif %}><i class="fas fa-network-wired"></i> Network</a></li>
-                <li><a href="/content-factory" {% if request.path == '/content-factory' %}class="active"{% endif %}><i class="fas fa-pen-fancy"></i> Content</a></li>
-                <li><a href="/analytics" {% if request.path == '/analytics' %}class="active"{% endif %}><i class="fas fa-chart-line"></i> Analytics</a></li>
-                <li><a href="/calendar" {% if request.path == '/calendar' %}class="active"{% endif %}><i class="fas fa-calendar-alt"></i> Calendar</a></li>
-                <li><a href="/notifications" {% if request.path == '/notifications' %}class="active"{% endif %}><i class="fas fa-bell"></i> Notifications</a></li>
-                <li><a href="/second-brain" {% if request.path == '/second-brain' %}class="active"{% endif %}><i class="fas fa-database"></i> Knowledge</a></li>
-                <li><a href="/expenses" {% if request.path == '/expenses' %}class="active"{% endif %}><i class="fas fa-receipt"></i> Expenses</a></li>
-                <li><a href="/bookmarks" {% if request.path == '/bookmarks' %}class="active"{% endif %}><i class="fas fa-bookmark"></i> Bookmarks</a></li>
-                <li><a href="/documents" {% if request.path == '/documents' %}class="active"{% endif %}><i class="fas fa-folder"></i> Documents</a></li>
-                <li><a href="/search" {% if request.path == '/search' %}class="active"{% endif %}><i class="fas fa-search"></i> Search</a></li>
-                <li><a href="/product-management" {% if request.path == '/product-management' %}class="active"{% endif %}><i class="fas fa-cogs"></i> Product</a></li>
+                <li><a href="/job-tracker" {% if request.path == '/job-tracker' %}class="active"{% endif %}><i class="fas fa-tasks"></i> Jobs</a></li>
+                <li><a href="/cv-optimizer" {% if request.path == '/cv-optimizer' %}class="active"{% endif %}><i class="fas fa-file-alt"></i> CVs</a></li>
+                
+                <!-- Data & Knowledge -->
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle"><i class="fas fa-database"></i> Data <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="/second-brain"><i class="fas fa-brain"></i> Knowledge</a></li>
+                        <li><a href="/documents"><i class="fas fa-folder"></i> Documents</a></li>
+                        <li><a href="/bookmarks"><i class="fas fa-bookmark"></i> Bookmarks</a></li>
+                        <li><a href="/search"><i class="fas fa-search"></i> Search</a></li>
+                    </ul>
+                </li>
+                
+                <!-- Tools -->
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle"><i class="fas fa-tools"></i> Tools <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="/network"><i class="fas fa-network-wired"></i> Network</a></li>
+                        <li><a href="/content-factory"><i class="fas fa-pen-fancy"></i> Content</a></li>
+                        <li><a href="/analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li><a href="/calendar"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                    </ul>
+                </li>
+                
+                <!-- Notifications -->
+                <li><a href="/notifications" {% if request.path == '/notifications' %}class="active"{% endif %} style="position: relative;">
+                    <i class="fas fa-bell"></i> Alerts
+                    <span id="nav-notif-badge" style="position: absolute; top: -4px; right: -4px; width: 8px; height: 8px; background: var(--error); border-radius: 50%; display: none;"></span>
+                </a></li>
             </ul>
         </div>
     </nav>
