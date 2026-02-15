@@ -36,6 +36,7 @@ from company_intelligence import CompanyIntelligence
 from email_automation import EmailAutomation
 from chat_brain import ChatBrain
 from data_coordinator import coordinator
+from product_manager import product_manager
 
 app = Flask(__name__)
 
@@ -522,6 +523,38 @@ def get_connections():
             })
     
     return jsonify(connections)
+
+# ===== PRODUCT MANAGEMENT ROUTES =====
+@app.route("/product-management")
+def product_management_view():
+    """Product Management - Feature catalog and roadmap"""
+    features = product_manager.get_all_features()
+    roadmap = product_manager.get_roadmap()
+    stats = product_manager.get_stats()
+    return render_template("product_management.html", 
+                          features=features, 
+                          roadmap=roadmap,
+                          stats=stats)
+
+@app.route("/api/product/generate/<tool_id>", methods=["POST"])
+def generate_features(tool_id):
+    """Generate more missing features for a tool"""
+    new_features = product_manager.generate_more_features(tool_id)
+    return jsonify({'count': len(new_features), 'features': new_features})
+
+@app.route("/api/product/roadmap", methods=["POST"])
+def add_to_roadmap():
+    """Add selected features to build roadmap"""
+    data = request.json if request.json else request.form
+    feature_ids = data.get('features', [])
+    added = product_manager.add_to_roadmap(feature_ids)
+    return jsonify({'added': added, 'count': len(added)})
+
+@app.route("/api/product/built/<feature_id>", methods=["POST"])
+def mark_feature_built(feature_id):
+    """Mark a feature as built"""
+    product_manager.mark_built(feature_id)
+    return jsonify({'status': 'success', 'message': 'Feature marked as built'})
 
 @app.route("/documents")
 def documents_view():
