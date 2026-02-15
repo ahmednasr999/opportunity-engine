@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Job Tracker{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📊 Job Tracker</h1>
+    <p>Track your applications from "Applied" to "Offer".</p>
+</div>
+
+<!-- Add Job Form -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">➕ Add New Job</div>
+    </div>
+    <form method="POST" action="/job-tracker/add">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr) 120px; gap: 1rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Company</label>
+                <input type="text" name="company" class="form-input" placeholder="Company name" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Job Title</label>
+                <input type="text" name="title" class="form-input" placeholder="Job title" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Location</label>
+                <input type="text" name="location" class="form-input" placeholder="e.g., Dubai, UAE">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Priority</label>
+                <select name="priority" class="form-select">
+                    <option value="5">🔴 High</option>
+                    <option value="4" selected>🟡 Med-High</option>
+                    <option value="3">🟢 Medium</option>
+                    <option value="2">⚪ Low</option>
+                    <option value="1">⚫ Very Low</option>
+                </select>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Source</label>
+                <select name="source" class="form-select">
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="Bayt">Bayt</option>
+                    <option value="GulfTalent">GulfTalent</option>
+                    <option value="Referral">Referral</option>
+                    <option value="Company Website">Company Website</option>
+                    <option value="Recruiter">Recruiter</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Sector</label>
+                <select name="sector" class="form-select">
+                    <option value="HealthTech" selected>HealthTech</option>
+                    <option value="FinTech">FinTech</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Consulting">Consulting</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Job URL</label>
+                <input type="url" name="url" class="form-input" placeholder="https://...">
+            </div>
+        </div>
+        <div style="margin-top: 1.5rem;">
+            <button type="submit" class="btn btn-primary">Add Job</button>
+        </div>
+    </form>
+</div>
+
+<!-- Pipeline View -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+    {% for status, jobs in pipeline.items() %}
+    <div class="card" style="min-height: 300px;">
+        <div class="card-header">
+            <div class="card-title">
+                {% if status == 'Applied' %}📤{% endif %}
+                {% if status == 'Phone Screen' %}📞{% endif %}
+                {% if status == 'Interview' %}🤝{% endif %}
+                {% if status == 'Offer' %}🎉{% endif %}
+                {% if status == 'Rejected' %}❌{% endif %}
+                {% if status == 'Ghosted' %}👻{% endif %}
+                {{ status }}
+            </div>
+            <span class="badge badge-blue">{{ jobs|length }}</span>
+        </div>
+        
+        {% if jobs %}
+            {% for job in jobs %}
+            <div style="background: #0f172a; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; border-left: 4px solid {% if job.priority >= 4 %}#ef4444{% elif job.priority == 3 %}#f59e0b{% else %}#3b82f6{% endif %};">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <strong style="font-size: 0.95rem;">{{ job.title }}</strong>
+                        <div class="text-muted" style="font-size: 0.85rem;">{{ job.company }}</div>
+                        {% if job.location %}
+                            <div class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">📍 {{ job.location }}</div>
+                        {% endif %}
+                        {% if job.ats_score > 0 %}
+                            <div style="font-size: 0.8rem; margin-top: 0.25rem; color: {% if job.ats_score >= 90 %}#10b981{% elif job.ats_score >= 75 %}#f59e0b{% else %}#64748b{% endif %};">
+                                ATS: {{ job.ats_score }}/100
+                            </div>
+                        {% endif %}
+                    </div>
+                    <form method="POST" action="/job-tracker/update/{{ job.id }}" style="display: flex; gap: 0.5rem;">
+                        <select name="status" class="form-select" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: 130px;">
+                            <option value="" disabled selected>Move to...</option>
+                            <option value="Applied">Applied</option>
+                            <option value="Phone Screen">Phone Screen</option>
+                            <option value="Interview">Interview</option>
+                            <option value="Offer">Offer</option>
+                            <option value="Rejected">Rejected</option>
+                            <option value="Ghosted">Ghosted</option>
+                            <option value="Withdrawn">Withdrawn</option>
+                        </select>
+                        <button type="submit" class="btn btn-secondary" style="padding: 0.25rem 0.75rem; font-size: 0.8rem;">Update</button>
+                    </form>
+                </div>
+                {% if job.notes %}
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #334155; font-size: 0.8rem; color: #94a3b8;">
+                        {{ job.notes[:100] }}{% if job.notes|length > 100 %}...{% endif %}
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-muted" style="text-align: center; padding: 2rem;">
+                No jobs in this stage
+            </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Follow-ups Section -->
+{% if follow_ups %}
+<div class="card" style="margin-top: 1.5rem; border: 2px solid #f59e0b;">
+    <div class="card-header">
+        <div class="card-title">🔔 Follow-ups Needed</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+        {% for job in follow_ups %}
+        <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; padding: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>{{ job.title }}</strong>
+                    <div class="text-muted" style="font-size: 0.85rem;">{{ job.company }}</div>
+                </div>
+                <span class="badge badge-yellow">Follow Up</span>
+            </div>
+            <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #f59e0b;">
+                Applied {{ (now - job.date_applied) }} days ago
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Stats Summary -->
+<div class="card" style="margin-top: 1.5rem;">
+    <div class="card-header">
+        <div class="card-title">📈 Statistics</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center;">
+        <div>
+            <div style="font-size: 2rem; font-weight: bold; color: #3b82f6;">{{ stats.total_applications }}</div>
+            <div class="text-muted">Total</div>
+        </div>
+        <div>
+            <div style="font-size: 2rem; font-weight: bold; color: #10b981;">{{ stats.active_applications }}</div>
+            <div class="text-muted">Active</div>
+        </div>
+        <div>
+            <div style="font-size: 2rem; font-weight: bold; color: #f59e0b;">{{ "%.1f"|format(stats.conversion_rate) }}%</div>
+            <div class="text-muted">Interview Rate</div>
+        </div>
+        <div>
+            <div style="font-size: 2rem; font-weight: bold; color: #8b5cf6;">{{ "%.0f"|format(stats.avg_ats_score) }}</div>
+            <div class="text-muted">Avg ATS</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

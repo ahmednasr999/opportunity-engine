@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Dashboard</h1>
+    <p>Your job search command center. Track applications, optimize CVs, and generate content.</p>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_applications }}</div>
+        <div class="stat-label">Total Applications</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.active_applications }}</div>
+        <div class="stat-label">Active</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.interviews }}</div>
+        <div class="stat-label">Interviews</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.offers }}</div>
+        <div class="stat-label">Offers</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ "%.1f"|format(stats.conversion_rate) }}%</div>
+        <div class="stat-label">Interview Rate</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ "%.0f"|format(stats.avg_ats_score) }}</div>
+        <div class="stat-label">Avg ATS Score</div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">⚡ Quick Actions</div>
+    </div>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/cv-optimizer" class="btn btn-primary">📝 Optimize CV for Job</a>
+        <a href="/job-tracker" class="btn btn-secondary">📊 View Pipeline</a>
+        <a href="/content-factory" class="btn btn-secondary">✍️ Generate Content</a>
+        <a href="/second-brain" class="btn btn-secondary">🔍 Search Knowledge</a>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+    <!-- Pipeline Overview -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">📈 Pipeline Overview</div>
+            <a href="/job-tracker" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">View All</a>
+        </div>
+        
+        {% for status, jobs in pipeline.items() %}
+            {% if jobs %}
+                <div style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span style="font-weight: 500;">{{ status }}</span>
+                        <span class="badge badge-blue">{{ jobs|length }}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ (jobs|length / stats.total_applications * 100) if stats.total_applications > 0 else 0 }}%;"></div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        
+        {% if stats.total_applications == 0 %}
+            <p class="text-muted">No applications yet. <a href="/cv-optimizer">Process your first job →</a></p>
+        {% endif %}
+    </div>
+    
+    <!-- Follow-ups -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">🔔 Follow-ups Needed</div>
+            <a href="/job-tracker" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">View All</a>
+        </div>
+        
+        {% if follow_ups %}
+            {% for job in follow_ups[:5] %}
+                <div style="padding: 1rem; background: #0f172a; border-radius: 8px; margin-bottom: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>{{ job.title }}</strong>
+                            <div class="text-muted" style="font-size: 0.9rem;">{{ job.company }}</div>
+                        </div>
+                        <span class="badge badge-yellow">Follow Up</span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No follow-ups needed. You're up to date! ✅</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Knowledge Base Stats -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">🧠 Knowledge Base</div>
+        <a href="/second-brain" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Search</a>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+        <div style="text-align: center; padding: 1rem;">
+            <div style="font-size: 2rem; font-weight: bold; color: #3b82f6;">{{ brain_stats.total_documents }}</div>
+            <div class="text-muted">Documents</div>
+        </div>
+        <div style="text-align: center; padding: 1rem;">
+            <div style="font-size: 2rem; font-weight: bold; color: #10b981;">{{ brain_stats.unique_terms }}</div>
+            <div class="text-muted">Unique Terms</div>
+        </div>
+        <div style="text-align: center; padding: 1rem;">
+            <div style="font-size: 2rem; font-weight: bold; color: #f59e0b;">Ready</div>
+            <div class="text-muted">Status</div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">📋 Recent Jobs</div>
+    </div>
+    {% if pipeline.get('Applied') %}
+        {% for job in pipeline['Applied'][:5] %}
+            <div style="padding: 1rem; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>{{ job.title }}</strong>
+                    <div class="text-muted" style="font-size: 0.9rem;">{{ job.company }} • {{ job.location }}</div>
+                </div>
+                <span class="badge badge-blue">{{ job.status }}</span>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No recent activity. Start by processing a job posting.</p>
+    {% endif %}
+</div>
+{% endblock %}

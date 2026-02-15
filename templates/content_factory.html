@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Content Factory{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>✍️ Content Factory</h1>
+    <p>Generate LinkedIn posts and newsletters for your HealthTech AI positioning.</p>
+</div>
+
+<!-- Generator Form -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Generate Content</div>
+    </div>
+    <form method="POST" action="/content-factory">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 150px; gap: 1.5rem; align-items: end;">
+            <div class="form-group">
+                <label class="form-label">Content Type</label>
+                <select name="content_type" class="form-select" id="contentType">
+                    <option value="linkedin">LinkedIn Post</option>
+                    <option value="newsletter">Newsletter</option>
+                    <option value="calendar">30-Day Calendar</option>
+                </select>
+            </div>
+            <div class="form-group" id="topicGroup">
+                <label class="form-label">Topic</label>
+                <select name="topic" class="form-select">
+                    <option value="healthtech_ai" selected>HealthTech AI</option>
+                    <option value="digital_transformation">Digital Transformation</option>
+                    <option value="leadership">Leadership</option>
+                    <option value="fintech_bridge">FinTech → HealthTech Bridge</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Generate</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% if result %}
+<!-- Results -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">
+            {% if result.type == 'calendar' %}
+                📅 Content Calendar ({{ result.total }} items)
+            {% else %}
+                Generated {{ result.type|title if result.type else 'Content' }}
+            {% endif %}
+        </div>
+        {% if result.type != 'calendar' %}
+        <button onclick="copyContent()" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">📋 Copy</button>
+        {% endif %}
+    </div>
+    
+    {% if result.type == 'calendar' %}
+        <!-- Calendar View -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+            {% for item in result.calendar %}
+            <div style="background: #0f172a; border-radius: 8px; padding: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span class="badge badge-blue">{{ item.type }}</span>
+                    <span class="text-muted" style="font-size: 0.85rem;">{{ item.date }}</span>
+                </div>
+                {% if item.type == 'Newsletter' %}
+                    <div style="font-weight: 500;">{{ item.subject }}</div>
+                {% else %}
+                    <div style="font-weight: 500;">{{ item.topic }}</div>
+                {% endif %}
+                <div class="text-muted" style="font-size: 0.85rem; margin-top: 0.5rem;">
+                    {{ item.content_preview }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div style="text-align: center; margin-top: 1rem; color: #64748b;">
+            Showing first {{ result.calendar|length }} of {{ result.total }} items
+        </div>
+    {% else %}
+        <!-- Single Content View -->
+        <div style="margin-bottom: 1rem;">
+            {% if result.template %}
+                <span class="badge badge-green" style="margin-right: 0.5rem;">{{ result.template }}</span>
+            {% endif %}
+            {% if result.tone %}
+                <span class="badge badge-blue">{{ result.tone }}</span>
+            {% endif %}
+            {% if result.word_count %}
+                <span class="text-muted" style="margin-left: 1rem;">{{ result.word_count }} words</span>
+            {% endif %}
+            {% if result.character_count %}
+                <span class="text-muted" style="margin-left: 1rem;">{{ result.character_count }} characters</span>
+            {% endif %}
+        </div>
+        
+        <pre id="content-text" style="background: #0f172a; padding: 1.5rem; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; font-family: inherit; font-size: 0.95rem; line-height: 1.7;">{{ result.content }}</pre>
+        
+        {% if result.hashtags %}
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #334155;">
+            <span class="text-muted">Hashtags:</span>
+            {% for tag in result.hashtags %}
+                <span style="color: #3b82f6; margin-right: 0.5rem;">#{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<script>
+function copyContent() {
+    const text = document.getElementById('content-text').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Content copied to clipboard!');
+    });
+}
+
+document.getElementById('contentType').addEventListener('change', function() {
+    const topicGroup = document.getElementById('topicGroup');
+    if (this.value === 'calendar') {
+        topicGroup.style.opacity = '0.5';
+        topicGroup.querySelector('select').disabled = true;
+    } else {
+        topicGroup.style.opacity = '1';
+        topicGroup.querySelector('select').disabled = false;
+    }
+});
+</script>
+{% endif %}
+
+<!-- Content Templates Info -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+    <div class="card">
+        <div class="card-title">📢 LinkedIn Templates</div>
+        <ul style="margin-left: 1.5rem; color: #cbd5e1; line-height: 2;">
+            <li><strong>HealthTech Insight</strong> - Share expertise</li>
+            <li><strong>Lessons Learned</strong> - Career wisdom</li>
+            <li><strong>Industry Trend</strong> - Market analysis</li>
+            <li><strong>Behind the Scenes</strong> - Work stories</li>
+            <li><strong>Contrarian Take</strong> - Thought leadership</li>
+        </ul>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">📧 Newsletter Formats</div>
+        <ul style="margin-left: 1.5rem; color: #cbd5e1; line-height: 2;">
+            <li><strong>Weekly Roundup</strong> - Top 3 stories</li>
+            <li><strong>Deep Dive</strong> - In-depth analysis</li>
+        </ul>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #334155;">
+            <div class="text-muted" style="font-size: 0.9rem;">Recommended: 70% HealthTech, 30% FinTech bridge</div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">💡 Best Practices</div>
+        <ul style="margin-left: 1.5rem; color: #cbd5e1; line-height: 2;">
+            <li>Post 3x/week (Mon, Wed, Fri)</li>
+            <li>Engage with comments within 1 hour</li>
+            <li>Use contrarian takes for virality</li>
+            <li>Always end with a question</li>
+            <li>Mix professional + personal</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Quick Generate Buttons -->
+<div class="card" style="margin-top: 1.5rem;">
+    <div class="card-title">⚡ Quick Generate</div>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <form method="POST" action="/content-factory" style="display: inline;">
+            <input type="hidden" name="content_type" value="linkedin">
+            <input type="hidden" name="topic" value="healthtech_ai">
+            <button type="submit" class="btn btn-primary">HealthTech AI Post</button>
+        </form>
+        <form method="POST" action="/content-factory" style="display: inline;">
+            <input type="hidden" name="content_type" value="linkedin">
+            <input type="hidden" name="topic" value="leadership">
+            <button type="submit" class="btn btn-secondary">Leadership Post</button>
+        </form>
+        <form method="POST" action="/content-factory" style="display: inline;">
+            <input type="hidden" name="content_type" value="newsletter">
+            <input type="hidden" name="topic" value="healthtech_ai">
+            <button type="submit" class="btn btn-success">Weekly Newsletter</button>
+        </form>
+        <form method="POST" action="/content-factory" style="display: inline;">
+            <input type="hidden" name="content_type" value="calendar">
+            <button type="submit" class="btn btn-secondary">30-Day Calendar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

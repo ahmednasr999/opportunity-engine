@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}CV Optimizer{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📝 CV Optimizer</h1>
+    <p>Paste a job description to generate a tailored CV with ATS scoring.</p>
+</div>
+
+{% if result %}
+<div class="alert alert-success">
+    ✅ CV generated for <strong>{{ result.title }}</strong> at <strong>{{ result.company }}</strong>
+    <br>📁 Saved as: {{ result.filename }}
+</div>
+
+<!-- Results Card -->
+<div style="display: grid; grid-template-columns: 300px 1fr; gap: 1.5rem;">
+    <!-- Left: Scores -->
+    <div>
+        <div class="card" style="text-align: center;">
+            <div class="card-title">ATS Score</div>
+            <div style="font-size: 4rem; font-weight: bold; color: {% if result.ats_score >= 90 %}#10b981{% elif result.ats_score >= 75 %}#f59e0b{% else %}#ef4444{% endif %};">
+                {{ result.ats_score }}
+            </div>
+            <div class="text-muted">/ 100</div>
+            <div style="margin-top: 1rem;">
+                {% if result.ats_score >= 90 %}
+                    <span class="badge badge-green">Excellent</span>
+                {% elif result.ats_score >= 75 %}
+                    <span class="badge badge-yellow">Good</span>
+                {% else %}
+                    <span class="badge badge-red">Needs Work</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Match Breakdown</div>
+            {% for category, score in result.match_analysis.items() %}
+                <div style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.25rem;">
+                        <span>{{ category.replace('_', ' ').title() }}</span>
+                        <span>{{ score }}/30</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ (score / 30 * 100) }}%;"></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        {% if result.suggestions %}
+        <div class="card">
+            <div class="card-title">💡 Suggestions</div>
+            {% for suggestion in result.suggestions %}
+                <div style="padding: 0.75rem; background: #0f172a; border-radius: 6px; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                    {{ suggestion }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Right: CV Output -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Generated CV</div>
+            <button onclick="copyCV()" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">📋 Copy</button>
+        </div>
+        <pre id="cv-text" style="background: #0f172a; padding: 1.5rem; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.6;">{{ result.cv_text }}</pre>
+    </div>
+</div>
+
+<div style="margin-top: 1.5rem;">
+    <a href="/cv-optimizer" class="btn btn-primary">← Process Another Job</a>
+    <a href="/job-tracker" class="btn btn-secondary">View in Job Tracker →</a>
+</div>
+
+<script>
+function copyCV() {
+    const text = document.getElementById('cv-text').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        alert('CV copied to clipboard!');
+    });
+}
+</script>
+
+{% else %}
+<!-- Input Form -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Job Details</div>
+    </div>
+    <form method="POST" action="/cv-optimizer">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="form-group">
+                <label class="form-label">Company Name</label>
+                <input type="text" name="company" class="form-input" placeholder="e.g., Saudi German Hospital Group" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Job Title</label>
+                <input type="text" name="title" class="form-input" placeholder="e.g., VP of Digital Transformation" required>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Job Description</label>
+            <textarea name="job_text" class="form-textarea" placeholder="Paste the full job description here...&#10;&#10;Include:&#10;- Responsibilities&#10;- Requirements&#10;- Qualifications&#10;- Skills needed" required></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">🚀 Generate Tailored CV</button>
+    </form>
+</div>
+
+<!-- Tips -->
+<div class="card">
+    <div class="card-title">💡 Tips for Best Results</div>
+    <ul style="margin-left: 1.5rem; color: #cbd5e1;">
+        <li>Include the full job description for best keyword matching</li>
+        <li>Target ATS score: 90+ (shows as green)</li>
+        <li>Add missing keywords to your master profile for better future matches</li>
+        <li>Always review the generated CV before submitting</li>
+    </ul>
+</div>
+{% endif %}
+{% endblock %}

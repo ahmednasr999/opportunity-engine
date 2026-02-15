@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}2nd Brain{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🧠 2nd Brain</h1>
+    <p>Search across all your CVs, job postings, notes, and knowledge.</p>
+</div>
+
+<!-- Search Box -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">🔍 Search</div>
+    </div>
+    <form method="POST" action="/second-brain">
+        <div style="display: grid; grid-template-columns: 1fr 200px 150px; gap: 1rem; align-items: end;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Search Query</label>
+                <input type="text" name="query" class="form-input" placeholder="e.g., AI healthcare, project management, digital transformation..." value="{{ query }}" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Document Type (optional)</label>
+                <select name="doc_type" class="form-select">
+                    <option value="">All Types</option>
+                    <option value="cv">CVs</option>
+                    <option value="job_posting">Job Postings</option>
+                    <option value="note">Notes</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_documents }}</div>
+        <div class="stat-label">Documents</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.unique_terms }}</div>
+        <div class="stat-label">Unique Terms</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.by_type.get('cv', 0) }}</div>
+        <div class="stat-label">CVs</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.by_type.get('job_posting', 0) }}</div>
+        <div class="stat-label">Job Postings</div>
+    </div>
+</div>
+
+<!-- Search Results -->
+{% if results is not none %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Search Results for "{{ query }}"</div>
+        <span class="badge badge-blue">{{ results|length }} found</span>
+    </div>
+    
+    {% if results %}
+        {% for result in results %}
+        <div style="background: #0f172a; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; border-left: 4px solid #3b82f6;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                <div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem;">{{ result.document.title }}</h3>
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <span class="badge badge-green">{{ result.document.doc_type }}</span>
+                        <span class="text-muted" style="font-size: 0.85rem;">Score: {{ "%.3f"|format(result.score) }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="color: #cbd5e1; line-height: 1.6; margin-bottom: 0.75rem;">
+                {{ result.excerpt }}
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                {% for term in result.matched_terms[:8] %}
+                    <span style="background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">{{ term }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-muted" style="text-align: center; padding: 3rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+            <p>No results found for "{{ query }}"</p>
+            <p style="font-size: 0.9rem;">Try different keywords or check spelling</p>
+        </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Quick Searches -->
+<div class="card">
+    <div class="card-title">⚡ Quick Searches</div>
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <form method="POST" action="/second-brain" style="display: inline;">
+            <input type="hidden" name="query" value="AI healthcare">
+            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">AI healthcare</button>
+        </form>
+        <form method="POST" action="/second-brain" style="display: inline;">
+            <input type="hidden" name="query" value="project management">
+            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">project management</button>
+        </form>
+        <form method="POST" action="/second-brain" style="display: inline;">
+            <input type="hidden" name="query" value="digital transformation">
+            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">digital transformation</button>
+        </form>
+        <form method="POST" action="/second-brain" style="display: inline;">
+            <input type="hidden" name="query" value="PMO leadership">
+            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">PMO leadership</button>
+        </form>
+        <form method="POST" action="/second-brain" style="display: inline;">
+            <input type="hidden" name="query" value="HealthTech">
+            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">HealthTech</button>
+        </form>
+        <form method="POST" action="/second-brain" style="display: inline;">
+            <input type="hidden" name="query" value="FinTech">
+            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">FinTech</button>
+        </form>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+    <div class="card">
+        <div class="card-title">📄 What Gets Indexed</div>
+        <ul style="margin-left: 1.5rem; color: #cbd5e1; line-height: 2;">
+            <li>Your CVs and profiles</li>
+            <li>Job postings you process</li>
+            <li>Generated content</li>
+            <li>Personal notes</li>
+            <li>Application history</li>
+        </ul>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">🔍 How Search Works</div>
+        <ul style="margin-left: 1.5rem; color: #cbd5e1; line-height: 2;">
+            <li>Semantic keyword matching</li>
+            <li>Relevance scoring</li>
+            <li>Context-aware excerpts</li>
+            <li>Cross-document connections</li>
+        </ul>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">💡 Use Cases</div>
+        <ul style="margin-left: 1.5rem; color: #cbd5e1; line-height: 2;">
+            <li>Find talking points before interviews</li>
+            <li>Discover patterns across jobs</li>
+            <li>Recall past achievements</li>
+            <li>Compare job requirements</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

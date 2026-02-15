@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mission Control{% endblock %} | Ahmed Nasr</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background: #1e293b;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #334155;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+        
+        .logo span {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: #3b82f6;
+        }
+        
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .page-header {
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            font-size: 2rem;
+            color: #f8fafc;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            color: #64748b;
+        }
+        
+        .card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #334155;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+        
+        .btn-secondary {
+            background: #334155;
+            color: #e2e8f0;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+        
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .form-textarea {
+            min-height: 200px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .badge-blue {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+        
+        .badge-green {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        
+        .badge-yellow {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        
+        .badge-red {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #334155;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+        
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+        }
+        
+        .text-muted {
+            color: #64748b;
+        }
+        
+        .text-success {
+            color: #10b981;
+        }
+        
+        .text-warning {
+            color: #f59e0b;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">🚀 Mission Control <span>| Ahmed Nasr</span></div>
+            <ul class="nav-links">
+                <li><a href="/" {% if request.path == '/' %}class="active"{% endif %}>Dashboard</a></li>
+                <li><a href="/cv-optimizer" {% if request.path == '/cv-optimizer' %}class="active"{% endif %}>CV Optimizer</a></li>
+                <li><a href="/job-tracker" {% if request.path == '/job-tracker' %}class="active"{% endif %}>Job Tracker</a></li>
+                <li><a href="/content-factory" {% if request.path == '/content-factory' %}class="active"{% endif %}>Content</a></li>
+                <li><a href="/second-brain" {% if request.path == '/second-brain' %}class="active"{% endif %}>2nd Brain</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
