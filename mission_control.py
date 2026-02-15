@@ -568,6 +568,12 @@ def view_cv(filename):
     else:
         return "File not found", 404
 
+# ===== MY PROFILE & CVS ROUTE =====
+@app.route("/my-profile-cv")
+def my_profile_cv():
+    """My Profile and CVs overview page"""
+    return render_template("my_profile_cv.html")
+
 # ===== UNIFIED DATA ROUTES =====
 @app.route("/job/<job_id>/context")
 def job_context(job_id):

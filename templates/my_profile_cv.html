@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile & CVs - Ahmed Nasr</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #1a365d 0%, #2d4a7c 100%); min-height: 100vh; padding: 40px 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: white; border-radius: 16px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        h1 { color: #1a365d; font-size: 28px; margin-bottom: 30px; text-align: center; }
+        h2 { color: #1a365d; font-size: 18px; margin: 30px 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e2e8f0; }
+        .btn { display: block; width: 100%; padding: 16px 24px; margin: 10px 0; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.3s; text-align: center; }
+        .btn-primary { background: #1a365d; color: white; }
+        .btn-primary:hover { background: #2d4a7c; transform: translateY(-2px); }
+        .btn-secondary { background: #f7fafc; color: #1a365d; border: 2px solid #1a365d; }
+        .btn-secondary:hover { background: #edf2f7; }
+        .profile-summary { background: #f7fafc; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .profile-summary p { margin: 8px 0; font-size: 14px; }
+        .tag { display: inline-block; background: #e2e8f0; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>📋 My Profile & CVs</h1>
+            
+            <div class="profile-summary">
+                <p><strong>Name:</strong> Ahmed Nasr</p>
+                <p><strong>Title:</strong> HealthTech Digital Transformation Expert</p>
+                <p><strong>Experience:</strong> 20+ Years</p>
+                <p><strong>Location:</strong> Dubai, UAE</p>
+                <p><strong>Phone:</strong> +971 50 281 4490</p>
+                <p><strong>Email:</strong> ahmednasr999@gmail.com</p>
+            </div>
+
+            <h2>🌐 Web Profile (HTML)</h2>
+            <a href="/static/my_profile.html" target="_blank" class="btn btn-primary">
+                📄 View Full Profile (my_profile.html)
+            </a>
+
+            <h2>📄 Ready-to-Use CVs</h2>
+            <a href="/static/Ahmed_Nasr_Senior_PMO_Director_CV.html" target="_blank" class="btn btn-secondary">
+                🎯 Senior PMO Director CV (ATS Optimized)
+            </a>
+            <a href="/static/Ahmed_Nasr_ATS_Optimized_CV.html" target="_blank" class="btn btn-secondary">
+                📊 CTO/Digital Transformation CV
+            </a>
+
+            <h2>🖨️ How to Save as PDF</h2>
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; font-size: 13px; color: #856404;">
+                <p><strong>Steps:</strong></p>
+                <p>1. Click any CV link above</p>
+                <p>2. Press <kbd>Ctrl</kbd> + <kbd>P</kbd> (or Cmd+P on Mac)</p>
+                <p>3. Select "Save as PDF"</p>
+                <p>4. Done!</p>
+            </div>
+
+            <h2>📜 Quick Info</h2>
+            <p><strong>7 Work Experiences</strong></p>
+            <div style="margin-top: 10px;">
+                <span class="tag">PMP</span>
+                <span class="tag">CSM</span>
+                <span class="tag">CBAP</span>
+                <span class="tag">MBA (In Progress)</span>
+                <span class="tag">20+ Years</span>
+                <span class="tag">Dubai, UAE</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

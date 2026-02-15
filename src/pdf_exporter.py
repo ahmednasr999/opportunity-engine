@@ -203,13 +203,13 @@ CV_TEMPLATE = """
 <body>
     <div class="header">
         <div class="name">{{name}}</div>
-        <div class="title">{{headline}}</div>
+        <div class="title">{{title}}</div>
         <div class="contact">
             {% if location %}<span class="contact-item">{{location}}</span>{% endif %}
-            {% if phone_uae %}<span class="contact-item">📱 UAE: {{phone_uae}}</span>{% endif %}
-            {% if phone_egypt %}<span class="contact-item">📱 Egypt: {{phone_egypt}}</span>{% endif %}
-            {% if email %}<span class="contact-item">{{email}}</span>{% endif %}
-            {% if linkedin %}<span class="contact-item">{{linkedin}}</span>{% endif %}
+            {% if contact.phone_uae %}<span class="contact-item">📱 UAE: {{contact.phone_uae}}</span>{% endif %}
+            {% if contact.phone_egypt %}<span class="contact-item">📱 Egypt: {{contact.phone_egypt}}</span>{% endif %}
+            {% if contact.email %}<span class="contact-item">{{contact.email}}</span>{% endif %}
+            {% if contact.linkedin %}<span class="contact-item">{{contact.linkedin}}</span>{% endif %}
         </div>
     </div>
     
@@ -239,11 +239,12 @@ CV_TEMPLATE = """
                     <span class="exp-title">{{exp.title}}</span> | 
                     <span class="exp-company">{{exp.company}}</span>
                 </div>
-                <span class="exp-date">{{exp.date}}</span>
+                <span class="exp-date">{{exp.period}}</span>
             </div>
+            <div class="exp-location">{{exp.location}}</div>
             <div class="exp-description">
                 <ul>
-                    {% for bullet in exp.bullets %}
+                    {% for bullet in exp.achievements %}
                     <li>{{bullet}}</li>
                     {% endfor %}
                 </ul>
@@ -261,7 +262,7 @@ CV_TEMPLATE = """
                 {% for edu in education %}
                 <div class="education-item">
                     <div class="edu-degree">{{edu.degree}}</div>
-                    <div class="edu-school">{{edu.school}}</div>
+                    <div class="edu-school">{{edu.institution}}</div>
                     <div class="edu-year">{{edu.year}}</div>
                 </div>
                 {% endfor %}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmed Nasr - CV</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background: #f5f5f5; 
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .cv-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .header { text-align: center; border-bottom: 3px solid #1a365d; padding-bottom: 30px; margin-bottom: 30px; }
+        .name { color: #1a365d; font-size: 36px; font-weight: bold; margin-bottom: 10px; }
+        .title { color: #4a5568; font-size: 18px; margin-bottom: 20px; }
+        .contact { color: #666; font-size: 14px; line-height: 1.8; }
+        h2 { color: #1a365d; font-size: 20px; border-bottom: 2px solid #1a365d; padding-bottom: 10px; margin: 30px 0 20px 0; }
+        .section { margin-bottom: 30px; }
+        .job { margin-bottom: 25px; padding-left: 20px; border-left: 3px solid #e2e8f0; }
+        .job-title { font-weight: bold; font-size: 16px; color: #2d3748; }
+        .company { color: #4a5568; font-size: 14px; }
+        .date { color: #718096; font-style: italic; font-size: 13px; }
+        ul { margin-left: 20px; margin-top: 10px; }
+        li { margin-bottom: 8px; color: #333; line-height: 1.5; }
+        .cert-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+        .cert { background: #edf2f7; padding: 8px 15px; border-radius: 5px; font-size: 13px; }
+        .print-btn {
+            position: fixed; top: 20px; right: 20px;
+            background: #1a365d; color: white; border: none;
+            padding: 15px 25px; border-radius: 8px; cursor: pointer;
+            font-size: 16px;
+        }
+        .print-btn:hover { background: #2d4a7c; }
+        @media print {
+            body { background: white; padding: 0; }
+            .cv-container { box-shadow: none; padding: 20px; }
+            .print-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">🖨️ Print to PDF</button>
+    
+    <div class="cv-container">
+        <div class="header">
+            <div class="name">AHMED NASR</div>
+            <div class="title">HealthTech Digital Transformation Expert & Regional Engagement Leader</div>
+            <div class="contact">
+                Dubai, UAE | UAE: +971 50 281 4490 | Egypt: +20 128 573 3991<br>
+                ahmednasr999@gmail.com | linkedin.com/in/ahmednasr
+            </div>
+        </div>
+
+        <h2>PROFESSIONAL SUMMARY</h2>
+        <p>A distinguished Digital Transformation Expert and Regional Engagement Leader with over 20 years of experience, driving innovation and operational excellence across FinTech, healthcare, and e-commerce sectors. Adept at leading large-scale digital projects, managing high-performance cross-functional teams, and delivering transformative business solutions.</p>
+
+        <h2>PROFESSIONAL EXPERIENCE</h2>
+        
+        <div class="job">
+            <div class="job-title">Acting PMO & Regional Engagement Lead</div>
+            <div class="company">TopMed (Saudi German Hospital Group - SGH) | KSA, UAE, Egypt</div>
+            <div class="date">June 2024 - Present</div>
+            <ul>
+                <li>Leading HealthTech Digital Transformation across SGH Group in KSA, UAE & Egypt</li>
+                <li>Strategic Partnerships with Health Catalyst and KLAS Research (US healthcare providers)</li>
+                <li>PMO Framework: Established structured PMO for large-scale HealthTech projects</li>
+                <li>Enterprise Data Strategy: Implemented Health Catalyst EDW for real-time analytics</li>
+                <li>AI Clinical Decision Support: Deployed AI-driven CDS for diagnostics and patient safety</li>
+                <li>Patient Digital Engagement: Launched telemedicine, mobile apps, and engagement portals</li>
+                <li>Operational Efficiency: Data-driven insights streamlined workflows, reduced costs</li>
+                <li>Healthcare Compliance: Aligned with JCI, HIMSS, and MOH regulations</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-title">Country Manager</div>
+            <div class="company">PaySky & Yalla SuperApp (Acquired by ENPO) | Egypt</div>
+            <div class="date">Apr 2021 - Jan 2022</div>
+            <ul>
+                <li>P&L Leadership: Managed operating budgets and achieved financial OKRs</li>
+                <li>People Leadership: Managed cross-functional teams, headcount, and budgets</li>
+                <li>GTM Leadership: Built world-class Go-To-Market team for B2B and B2C success</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-title">Head of Strategy & VP Advisor</div>
+            <div class="company">El Araby Group | Egypt</div>
+            <div class="date">Jan 2020 - Dec 2021</div>
+            <ul>
+                <li>SAP S/4HANA Implementation: Led successful ERP implementation project</li>
+                <li>Health ERP System: Led Araby Hospital implementation (same system as Mayo Clinic)</li>
+                <li>Strategic Planning: Developed multi-year strategic business plans</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-title">CEO & Business Partner</div>
+            <div class="company">Soleek Lab | Egypt</div>
+            <div class="date">May 2018 - Jul 2019</div>
+            <ul>
+                <li>Business Development: Spearheaded strategic planning and customer engagement</li>
+                <li>Operational Management: Enhanced project delivery and customer satisfaction</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-title">PMO Section Head</div>
+            <div class="company">EMP (Acquired by Network International) | Egypt</div>
+            <div class="date">Sep 2014 - Jun 2017</div>
+            <ul>
+                <li>PMO Establishment: Built PMO from scratch for African bank projects</li>
+                <li>Strategic Dashboard: Developed proactive decision-making dashboard, 3x net profit increase</li>
+                <li>Project Automation: Implemented Microsoft Project Server, managed 300 concurrent projects</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-title">Product Development Manager</div>
+            <div class="company">Talabat (Delivery Hero SE) | Egypt</div>
+            <div class="date">Jun 2017 - May 2018</div>
+            <ul>
+                <li>Regional Liaison: Focal point between Berlin HQ and MENA region companies</li>
+                <li>Scale Achievement: Moved daily orders from 30K to 7M through operational excellence</li>
+                <li>Office Setup: Established Egypt office, managed software engineers and product managers</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-title">Project Manager</div>
+            <div class="company">Intel, Microsoft, Revamp Consulting | Global / Egypt</div>
+            <div class="date">2007 - 2014</div>
+            <ul>
+                <li>Successfully managed and delivered multiple software engineering projects</li>
+                <li>Regional engagement and technical leadership</li>
+            </ul>
+        </div>
+
+        <h2>EDUCATION</h2>
+        <div class="section">
+            <p><b>MBA (In Progress)</b> - Sadat Academy for Management Sciences | Expected 2026</p>
+            <p><b>BSc. Computer Sciences & Business Administration</b> - Sadat Academy for Management Sciences | June 2006</p>
+        </div>
+
+        <h2>CERTIFICATIONS</h2>
+        <div class="cert-grid">
+            <span class="cert">Project Management Professional (PMP)</span>
+            <span class="cert">Certified Scrum Master (CSM)</span>
+            <span class="cert">Certified Business Analysis Professional (CBAP)</span>
+            <span class="cert">Microsoft Certified Application Developer (MCAD)</span>
+            <span class="cert">Microsoft Certified Professional (MCP)</span>
+            <span class="cert">Lean Six Sigma Certified Professional</span>
+        </div>
+    </div>
+</body>
+</html>
