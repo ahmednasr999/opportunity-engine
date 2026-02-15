@@ -4,44 +4,54 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>📝 CV Optimizer</h1>
+    <h1><i class="fas fa-magic" style="color: var(--primary);"></i> CV Optimizer</h1>
     <p>Paste a job description to generate a tailored CV with ATS scoring.</p>
 </div>
 
 {% if result %}
+<!-- Success Alert -->
 <div class="alert alert-success">
-    ✅ CV generated for <strong>{{ result.title }}</strong> at <strong>{{ result.company }}</strong>
-    <br>📁 Saved as: {{ result.filename }}
+    <i class="fas fa-check-circle"></i>
+    <strong>Success!</strong> CV generated for {{ result.title }} at {{ result.company }}
+    <span style="margin-left: auto;">{{ result.filename }}</span>
 </div>
 
-<!-- Results Card -->
-<div style="display: grid; grid-template-columns: 300px 1fr; gap: 1.5rem;">
+<!-- Results -->
+<div class="grid-2">
     <!-- Left: Scores -->
     <div>
-        <div class="card" style="text-align: center;">
-            <div class="card-title">ATS Score</div>
-            <div style="font-size: 4rem; font-weight: bold; color: {% if result.ats_score >= 90 %}#10b981{% elif result.ats_score >= 75 %}#f59e0b{% else %}#ef4444{% endif %};">
+        <!-- ATS Score Card -->
+        <div class="card" style="text-align: center; background: linear-gradient(145deg, var(--bg-card), rgba(99, 102, 241, 0.1));">
+            <div class="card-title" style="justify-content: center;"><i class="fas fa-chart-bar"></i> ATS Score</div>
+            <div style="font-size: 5rem; font-weight: 800; 
+                        background: linear-gradient(135deg, 
+                        {% if result.ats_score >= 90 %}#10b981{% elif result.ats_score >= 75 %}#f59e0b{% else %}#ef4444{% endif %}, 
+                        {% if result.ats_score >= 90 %}#34d399{% elif result.ats_score >= 75 %}#fbbf24{% else %}#f87171{% endif %});
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        line-height: 1;">
                 {{ result.ats_score }}
             </div>
-            <div class="text-muted">/ 100</div>
+            <div class="text-muted" style="font-size: 1.2rem; margin-top: 0.5rem;">/ 100</div>
             <div style="margin-top: 1rem;">
                 {% if result.ats_score >= 90 %}
-                    <span class="badge badge-green">Excellent</span>
+                    <span class="badge badge-green"><i class="fas fa-star"></i> Excellent</span>
                 {% elif result.ats_score >= 75 %}
-                    <span class="badge badge-yellow">Good</span>
+                    <span class="badge badge-yellow"><i class="fas fa-thumbs-up"></i> Good</span>
                 {% else %}
-                    <span class="badge badge-red">Needs Work</span>
+                    <span class="badge badge-red"><i class="fas fa-exclamation-triangle"></i> Needs Work</span>
                 {% endif %}
             </div>
         </div>
         
-        <div class="card">
-            <div class="card-title">Match Breakdown</div>
+        <!-- Match Breakdown -->
+        <div class="card mt-4">
+            <div class="card-title"><i class="fas fa-puzzle-piece"></i> Match Breakdown</div>
             {% for category, score in result.match_analysis.items() %}
-                <div style="margin-bottom: 1rem;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.25rem;">
-                        <span>{{ category.replace('_', ' ').title() }}</span>
-                        <span>{{ score }}/30</span>
+                <div class="mb-3">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        <span class="text-secondary">{{ category.replace('_', ' ').title() }}</span>
+                        <span style="font-weight: 600;">{{ score }}/30</span>
                     </div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: {{ (score / 30 * 100) }}%;"></div>
@@ -50,11 +60,12 @@
             {% endfor %}
         </div>
         
+        <!-- Suggestions -->
         {% if result.suggestions %}
-        <div class="card">
-            <div class="card-title">💡 Suggestions</div>
+        <div class="card mt-4">
+            <div class="card-title"><i class="fas fa-lightbulb"></i> Improvement Tips</div>
             {% for suggestion in result.suggestions %}
-                <div style="padding: 0.75rem; background: #0f172a; border-radius: 6px; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                <div style="padding: 0.875rem; background: var(--bg-dark); border-radius: var(--radius); margin-bottom: 0.5rem; font-size: 0.9rem; border-left: 3px solid var(--warning);">
                     {{ suggestion }}
                 </div>
             {% endfor %}
@@ -65,16 +76,18 @@
     <!-- Right: CV Output -->
     <div class="card">
         <div class="card-header">
-            <div class="card-title">Generated CV</div>
-            <button onclick="copyCV()" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">📋 Copy</button>
+            <div class="card-title"><i class="fas fa-file-alt"></i> Generated CV</div>
+            <button onclick="copyCV()" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                <i class="fas fa-copy"></i> Copy
+            </button>
         </div>
-        <pre id="cv-text" style="background: #0f172a; padding: 1.5rem; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.6;">{{ result.cv_text }}</pre>
+        <pre id="cv-text" style="background: var(--bg-dark); padding: 1.5rem; border-radius: var(--radius); overflow-x: auto; white-space: pre-wrap; font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 0.85rem; line-height: 1.7; color: var(--text-secondary);">{{ result.cv_text }}</pre>
     </div>
 </div>
 
-<div style="margin-top: 1.5rem;">
-    <a href="/cv-optimizer" class="btn btn-primary">← Process Another Job</a>
-    <a href="/job-tracker" class="btn btn-secondary">View in Job Tracker →</a>
+<div class="mt-4" style="display: flex; gap: 1rem;">
+    <a href="/cv-optimizer" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Process Another Job</a>
+    <a href="/job-tracker" class="btn btn-secondary"><i class="fas fa-tasks"></i> View in Job Tracker</a>
 </div>
 
 <script>
@@ -88,40 +101,60 @@ function copyCV() {
 
 {% else %}
 <!-- Input Form -->
-<div class="card">
+<div class="card" style="max-width: 900px;">
     <div class="card-header">
-        <div class="card-title">Job Details</div>
+        <div class="card-title"><i class="fas fa-edit"></i> Job Details</div>
     </div>
     <form method="POST" action="/cv-optimizer">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="grid-2">
             <div class="form-group">
-                <label class="form-label">Company Name</label>
+                <label class="form-label"><i class="fas fa-building"></i> Company Name</label>
                 <input type="text" name="company" class="form-input" placeholder="e.g., Saudi German Hospital Group" required>
             </div>
             <div class="form-group">
-                <label class="form-label">Job Title</label>
+                <label class="form-label"><i class="fas fa-briefcase"></i> Job Title</label>
                 <input type="text" name="title" class="form-input" placeholder="e.g., VP of Digital Transformation" required>
             </div>
         </div>
         
         <div class="form-group">
-            <label class="form-label">Job Description</label>
-            <textarea name="job_text" class="form-textarea" placeholder="Paste the full job description here...&#10;&#10;Include:&#10;- Responsibilities&#10;- Requirements&#10;- Qualifications&#10;- Skills needed" required></textarea>
+            <label class="form-label"><i class="fas fa-align-left"></i> Job Description</label>
+            <textarea name="job_text" class="form-textarea" placeholder="Paste the full job description here...
+
+Include:
+• Responsibilities
+• Requirements
+• Qualifications
+• Skills needed" required></textarea>
         </div>
         
-        <button type="submit" class="btn btn-primary">🚀 Generate Tailored CV</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+            <i class="fas fa-magic"></i> Generate Tailored CV
+        </button>
     </form>
 </div>
 
 <!-- Tips -->
-<div class="card">
-    <div class="card-title">💡 Tips for Best Results</div>
-    <ul style="margin-left: 1.5rem; color: #cbd5e1;">
-        <li>Include the full job description for best keyword matching</li>
-        <li>Target ATS score: 90+ (shows as green)</li>
-        <li>Add missing keywords to your master profile for better future matches</li>
-        <li>Always review the generated CV before submitting</li>
-    </ul>
+<div class="card mt-4" style="max-width: 900px;">
+    <div class="card-title"><i class="fas fa-info-circle"></i> Tips for Best Results</div>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+        <div style="padding: 1rem; background: var(--bg-dark); border-radius: var(--radius);">
+            <i class="fas fa-check-circle" style="color: var(--success); margin-right: 0.5rem;"></i>
+            Include the full job description for best keyword matching
+        </div>
+        <div style="padding: 1rem; background: var(--bg-dark); border-radius: var(--radius);">
+            <i class="fas fa-check-circle" style="color: var(--success); margin-right: 0.5rem;"></i>
+            Target ATS score: 90+ (shows as green)
+        </div>
+        <div style="padding: 1rem; background: var(--bg-dark); border-radius: var(--radius);">
+            <i class="fas fa-check-circle" style="color: var(--success); margin-right: 0.5rem;"></i>
+            Add missing keywords to your master profile
+        </div>
+        <div style="padding: 1rem; background: var(--bg-dark); border-radius: var(--radius);">
+            <i class="fas fa-check-circle" style="color: var(--success); margin-right: 0.5rem;"></i>
+            Always review the generated CV before submitting
+        </div>
+    </div>
 </div>
 {% endif %}
 {% endblock %}
