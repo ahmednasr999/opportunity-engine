@@ -331,51 +331,6 @@ class JDParser:
         "threat intelligence", "incident response", "forensics", "siem", "soar"
     ]
     
-    # Synonym mapping for semantic matching
-    SKILL_SYNONYMS = {
-        # Project Management
-        "project manager": ["pm", "program manager", "delivery manager", "project coordinator"],
-        "program manager": ["pgm", "program director", "portfolio manager"],
-        "scrum master": ["agile coach", "scrum coach", "iteration manager"],
-        "product manager": ["pm", "product owner", "po"],
-        "agile": ["scrum", "kanban", "lean", "iterative", "sprint"],
-        
-        # Leadership
-        "director": ["vp", "vice president", "head of", "lead"],
-        "vp": ["vice president", "svp", "vice president"],
-        "cto": ["chief technology officer", "vp engineering", "head of engineering"],
-        "ceo": ["chief executive officer", "founder", "co-founder"],
-        
-        # Technical
-        "software engineer": ["developer", "software developer", "programmer", "coder"],
-        "full stack": ["fullstack", "full-stack", "frontend and backend", "end-to-end"],
-        "frontend": ["front-end", "ui developer", "client-side"],
-        "backend": ["back-end", "server-side", "api developer"],
-        "devops": ["sre", "platform engineer", "infrastructure engineer"],
-        "cloud": ["aws", "azure", "gcp", "cloud computing", "cloud infrastructure"],
-        
-        # Data
-        "data scientist": ["data science", "machine learning engineer", "ml engineer"],
-        "data engineer": ["data engineering", "etl developer", "big data engineer"],
-        "business analyst": ["ba", "business systems analyst", "requirements analyst"],
-        "data analyst": ["data analytics", "bi analyst", "reporting analyst"],
-        
-        # AI/ML
-        "machine learning": ["ml", "deep learning", "ai", "artificial intelligence"],
-        "ai": ["artificial intelligence", "machine learning", "cognitive computing"],
-        "generative ai": ["genai", "gen ai", "llm", "foundation models"],
-        
-        # Healthcare
-        "healthcare": ["health care", "medical", "clinical", "hospital"],
-        "ehr": ["electronic health records", "emr", "electronic medical records"],
-        "clinical": ["medical", "patient care", "healthcare delivery"],
-        
-        # Finance
-        "fintech": ["financial technology", "digital finance", "finance technology"],
-        "banking": ["financial services", "retail banking", "commercial banking"],
-        "investment": ["asset management", "portfolio management", "wealth management"]
-    }
-    
     def __init__(self):
         self.skill_patterns = [re.compile(r'\b' + re.escape(skill) + r'\b', re.I) 
                                for skill in self.SKILL_KEYWORDS]
@@ -506,6 +461,52 @@ class JDParser:
                 keywords.append(kw)
         
         return list(set(keywords))
+
+
+# Skill synonym mapping for semantic matching
+SKILL_SYNONYMS = {
+    # Project Management
+    "project manager": ["pm", "program manager", "delivery manager", "project coordinator"],
+    "program manager": ["pgm", "program director", "portfolio manager"],
+    "scrum master": ["agile coach", "scrum coach", "iteration manager"],
+    "product manager": ["pm", "product owner", "po"],
+    "agile": ["scrum", "kanban", "lean", "iterative", "sprint"],
+    
+    # Leadership
+    "director": ["vp", "vice president", "head of", "lead"],
+    "vp": ["vice president", "svp", "vice president"],
+    "cto": ["chief technology officer", "vp engineering", "head of engineering"],
+    "ceo": ["chief executive officer", "founder", "co-founder"],
+    
+    # Technical
+    "software engineer": ["developer", "software developer", "programmer", "coder"],
+    "full stack": ["fullstack", "full-stack", "frontend and backend", "end-to-end"],
+    "frontend": ["front-end", "ui developer", "client-side"],
+    "backend": ["back-end", "server-side", "api developer"],
+    "devops": ["sre", "platform engineer", "infrastructure engineer"],
+    "cloud": ["aws", "azure", "gcp", "cloud computing", "cloud infrastructure"],
+    
+    # Data
+    "data scientist": ["data science", "machine learning engineer", "ml engineer"],
+    "data engineer": ["data engineering", "etl developer", "big data engineer"],
+    "business analyst": ["ba", "business systems analyst", "requirements analyst"],
+    "data analyst": ["data analytics", "bi analyst", "reporting analyst"],
+    
+    # AI/ML
+    "machine learning": ["ml", "deep learning", "ai", "artificial intelligence"],
+    "ai": ["artificial intelligence", "machine learning", "cognitive computing"],
+    "generative ai": ["genai", "gen ai", "llm", "foundation models"],
+    
+    # Healthcare
+    "healthcare": ["health care", "medical", "clinical", "hospital"],
+    "ehr": ["electronic health records", "emr", "electronic medical records"],
+    "clinical": ["medical", "patient care", "healthcare delivery"],
+    
+    # Finance
+    "fintech": ["financial technology", "digital finance", "finance technology"],
+    "banking": ["financial services", "retail banking", "commercial banking"],
+    "investment": ["asset management", "portfolio management", "wealth management"]
+}
 
 
 class ATSScorer:
