@@ -130,7 +130,7 @@ class EnhancedNetworkMapper:
             if days_ago > 90:
                 starters.append(f"Hi {contact['name']}, it's been a while! Would love to reconnect and hear what you're working on at {company}.")
             else:
-                starters.append(f"Hi {contact['name']}, following up on our conversation from {days_ago} days ago. Any updates on [topic]"))
+                starters.append(f"Hi {contact['name']}, following up on our conversation from {days_ago} days ago. Any updates on [topic]?")
         else:
             # First outreach
             title = contact.get('title', '')
