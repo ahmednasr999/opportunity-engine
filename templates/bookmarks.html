@@ -15,14 +15,14 @@
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Total Bookmarks</div>
         <div style="font-size: 32px; font-weight: 700;">{{ stats.total }}</div>
     </div>
-    <div class="card" style="padding: 20px;">
+    <a href="/job-tracker" class="card" style="padding: 20px; text-decoration: none; color: inherit;">
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Jobs Saved</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--brand);">{{ stats.by_category.job }}</div>
-    </div>
-    <div class="card" style="padding: 20px;">
+    </a>
+    <a href="/second-brain" class="card" style="padding: 20px; text-decoration: none; color: inherit;">
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Articles</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--success);">{{ stats.by_category.article }}</div>
-    </div>
+    </a>
     <div class="card" style="padding: 20px;">
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">This Week</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--warning);">{{ stats.recent }}</div>

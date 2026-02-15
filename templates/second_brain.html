@@ -44,8 +44,13 @@
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Unique Terms</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--success);">{{ stats.unique_terms }}</div>
     </div>
-    <div class="card" style="padding: 20px;">
-        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">CVs</div>
+    <div class="card" style="padding: 20px; cursor: pointer;" onclick="document.getElementById('show-all-cvs').click()">
+        <form method="POST" action="/second-brain" style="display: none;">
+            <input type="hidden" name="query" value="CV">
+            <input type="hidden" name="doc_type" value="cv">
+            <button type="submit" id="show-all-cvs"></button>
+        </form>
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">CVs (Click to view all)</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--warning);">{{ stats.by_type.get('cv', 0) }}</div>
     </div>
     <div class="card" style="padding: 20px;">
@@ -65,15 +70,31 @@
     {% if results %}
         {% for result in results %}
         <div style="padding: 20px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 12px; border-left: 4px solid var(--brand);">
-            <div style="margin-bottom: 12px;">
-                <strong style="font-size: 16px;">{{ result.document.title }}</strong>
-                <span class="badge badge-green" style="margin-left: 12px;">{{ result.document.doc_type }}</span>
+            <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong style="font-size: 16px; cursor: pointer; color: var(--brand);" onclick="document.getElementById('doc-{{ result.document.id }}').style.display='block'" title="Click to view">{{ result.document.title }}</strong>
+                    <span class="badge badge-green" style="margin-left: 12px;">{{ result.document.doc_type }}</span>
+                </div>
+                <button onclick="document.getElementById('doc-{{ result.document.id }}').style.display='block'" class="btn btn-primary btn-sm">View</button>
             </div>
             <div class="text-secondary" style="margin-bottom: 12px; line-height: 1.6;">{{ result.excerpt }}</div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 {% for term in result.matched_terms[:6] %}
                     <span style="padding: 4px 12px; background: rgba(37, 99, 235, 0.15); color: var(--brand-light); border-radius: 100px; font-size: 12px;">{{ term }}</span>
                 {% endfor %}
+            </div>
+            <!-- Full Document Viewer -->
+            <div id="doc-{{ result.document.id }}" style="display: none; margin-top: 20px; padding: 20px; background: var(--bg-surface); border-radius: 8px; border: 1px solid var(--border-subtle);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
+                    <h3 style="margin: 0;">{{ result.document.title }}</h3>
+                    <button onclick="document.getElementById('doc-{{ result.document.id }}').style.display='none'" class="btn btn-ghost btn-sm">Close</button>
+                </div>
+                <pre style="white-space: pre-wrap; font-family: inherit; line-height: 1.6; max-height: 500px; overflow-y: auto;">{{ result.document.content }}</pre>
+                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-subtle);">
+                    <button onclick="navigator.clipboard.writeText(document.querySelector('#doc-{{ result.document.id }} pre').innerText); alert('Copied to clipboard!')" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                </div>
             </div>
         </div>
         {% endfor %}

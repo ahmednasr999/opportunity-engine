@@ -15,22 +15,22 @@
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Total Documents</div>
         <div style="font-size: 32px; font-weight: 700;">{{ documents|length + cvs|length }}</div>
     </div>
-    <div class="card" style="padding: 20px;">
+    <a href="#generated-cvs" class="card" style="padding: 20px; text-decoration: none; color: inherit;">
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Generated CVs</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--brand);">{{ cvs|length }}</div>
-    </div>
-    <div class="card" style="padding: 20px;">
+    </a>
+    <a href="/job-tracker" class="card" style="padding: 20px; text-decoration: none; color: inherit;">
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Linked to Jobs</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--success);">{{ cvs|selectattr('linked_to_job')|list|length }}</div>
-    </div>
-    <div class="card" style="padding: 20px;">
-        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Indexed</div>
+    </a>
+    <a href="/second-brain" class="card" style="padding: 20px; text-decoration: none; color: inherit;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Indexed (2nd Brain)</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--info);">{{ documents|length }}</div>
-    </div>
+    </a>
 </div>
 
 <!-- Generated CVs -->
-<div class="card mb-4">
+<div id="generated-cvs" class="card mb-4">
     <div class="card-header">
         <div class="card-title"><i class="fas fa-file-alt"></i> Generated CVs (Auto-Indexed)</div>
     </div>

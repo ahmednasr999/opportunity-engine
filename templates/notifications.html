@@ -11,14 +11,14 @@
 
 <!-- Stats -->
 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
-    <div class="card" style="padding: 20px;">
+    <a href="#recent-notifications" class="card" style="padding: 20px; text-decoration: none; color: inherit;">
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Unread</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--info);">{{ stats.unread }}</div>
-    </div>
-    <div class="card" style="padding: 20px;">
+    </a>
+    <a href="#action-required" class="card" style="padding: 20px; text-decoration: none; color: inherit;">
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Action Required</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--warning);">{{ stats.action_required }}</div>
-    </div>
+    </a>
     <div class="card" style="padding: 20px;">
         <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Total</div>
         <div style="font-size: 32px; font-weight: 700;">{{ stats.total }}</div>
@@ -31,7 +31,7 @@
 
 <!-- Action Required -->
 {% if stats.action_required > 0 %}
-<div class="card mb-4" style="border-color: var(--warning);">
+<div id="action-required" class="card mb-4" style="border-color: var(--warning);">
     <div class="card-header">
         <div class="card-title" style="color: var(--warning);">
             <i class="fas fa-exclamation-triangle"></i> Action Required
@@ -54,7 +54,7 @@
 {% endif %}
 
 <!-- Recent Notifications -->
-<div class="card">
+<div id="recent-notifications" class="card">
     <div class="card-header">
         <div class="card-title">Recent Notifications</div>
     </div>
