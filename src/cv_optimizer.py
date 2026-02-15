@@ -12,6 +12,13 @@ from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass, asdict
 from pathlib import Path
 
+# Import semantic scoring (uses MiniMax, no extra cost)
+try:
+    from semantic_ats import SemanticATSScorer
+    SEMANTIC_AVAILABLE = True
+except ImportError:
+    SEMANTIC_AVAILABLE = False
+
 @dataclass
 class JobRequirements:
     """Parsed job description requirements"""
@@ -1097,7 +1104,18 @@ def main():
     
     # Display results
     print(f"📄 Job: {tailored_cv.job_title} at {tailored_cv.company}")
-    print(f"🎯 ATS Score: {tailored_cv.ats_score}/100")
+    print(f"🎯 Traditional ATS Score: {tailored_cv.ats_score}/100")
+    
+    # Add semantic scoring if available
+    if SEMANTIC_AVAILABLE:
+        print("\n🧠 Running Semantic Analysis (MiniMax)...")
+        semantic_scorer = SemanticATSScorer()
+        cv_text = "\n".join([section.content for section in tailored_cv.sections])
+        semantic_result = semantic_scorer.score_semantic(cv_text, job_text)
+        print(f"🎯 Semantic Score: {semantic_result.overall_score}/100 (confidence: {semantic_result.confidence:.0%})")
+        print(f"   +{semantic_result.overall_score - tailored_cv.ats_score} points of understanding")
+        print(f"\n💡 {semantic_result.reasoning[:100]}...")
+    
     print()
     
     print("Match Analysis:")
