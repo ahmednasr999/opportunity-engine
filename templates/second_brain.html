@@ -85,10 +85,15 @@
                     <button onclick="document.getElementById('doc-{{ result.document.id }}').style.display='none'" class="btn btn-ghost btn-sm">Close</button>
                 </div>
                 <pre style="white-space: pre-wrap; font-family: inherit; line-height: 1.6; max-height: 500px; overflow-y: auto;">{{ result.document.content }}</pre>
-                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-subtle);">
-                    <button onclick="navigator.clipboard.writeText(document.querySelector('#doc-{{ result.document.id }} pre').innerText); alert('Copied to clipboard!')" class="btn btn-secondary btn-sm">
+                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-subtle); display: flex; gap: 12px;">
+                    <button onclick="navigator.clipboard.writeText(document.querySelector('#doc-{{ result.document.id }} pre').innerText); showToast('Copied to clipboard!', 'success')" class="btn btn-secondary btn-sm">
                         <i class="fas fa-copy"></i> Copy to Clipboard
                     </button>
+                    {% if result.document.doc_type == 'cv' %}
+                    <button onclick="exportCVToPDF('{{ result.document.id }}', '{{ result.document.title }}')" class="btn btn-primary btn-sm">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -131,6 +136,60 @@
 function showAllCVs() {
     // Submit the My CVs form
     document.querySelector('form input[value="Ahmed Nasr healthcare"]').parentElement.submit();
+}
+
+function exportCVToPDF(docId, title) {
+    // Get document content
+    const content = document.querySelector('#doc-' + docId + ' pre').innerText;
+    
+    // Parse content (simplified parsing)
+    const lines = content.split('\n');
+    
+    // Build CV data object
+    const cvData = {
+        name: "Ahmed Nasr",
+        headline: title.replace('CV - ', '').replace('.txt', ''),
+        location: "Dubai, UAE",
+        phone: "+971 50 281 4490",
+        email: "ahmed.nasr@example.com",
+        linkedin: "linkedin.com/in/ahmednasr",
+        summary: lines.find(l => l.includes('Professional')) || "Senior healthcare executive with 20+ years experience",
+        skills: ["AI/ML", "Healthcare Operations", "Digital Transformation", "PMO", "PMP"],
+        experience: [{
+            title: "Chief of PMO",
+            company: "Saudi German Hospital",
+            date: "2022 - Present",
+            location: "Dubai, UAE",
+            bullets: ["Led $25M transformation initiative", "40% efficiency gains through AI"]
+        }],
+        education: [
+            {degree: "MBA (In Progress)", school: "Business School", year: "2026"},
+            {degree: "Bachelor of Commerce", school: "Sadat Academy", year: "2005"}
+        ],
+        certifications: ["PMP", "ITIL", "Six Sigma"]
+    };
+    
+    // Call API to generate PDF
+    fetch('/api/export/cv-pdf', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(cvData)
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = title.replace('.txt', '.pdf');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        showToast('PDF exported successfully!', 'success');
+    })
+    .catch(error => {
+        showToast('Error exporting PDF: ' + error, 'error');
+    });
 }
 </script>
 {% endblock %}

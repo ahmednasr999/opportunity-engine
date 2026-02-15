@@ -38,6 +38,7 @@ from email_automation import EmailAutomation
 from chat_brain import ChatBrain
 from data_coordinator import coordinator
 from product_manager import product_manager
+from pdf_exporter import pdf_exporter
 
 # Phase 4-9 imports
 from phase4_cv_enhancements import (CVVersionHistory, ReadingTimeEstimator, CVHealthTimeline,
@@ -1509,6 +1510,30 @@ def pwa_manifest():
 def service_worker():
     from flask import Response
     return Response(offline_mode.get_service_worker(), mimetype="application/javascript")
+
+
+# PDF Export Routes
+@app.route("/api/export/cv-pdf", methods=["POST"])
+def export_cv_pdf():
+    """Export CV as PDF"""
+    data = request.json
+    try:
+        output_path = pdf_exporter.generate_cv_pdf(data)
+        from flask import send_file
+        return send_file(output_path, as_attachment=True, download_name=f"{data.get('name', 'CV').replace(' ', '_')}_CV.pdf")
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/api/export/cover-letter-pdf", methods=["POST"])
+def export_cover_letter_pdf():
+    """Export cover letter as PDF"""
+    data = request.json
+    try:
+        output_path = pdf_exporter.generate_cover_letter_pdf(data)
+        from flask import send_file
+        return send_file(output_path, as_attachment=True, download_name=f"{data.get('name', 'Cover').replace(' ', '_')}_Cover_Letter.pdf")
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 if __name__ == "__main__":
