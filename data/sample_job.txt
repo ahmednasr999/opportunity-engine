@@ -1,0 +1,42 @@
+# Sample Job Description for Testing
+
+## VP of Digital Transformation - Healthcare
+
+**Company:** Leading Healthcare Network in GCC
+**Location:** Dubai, UAE
+
+### About the Role
+We are seeking an experienced VP of Digital Transformation to lead our healthcare technology initiatives across the GCC region. The ideal candidate will have a strong background in HealthTech, AI implementation, and hospital operations.
+
+### Key Responsibilities
+• Lead digital transformation strategy for 15+ hospitals across GCC
+• Oversee AI and automation initiatives to improve patient care and operational efficiency
+• Manage PMO function for technology programs with $50M+ budget
+• Drive implementation of EMR/EHR systems and clinical decision support tools
+• Build and mentor high-performing technology teams
+• Collaborate with clinical leaders to align technology with patient outcomes
+• Ensure compliance with healthcare regulations and data security standards
+
+### Requirements
+• 15+ years of experience in technology leadership roles
+• Minimum 5 years in healthcare or HealthTech sector
+• Proven experience with AI/ML implementation in healthcare settings
+• Strong PMO and program management background
+• PMP certification required; MBA preferred
+• Experience managing large-scale technology budgets
+• Knowledge of healthcare regulations (HIPAA, GDPR, local UAE/KSA requirements)
+• Excellent stakeholder management and communication skills
+
+### Preferred Qualifications
+• Experience with cloud platforms (AWS, Azure, GCP)
+• Knowledge of healthcare interoperability standards (HL7, FHIR)
+• Background in FinTech or financial services
+• Experience working across GCC region
+• Arabic language skills (beneficial but not required)
+
+### What We Offer
+• Competitive salary: $180,000 - $250,000 USD annually
+• Housing allowance
+• Medical insurance
+• Annual bonus
+• Career growth opportunities in expanding healthcare network
