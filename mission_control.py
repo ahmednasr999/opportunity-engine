@@ -67,8 +67,10 @@ def cv_optimizer():
     
     # Check for LinkedIn import
     linkedin_url = request.args.get('linkedin_url', '')
+    print(f"DEBUG: linkedin_url from args = {linkedin_url}")  # Debug output
     if linkedin_url and linkedin_importer.is_linkedin_url(linkedin_url):
         linkedin_data = linkedin_importer.scrape_job(linkedin_url)
+        print(f"DEBUG: linkedin_data = {linkedin_data}")  # Debug output
     
     if request.method == "POST":
         job_text = request.form.get("job_text", "")

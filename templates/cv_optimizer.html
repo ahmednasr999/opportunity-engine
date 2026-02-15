@@ -136,16 +136,23 @@ function copyCV() {
     </form>
     
     {% if linkedin_data %}
-    <div style="margin-top: 20px; padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+    <div style="margin-top: 20px; padding: 16px; background: rgba(34, 197, 94, 0.1); border: 1px solid var(--success); border-radius: 8px;">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-            <i class="fas fa-check-circle" style="color: var(--success);"></i>
-            <span>URL recognized! Please confirm the details below:</span>
+            <i class="fas fa-check-circle" style="color: var(--success); font-size: 20px;"></i>
+            <span style="font-weight: 600;">LinkedIn URL imported!</span>
         </div>
         {% if linkedin_data.title %}
-        <div style="margin-bottom: 8px;"><strong>Detected Title:</strong> {{ linkedin_data.title }}</div>
+        <div style="margin-bottom: 8px; padding: 8px; background: var(--bg-card); border-radius: 4px;">
+            <strong>Detected Title:</strong> {{ linkedin_data.title }}
+        </div>
         {% endif %}
-        <div class="text-muted" style="font-size: 12px;">
-            LinkedIn blocks automated scraping. Please paste the job description manually for best results.
+        {% if linkedin_data.company %}
+        <div style="margin-bottom: 8px; padding: 8px; background: var(--bg-card); border-radius: 4px;">
+            <strong>Detected Company:</strong> {{ linkedin_data.company }}
+        </div>
+        {% endif %}
+        <div class="text-muted" style="font-size: 12px; margin-top: 12px;">
+            <i class="fas fa-info-circle"></i> LinkedIn blocks full scraping. Please fill in the details below manually.
         </div>
     </div>
     {% endif %}
