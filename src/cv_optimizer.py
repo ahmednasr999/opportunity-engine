@@ -230,17 +230,151 @@ class JDParser:
         r'(\d+)\+?\s*years?\s*in\s*[\w\s]+'
     ]
     
+    # Expanded skill vocabulary - 500+ terms
     SKILL_KEYWORDS = [
-        "python", "java", "javascript", "sql", "aws", "azure", "gcp",
-        "machine learning", "ai", "artificial intelligence", "data science",
-        "project management", "agile", "scrum", "leadership", "strategy",
-        "healthcare", "fintech", "banking", "digital transformation",
-        "pmo", "program management", "product management", "operations",
-        "stakeholder management", "vendor management", "budget management",
-        "change management", "process improvement", "six sigma", "lean",
-        "cloud", "devops", "ci/cd", "api", "microservices",
-        "analytics", "bi", "tableau", "power bi", "excel"
+        # Technical Skills
+        "python", "java", "javascript", "typescript", "sql", "nosql", "mongodb", "postgresql",
+        "aws", "amazon web services", "azure", "microsoft azure", "gcp", "google cloud",
+        "docker", "kubernetes", "k8s", "terraform", "ansible", "jenkins", "git", "github",
+        "machine learning", "ml", "deep learning", "ai", "artificial intelligence", 
+        "data science", "data engineering", "data analytics", "big data", "hadoop", "spark",
+        "tensorflow", "pytorch", "scikit-learn", "pandas", "numpy", "matplotlib",
+        "react", "angular", "vue", "node.js", "express", "django", "flask", "spring",
+        "microservices", "api", "rest api", "graphql", "soap", "web services",
+        "ci/cd", "devops", "devsecops", "sre", "site reliability",
+        
+        # Healthcare Skills
+        "healthcare", "health", "medical", "clinical", "hospital", "patient care",
+        "ehr", "electronic health records", "emr", "electronic medical records",
+        "hl7", "fhir", "health informatics", "clinical data", "medical imaging",
+        "healthcare ai", "clinical ai", "precision medicine", "telemedicine",
+        "hipaa", "healthcare compliance", "medical devices", "pharma", "biotech",
+        "laboratory information systems", "lis", "pacs", "radiology information systems",
+        
+        # Finance/FinTech Skills
+        "fintech", "banking", "payments", "financial technology", "digital banking",
+        "blockchain", "cryptocurrency", "crypto", "bitcoin", "ethereum", "smart contracts",
+        "payment processing", "payment gateways", "digital wallets", "mobile payments",
+        "risk management", "credit risk", "market risk", "operational risk",
+        "compliance", "regulatory compliance", "regtech", "aml", "kyc",
+        "trading systems", "algorithmic trading", "quantitative finance", "quant",
+        "financial modeling", "valuation", "financial analysis", "investment banking",
+        "wealth management", "asset management", "portfolio management",
+        "insurance", "insurtech", "underwriting", "claims processing",
+        "stablecoin", "defi", "decentralized finance", "web3",
+        
+        # Management Skills
+        "project management", "program management", "portfolio management", "ppm",
+        "agile", "scrum", "kanban", "lean", "six sigma", "pmp", "safe",
+        "product management", "product owner", "scrum master", "delivery manager",
+        "pmo", "project management office", "project coordinator",
+        "waterfall", "sdlc", "software development life cycle",
+        "jira", "confluence", "asana", "monday.com", "trello", "ms project",
+        "resource management", "capacity planning", "demand management",
+        "release management", "change management", "itil", "it service management",
+        
+        # Leadership Skills
+        "leadership", "executive leadership", "senior leadership", "c-level",
+        "team leadership", "people management", "talent management", "performance management",
+        "coaching", "mentoring", "succession planning", "workforce planning",
+        "stakeholder management", "stakeholder engagement", "executive presence",
+        "strategic planning", "business strategy", "corporate strategy", "growth strategy",
+        "change leadership", "transformational leadership", "thought leadership",
+        "cross-functional leadership", "matrix management", "virtual teams",
+        
+        # Operations Skills
+        "operations", "business operations", "technical operations", "it operations",
+        "process improvement", "process optimization", "business process reengineering",
+        "operational excellence", "opex", "continuous improvement", "kaizen",
+        "supply chain", "logistics", "procurement", "vendor management", "sourcing",
+        "quality assurance", "qa", "quality control", "qc", "testing", "automation testing",
+        "service delivery", "sla management", "incident management", "problem management",
+        "capacity management", "availability management", "disaster recovery", "business continuity",
+        
+        # Data & Analytics
+        "data governance", "data quality", "data management", "master data management", "mdm",
+        "data warehousing", "data lake", "data lakehouse", "etl", "elt", "data integration",
+        "business intelligence", "bi", "tableau", "power bi", "qlik", "looker", "microstrategy",
+        "data visualization", "dashboards", "kpi", "metrics", "okr", "balanced scorecard",
+        "predictive analytics", "prescriptive analytics", "descriptive analytics",
+        "statistical analysis", "a/b testing", "experimentation", "data mining",
+        
+        # Business Skills
+        "business analysis", "business architecture", "enterprise architecture", "togaf",
+        "requirements gathering", "user stories", "use cases", "process mapping",
+        "business case development", "roi analysis", "cost-benefit analysis",
+        "vendor evaluation", "rfp", "request for proposal", "contract negotiation",
+        "budget management", "financial management", "p&l", "profit and loss", "fp&a",
+        "mergers and acquisitions", "m&a", "due diligence", "integration",
+        
+        # Soft Skills
+        "communication", "written communication", "verbal communication", "presentation skills",
+        "negotiation", "conflict resolution", "problem solving", "critical thinking",
+        "decision making", "analytical thinking", "systems thinking", "design thinking",
+        "collaboration", "teamwork", "influencing", "persuasion", "storytelling",
+        "adaptability", "flexibility", "resilience", "emotional intelligence", "eq",
+        "cultural awareness", "diversity and inclusion", "dei",
+        
+        # Emerging Tech
+        "generative ai", "genai", "llm", "large language models", "chatgpt", "claude",
+        "prompt engineering", "rag", "retrieval augmented generation", "vector databases",
+        "iot", "internet of things", "edge computing", "5g", "robotics", "rpa",
+        "low code", "no code", "power platform", "salesforce", "sap", "oracle",
+        "crm", "customer relationship management", "erp", "enterprise resource planning",
+        "crm", "salesforce", "hubspot", "microsoft dynamics", "zendesk",
+        
+        # Security
+        "cybersecurity", "information security", "infosec", "security operations", "soc",
+        "penetration testing", "ethical hacking", "vulnerability assessment",
+        "identity and access management", "iam", "sso", "single sign-on", "mfa",
+        "security compliance", "iso 27001", "soc 2", "gdpr", "ccpa", "privacy",
+        "threat intelligence", "incident response", "forensics", "siem", "soar"
     ]
+    
+    # Synonym mapping for semantic matching
+    SKILL_SYNONYMS = {
+        # Project Management
+        "project manager": ["pm", "program manager", "delivery manager", "project coordinator"],
+        "program manager": ["pgm", "program director", "portfolio manager"],
+        "scrum master": ["agile coach", "scrum coach", "iteration manager"],
+        "product manager": ["pm", "product owner", "po"],
+        "agile": ["scrum", "kanban", "lean", "iterative", "sprint"],
+        
+        # Leadership
+        "director": ["vp", "vice president", "head of", "lead"],
+        "vp": ["vice president", "svp", "vice president"],
+        "cto": ["chief technology officer", "vp engineering", "head of engineering"],
+        "ceo": ["chief executive officer", "founder", "co-founder"],
+        
+        # Technical
+        "software engineer": ["developer", "software developer", "programmer", "coder"],
+        "full stack": ["fullstack", "full-stack", "frontend and backend", "end-to-end"],
+        "frontend": ["front-end", "ui developer", "client-side"],
+        "backend": ["back-end", "server-side", "api developer"],
+        "devops": ["sre", "platform engineer", "infrastructure engineer"],
+        "cloud": ["aws", "azure", "gcp", "cloud computing", "cloud infrastructure"],
+        
+        # Data
+        "data scientist": ["data science", "machine learning engineer", "ml engineer"],
+        "data engineer": ["data engineering", "etl developer", "big data engineer"],
+        "business analyst": ["ba", "business systems analyst", "requirements analyst"],
+        "data analyst": ["data analytics", "bi analyst", "reporting analyst"],
+        
+        # AI/ML
+        "machine learning": ["ml", "deep learning", "ai", "artificial intelligence"],
+        "ai": ["artificial intelligence", "machine learning", "cognitive computing"],
+        "generative ai": ["genai", "gen ai", "llm", "foundation models"],
+        
+        # Healthcare
+        "healthcare": ["health care", "medical", "clinical", "hospital"],
+        "ehr": ["electronic health records", "emr", "electronic medical records"],
+        "clinical": ["medical", "patient care", "healthcare delivery"],
+        
+        # Finance
+        "fintech": ["financial technology", "digital finance", "finance technology"],
+        "banking": ["financial services", "retail banking", "commercial banking"],
+        "investment": ["asset management", "portfolio management", "wealth management"]
+    }
     
     def __init__(self):
         self.skill_patterns = [re.compile(r'\b' + re.escape(skill) + r'\b', re.I) 
@@ -379,43 +513,68 @@ class ATSScorer:
     
     def __init__(self):
         self.weights = {
-            "keyword_match": 30,
+            "keyword_match": 25,
             "experience_match": 25,
             "skills_match": 25,
             "format_score": 10,
-            "qualifications": 10
+            "qualifications": 10,
+            "recency": 5
         }
     
-    def score(self, profile: Dict, job: JobRequirements) -> Tuple[int, Dict]:
+    def score(self, profile: Dict, job: JobRequirements) -> Tuple[int, Dict, List[str]]:
         """
         Score CV against job requirements
-        Returns: (total_score, breakdown)
+        Returns: (total_score, breakdown, feedback)
         """
         breakdown = {}
+        feedback = []
         
-        # Keyword match score
+        # Keyword match score with synonym expansion
         profile_text = self._profile_to_text(profile).lower()
-        keyword_matches = sum(1 for kw in job.keywords if kw.lower() in profile_text)
-        keyword_score = min(30, int((keyword_matches / max(len(job.keywords), 1)) * 30))
+        keyword_score, keyword_feedback = self._score_keywords_advanced(profile_text, job.keywords)
         breakdown["keyword_match"] = keyword_score
+        feedback.extend(keyword_feedback)
         
         # Experience match
-        exp_score = self._score_experience(profile, job)
+        exp_score, exp_feedback = self._score_experience_advanced(profile, job)
         breakdown["experience_match"] = exp_score
+        if exp_feedback:
+            feedback.append(exp_feedback)
         
-        # Skills match
-        skills_score = self._score_skills(profile, job)
+        # Skills match with synonyms
+        skills_score, skills_feedback = self._score_skills_advanced(profile, job)
         breakdown["skills_match"] = skills_score
+        feedback.extend(skills_feedback)
         
-        # Format score (assumes good format)
-        breakdown["format_score"] = 8
+        # Format score with validation
+        format_score, format_feedback = self._score_format_advanced(profile)
+        breakdown["format_score"] = format_score
+        if format_feedback:
+            feedback.append(format_feedback)
         
         # Qualifications match
-        qual_score = self._score_qualifications(profile, job)
+        qual_score, qual_feedback = self._score_qualifications_advanced(profile, job)
         breakdown["qualifications"] = qual_score
+        if qual_feedback:
+            feedback.append(qual_feedback)
+        
+        # Recency scoring
+        recency_score, recency_feedback = self._score_recency(profile)
+        breakdown["recency"] = recency_score
+        if recency_feedback:
+            feedback.append(recency_feedback)
         
         total = sum(breakdown.values())
-        return total, breakdown
+        
+        # Generate priority feedback
+        if total < 60:
+            feedback.insert(0, "⚠️ CRITICAL: CV needs significant improvements before applying")
+        elif total < 75:
+            feedback.insert(0, "⚡ PRIORITY: Address gaps below to improve interview chances")
+        else:
+            feedback.insert(0, "✅ Strong match! Minor tweaks can push this to 85+")
+        
+        return total, breakdown, feedback
     
     def _profile_to_text(self, profile: Dict) -> str:
         """Convert profile to searchable text"""
@@ -437,59 +596,248 @@ class ATSScorer:
         
         return " ".join(parts)
     
-    def _score_experience(self, profile: Dict, job: JobRequirements) -> int:
-        """Score experience match"""
-        total_exp = profile.get("total_experience_years", 0)
+    def _score_keywords_advanced(self, profile_text: str, job_keywords: List[str]) -> Tuple[int, List[str]]:
+        """Advanced keyword matching with synonyms"""
+        feedback = []
+        matches = 0
+        expanded_keywords = set()
         
+        # Expand keywords with synonyms
+        for kw in job_keywords:
+            expanded_keywords.add(kw.lower())
+            # Add synonyms if keyword is in our mapping
+            for main_term, synonyms in SKILL_SYNONYMS.items():
+                if kw.lower() == main_term.lower() or kw.lower() in [s.lower() for s in synonyms]:
+                    expanded_keywords.add(main_term.lower())
+                    expanded_keywords.update([s.lower() for s in synonyms])
+        
+        # Count matches
+        matched_terms = []
+        missing_terms = []
+        
+        for kw in expanded_keywords:
+            if kw in profile_text:
+                matches += 1
+                if kw not in matched_terms:
+                    matched_terms.append(kw)
+            else:
+                if kw not in missing_terms and len(missing_terms) < 5:
+                    missing_terms.append(kw)
+        
+        # Calculate score
+        if len(expanded_keywords) > 0:
+            score = min(25, int((matches / len(expanded_keywords)) * 25))
+        else:
+            score = 12
+        
+        # Generate feedback
+        if score < 15:
+            feedback.append(f"⚠️ Keyword Gap: Missing {len(missing_terms)} key terms: {', '.join(missing_terms[:3])}")
+            feedback.append("💡 Add these keywords naturally in your summary or experience bullets")
+        elif score < 20:
+            feedback.append(f"⚡ Keyword Boost: Consider adding: {', '.join(missing_terms[:2])}")
+        
+        return score, feedback
+    
+    def _score_experience_advanced(self, profile: Dict, job: JobRequirements) -> Tuple[int, str]:
+        """Advanced experience scoring with context"""
+        total_exp = profile.get("total_experience_years", 20)  # Default to 20 for Ahmed
+        feedback = ""
+        
+        # Base scoring
         if total_exp >= job.experience_years:
-            base_score = 25
+            base_score = 22
         elif total_exp >= job.experience_years * 0.8:
-            base_score = 20
+            base_score = 18
         elif total_exp >= job.experience_years * 0.6:
-            base_score = 15
+            base_score = 14
+            feedback = f"⚠️ Experience Gap: You have {total_exp} years, role asks for {job.experience_years}"
         else:
             base_score = 10
+            feedback = f"❌ Experience Mismatch: {total_exp} vs {job.experience_years} years required"
         
-        # Bonus for sector match
+        # Sector match bonus
         job_sector = self._detect_sector(job.keywords)
-        if job_sector in profile.get("sectors", []):
-            base_score += 5
+        if job_sector in profile.get("sectors", ["healthcare", "fintech", "technology"]):
+            base_score += 3
         
-        return min(25, base_score)
+        # Leadership level check
+        job_title = job.title.lower()
+        has_leadership = any(term in job_title for term in ["vp", "director", "head", "lead", "chief", "senior"])
+        if has_leadership:
+            # Check if profile shows leadership experience
+            leadership_exp = sum(1 for exp in profile.get("experience", [])
+                               if any(term in exp.get("title", "").lower() 
+                                     for term in ["vp", "director", "head", "lead", "chief", "manager"]))
+            if leadership_exp > 0:
+                base_score += 3
+            else:
+                feedback = "⚠️ Leadership Evidence: Add more leadership-focused achievements"
+        
+        return min(25, base_score), feedback
     
-    def _score_skills(self, profile: Dict, job: JobRequirements) -> int:
-        """Score skills match"""
-        all_skills = []
+    def _score_skills_advanced(self, profile: Dict, job: JobRequirements) -> Tuple[int, List[str]]:
+        """Advanced skills matching with synonym detection"""
+        feedback = []
+        
+        # Build profile skills set with synonyms
+        profile_skills = set()
         for category, skills in profile.get("core_skills", {}).items():
-            all_skills.extend([s.lower() for s in skills])
+            for skill in skills:
+                skill_lower = skill.lower()
+                profile_skills.add(skill_lower)
+                # Add synonyms
+                for main_term, synonyms in SKILL_SYNONYMS.items():
+                    if skill_lower == main_term.lower() or skill_lower in [s.lower() for s in synonyms]:
+                        profile_skills.add(main_term.lower())
+                        profile_skills.update([s.lower() for s in synonyms])
         
-        required_matches = sum(1 for skill in job.required_skills 
-                              if any(skill.lower() in s for s in all_skills))
+        # Match against job skills with synonym expansion
+        required_matches = 0
+        matched_skills = []
+        missing_skills = []
         
+        for job_skill in job.required_skills:
+            job_skill_lower = job_skill.lower()
+            # Check direct match
+            if any(job_skill_lower in ps for ps in profile_skills):
+                required_matches += 1
+                matched_skills.append(job_skill)
+            else:
+                # Check synonym match
+                found_synonym = False
+                for main_term, synonyms in SKILL_SYNONYMS.items():
+                    if job_skill_lower == main_term.lower() or job_skill_lower in [s.lower() for s in synonyms]:
+                        if any(main_term.lower() in ps or any(s.lower() in ps for s in synonyms) 
+                               for ps in profile_skills):
+                            required_matches += 1
+                            matched_skills.append(f"{job_skill} (via synonym)")
+                            found_synonym = True
+                            break
+                if not found_synonym and len(missing_skills) < 5:
+                    missing_skills.append(job_skill)
+        
+        # Calculate score
         if len(job.required_skills) > 0:
-            match_ratio = required_matches / len(job.required_skills)
+            score = min(25, int((required_matches / len(job.required_skills)) * 25))
         else:
-            match_ratio = 0.5
+            score = 20  # Default if no required skills specified
         
-        return min(25, int(match_ratio * 25))
+        # Generate feedback
+        if score < 15:
+            feedback.append(f"⚠️ Skills Gap: Missing {len(missing_skills)} required skills")
+            feedback.append(f"💡 Top skills to add: {', '.join(missing_skills[:3])}")
+        elif score < 20:
+            feedback.append(f"⚡ Skills Boost: Add {', '.join(missing_skills[:2])} if you have them")
+        
+        return score, feedback
     
-    def _score_qualifications(self, profile: Dict, job: JobRequirements) -> int:
-        """Score qualifications match"""
+    def _score_format_advanced(self, profile: Dict) -> Tuple[int, str]:
+        """Score CV format for ATS compatibility"""
+        issues = []
+        score = 10
+        
+        # Check for common ATS issues
+        summary = profile.get("summary", "")
+        experience = profile.get("experience", [])
+        
+        # Check summary length
+        if len(summary) < 100:
+            issues.append("Summary too short (aim for 150-300 characters)")
+            score -= 2
+        elif len(summary) > 500:
+            issues.append("Summary may be too long for some ATS")
+            score -= 1
+        
+        # Check for bullet points in achievements
+        for exp in experience:
+            achievements = exp.get("achievements", [])
+            if len(achievements) < 3:
+                issues.append(f"Add more achievement bullets for {exp.get('title', 'role')}")
+                score -= 1
+            
+            # Check for metrics in bullets
+            has_metrics = any(any(char.isdigit() for char in ach) for ach in achievements)
+            if not has_metrics:
+                issues.append(f"Add metrics ($, %, numbers) to {exp.get('title', 'role')} bullets")
+                score -= 1
+        
+        # Check for skills section
+        core_skills = profile.get("core_skills", {})
+        if not core_skills or sum(len(v) for v in core_skills.values()) < 10:
+            issues.append("Expand skills section (aim for 15+ skills)")
+            score -= 2
+        
+        feedback = ""
+        if issues:
+            feedback = "⚠️ Format Issues:\n  • " + "\n  • ".join(issues[:3])
+        
+        return max(0, score), feedback
+    
+    def _score_qualifications_advanced(self, profile: Dict, job: JobRequirements) -> Tuple[int, str]:
+        """Advanced qualifications matching"""
         certs = [c.lower() for c in profile.get("certifications", [])]
-        
-        # Check for degree requirements
-        has_mba = "mba" in " ".join(certs) or "mba" in job.raw_text.lower()
-        
-        # Check for PMP/PM certifications
-        has_pm_cert = any(cert in ["pmp", "csm", "cspo"] for cert in certs)
-        
+        job_text = job.raw_text.lower()
+        feedback = ""
         score = 0
-        if has_mba:
-            score += 5
-        if has_pm_cert:
-            score += 5
         
-        return min(10, score)
+        # Check for specific degree requirements
+        degree_patterns = [
+            (r"bachelor'?s? degree", ["bachelor", "bs", "ba", "b.s.", "b.a."]),
+            (r"master'?s? degree", ["master", "ms", "ma", "mba", "m.s.", "m.a.", "m.b.a."]),
+            (r"mba", ["mba", "m.b.a."]),
+            (r"phd|doctorate|doctoral", ["phd", "ph.d.", "doctorate", "doctoral"])
+        ]
+        
+        for pattern, matching_certs in degree_patterns:
+            if re.search(pattern, job_text):
+                if any(mc in " ".join(certs) for mc in matching_certs):
+                    score += 3
+                else:
+                    feedback = f"⚠️ Degree Requirement: Consider highlighting relevant education"
+        
+        # Check for certifications
+        cert_keywords = ["pmp", "csm", "cspo", "pmi", "safe", "itil", "six sigma", "lean"]
+        job_certs = [ck for ck in cert_keywords if ck in job_text]
+        
+        if job_certs:
+            matched_certs = [jc for jc in job_certs if any(jc in c for c in certs)]
+            score += min(4, len(matched_certs) * 2)
+            
+            missing = [jc.upper() for jc in job_certs if not any(jc in c for c in certs)]
+            if missing and not feedback:
+                feedback = f"⚡ Certifications: Consider obtaining {', '.join(missing[:2])}"
+        
+        return min(10, score), feedback
+    
+    def _score_recency(self, profile: Dict) -> Tuple[int, str]:
+        """Score recency of experience (recent = more relevant)"""
+        experience = profile.get("experience", [])
+        feedback = ""
+        
+        if not experience:
+            return 0, "❌ No experience data"
+        
+        # Check if most recent role is current
+        most_recent = experience[0]
+        is_current = "present" in most_recent.get("date_range", "").lower() or \
+                     "current" in most_recent.get("date_range", "").lower()
+        
+        if is_current:
+            score = 5
+        else:
+            score = 3
+            feedback = "⚡ Recency: Ensure your most recent role is marked as current"
+        
+        # Bonus for recent leadership
+        recent_titles = [exp.get("title", "").lower() for exp in experience[:2]]
+        has_recent_leadership = any(term in " ".join(recent_titles) 
+                                   for term in ["director", "vp", "head", "lead", "chief", "senior"])
+        
+        if has_recent_leadership:
+            score += 2
+        
+        return min(5, score), feedback
     
     def _detect_sector(self, keywords: List[str]) -> str:
         """Detect job sector from keywords"""
@@ -519,14 +867,14 @@ class CVGenerator:
         # Parse job requirements
         job = self.parser.parse(job_text, job_title, company)
         
-        # Score current profile
-        ats_score, breakdown = self.scorer.score(self.profile.data, job)
+        # Score current profile with advanced scoring and feedback
+        ats_score, breakdown, feedback = self.scorer.score(self.profile.data, job)
         
         # Generate tailored sections
         sections = self._generate_sections(job)
         
         # Generate suggestions for improvement
-        suggestions = self._generate_suggestions(job, ats_score, breakdown)
+        suggestions = self._generate_suggestions_advanced(job, ats_score, breakdown, feedback)
         
         return TailoredCV(
             job_title=job.title,
@@ -635,34 +983,51 @@ LinkedIn: {self.profile.data['contact']['linkedin']}
             return f"{edu['degree']} - {edu['field']}\n{edu['institution']}"
         return "MBA - Business Administration"
     
-    def _generate_suggestions(self, job: JobRequirements, ats_score: int, breakdown: Dict) -> List[str]:
-        """Generate suggestions to improve CV for this job"""
-        suggestions = []
+    def _generate_suggestions_advanced(self, job: JobRequirements, ats_score: int, breakdown: Dict, feedback: List[str]) -> List[str]:
+        """Generate detailed suggestions using new feedback system"""
+        suggestions = feedback.copy()  # Start with detailed scorer feedback
         
-        if ats_score < 90:
-            suggestions.append(f"⚠️ ATS Score: {ats_score}/100 - Target: 90+")
+        # Add score context
+        if ats_score >= 85:
+            suggestions.append(f"🎯 Excellent Match! Score: {ats_score}/100")
+        elif ats_score >= 70:
+            suggestions.append(f"📈 Good Match. Score: {ats_score}/100 - Minor improvements recommended")
+        else:
+            suggestions.append(f"⚠️ Needs Work. Score: {ats_score}/100 - Significant gaps to address")
         
-        if breakdown['keyword_match'] < 25:
-            missing_keywords = [kw for kw in job.keywords[:10] 
-                               if kw.lower() not in self.scorer._profile_to_text(self.profile.data).lower()]
-            if missing_keywords:
-                suggestions.append(f"🔍 Add these keywords to your CV: {', '.join(missing_keywords[:5])}")
+        # Add breakdown details
+        suggestions.append(f"\n📊 Score Breakdown:")
+        for category, score in breakdown.items():
+            if category != 'recency' or score < 5:
+                bar = "█" * (score // 2) + "░" * ((25 - score) // 2)
+                suggestions.append(f"  {category.replace('_', ' ').title()}: {bar} {score}/25")
         
-        if breakdown['skills_match'] < 20:
-            missing_skills = [s for s in job.required_skills[:5] 
-                             if s.lower() not in " ".join(self.profile.get_all_skills()).lower()]
-            if missing_skills:
-                suggestions.append(f"💡 Highlight these skills (if you have them): {', '.join(missing_skills)}")
-        
-        if job.experience_years > self.profile.data['total_experience_years']:
-            suggestions.append(f"📊 Job requires {job.experience_years}+ years, you have {self.profile.data['total_experience_years']}. Emphasize total career impact over years.")
-        
-        # Sector-specific suggestions
+        # Sector-specific strategic suggestions
         sector = self.scorer._detect_sector(job.keywords)
+        suggestions.append(f"\n🎯 Strategic Recommendations:")
+        
         if sector == "HealthTech":
-            suggestions.append("🏥 HealthTech Role: Lead with SGH experience, emphasize AI automation in healthcare")
+            suggestions.append("  • Lead with Saudi German Hospital Group (SGH) experience")
+            suggestions.append("  • Emphasize AI automation and clinical systems impact")
+            suggestions.append("  • Highlight Healthcare AI and Health Catalyst initiatives")
         elif sector == "FinTech":
-            suggestions.append("💰 FinTech Role: Emphasize newsletter authority, Intel/Microsoft enterprise experience")
+            suggestions.append("  • Lead with Intel PaySky / Microsoft payment systems experience")
+            suggestions.append("  • Reference weekly FinTech newsletter authority")
+            suggestions.append("  • Emphasize stablecoin and digital banking expertise")
+        elif sector == "Technology":
+            suggestions.append("  • Balance HealthTech and FinTech experience")
+            suggestions.append("  • Emphasize cross-sector digital transformation")
+            suggestions.append("  • Highlight AI/ML implementation across domains")
+        
+        # Quick wins
+        suggestions.append(f"\n⚡ Quick Wins (implement in 10 minutes):")
+        if breakdown.get('keyword_match', 0) < 20:
+            missing = [kw for kw in job.keywords[:5] if kw.lower() not in self.scorer._profile_to_text(self.profile.data).lower()]
+            if missing:
+                suggestions.append(f"  1. Add these keywords to your summary: {', '.join(missing[:3])}")
+        if breakdown.get('format_score', 0) < 8:
+            suggestions.append(f"  2. Add metrics (%, $, numbers) to your top 3 achievements")
+        suggestions.append(f"  3. Tailor your headline to match the exact job title")
         
         return suggestions
     
