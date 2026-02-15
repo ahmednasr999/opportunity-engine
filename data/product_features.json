@@ -1,0 +1,625 @@
+{
+  "cv_optimizer": {
+    "name": "CV Optimizer",
+    "icon": "fa-file-alt",
+    "built_features": [
+      "PDF export with professional formatting",
+      "LinkedIn job URL import",
+      "ATS scoring algorithm",
+      "AI-powered content rewriting",
+      "Cover letter generation",
+      "Interview Q&A prediction",
+      "Salary negotiation scripts",
+      "Real profile data integration"
+    ],
+    "missing_features": [
+      {
+        "id": "cv_001",
+        "name": "CV Comparison View",
+        "description": "Side-by-side compare 2-3 CV versions for same job",
+        "effort": "medium",
+        "impact": "high",
+        "category": "UX"
+      },
+      {
+        "id": "cv_002",
+        "name": "Version History",
+        "description": "Track every change, revert to old versions",
+        "effort": "low",
+        "impact": "medium",
+        "category": "Data"
+      },
+      {
+        "id": "cv_003",
+        "name": "Keyword Heatmap",
+        "description": "Visual overlay showing matched keywords in job description",
+        "effort": "medium",
+        "impact": "high",
+        "category": "Visualization"
+      },
+      {
+        "id": "cv_004",
+        "name": "Section Reordering",
+        "description": "Drag-drop to reorder experience bullets",
+        "effort": "low",
+        "impact": "medium",
+        "category": "UX"
+      },
+      {
+        "id": "cv_005",
+        "name": "Template Gallery",
+        "description": "10+ visual templates: HealthTech, FinTech, Academic",
+        "effort": "high",
+        "impact": "high",
+        "category": "Design"
+      },
+      {
+        "id": "cv_006",
+        "name": "Reading Time Estimator",
+        "description": "Show recruiter reading time: \"Yours is 4 seconds\"",
+        "effort": "low",
+        "impact": "medium",
+        "category": "Analytics"
+      },
+      {
+        "id": "cv_007",
+        "name": "DOCX Export",
+        "description": "Export to actual Word format, not just HTML",
+        "effort": "medium",
+        "impact": "high",
+        "category": "Export"
+      },
+      {
+        "id": "cv_008",
+        "name": "CV Health Timeline",
+        "description": "Track ATS scores over time with trends",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "Analytics"
+      },
+      {
+        "id": "cv_009",
+        "name": "Missing Skills Detector",
+        "description": "\"Job needs Kubernetes - add to CV?\"",
+        "effort": "high",
+        "impact": "high",
+        "category": "AI"
+      },
+      {
+        "id": "cv_010",
+        "name": "Bullet Strength Analyzer",
+        "description": "Score each bullet: Weak/Good/Strong",
+        "effort": "medium",
+        "impact": "high",
+        "category": "AI"
+      },
+      {
+        "name": "PDF Accessibility Checker",
+        "description": "Ensure PDF is screen-reader friendly",
+        "category": "Accessibility",
+        "id": "cv_011",
+        "effort": "medium",
+        "impact": "medium"
+      },
+      {
+        "name": "LinkedIn Headline Optimizer",
+        "description": "Sync CV with LinkedIn headline",
+        "category": "Social",
+        "id": "cv_012",
+        "effort": "medium",
+        "impact": "medium"
+      },
+      {
+        "name": "Reference Manager",
+        "description": "Track which references used for which job",
+        "category": "CRM",
+        "id": "cv_013",
+        "effort": "medium",
+        "impact": "medium"
+      },
+      {
+        "name": "Portfolio Link Generator",
+        "description": "Create simple portfolio website from CV",
+        "category": "Web",
+        "id": "cv_014",
+        "effort": "medium",
+        "impact": "medium"
+      }
+    ]
+  },
+  "job_tracker": {
+    "name": "Job Tracker",
+    "icon": "fa-tasks",
+    "built_features": [
+      "Kanban pipeline board",
+      "Auto-scrape from job URLs",
+      "Company research aggregation",
+      "Interview question prep",
+      "Timeline view",
+      "Follow-up reminders",
+      "Status tracking"
+    ],
+    "missing_features": [
+      {
+        "id": "jt_001",
+        "name": "Gantt Timeline View",
+        "description": "Visual application timeline with dates",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "Visualization"
+      },
+      {
+        "id": "jt_002",
+        "name": "Interview Checklist",
+        "description": "Per-job prep: research, questions, outfit",
+        "effort": "low",
+        "impact": "high",
+        "category": "Productivity"
+      },
+      {
+        "id": "jt_003",
+        "name": "Salary Negotiation Log",
+        "description": "Track offers, counter-offers, final numbers",
+        "effort": "low",
+        "impact": "high",
+        "category": "Finance"
+      },
+      {
+        "id": "jt_004",
+        "name": "Source Effectiveness",
+        "description": "\"LinkedIn: 20% interview rate, Indeed: 5%\"",
+        "effort": "medium",
+        "impact": "high",
+        "category": "Analytics"
+      },
+      {
+        "id": "jt_005",
+        "name": "Response Time Tracker",
+        "description": "Average days to first response by company",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "Analytics"
+      },
+      {
+        "id": "jt_006",
+        "name": "Rejection Analytics",
+        "description": "Log reasons, spot patterns in rejections",
+        "effort": "low",
+        "impact": "medium",
+        "category": "Analytics"
+      },
+      {
+        "id": "jt_007",
+        "name": "Referral Tracker",
+        "description": "Who referred you, did they get bonus?",
+        "effort": "low",
+        "impact": "medium",
+        "category": "Network"
+      },
+      {
+        "id": "jt_008",
+        "name": "Job Description Diff",
+        "description": "Compare 2 similar jobs side-by-side",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "UX"
+      },
+      {
+        "id": "jt_009",
+        "name": "Application Velocity",
+        "description": "You're applying 3x faster than last month",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "Analytics"
+      },
+      {
+        "id": "jt_010",
+        "name": "Ghost Job Detector",
+        "description": "Identify fake/reposted job listings",
+        "effort": "high",
+        "impact": "high",
+        "category": "AI"
+      },
+      {
+        "id": "jt_011",
+        "name": "Offer Comparison Tool",
+        "description": "Side-by-side benefits comparison",
+        "effort": "medium",
+        "impact": "high",
+        "category": "Finance"
+      },
+      {
+        "id": "jt_012",
+        "name": "Competitor Job Alerts",
+        "description": "\"Google just hired for similar role\"",
+        "effort": "high",
+        "impact": "medium",
+        "category": "Intelligence"
+      }
+    ]
+  },
+  "content_factory": {
+    "name": "Content Factory",
+    "icon": "fa-pen-fancy",
+    "built_features": [
+      "LinkedIn post generation",
+      "Auto-scheduling",
+      "Optimal timing algorithm",
+      "30-day content calendar",
+      "Trending topic alerts",
+      "Engagement analytics tracking"
+    ],
+    "missing_features": [
+      {
+        "id": "cf_001",
+        "name": "Quote Image Generator",
+        "description": "Create branded quote images for posts",
+        "effort": "medium",
+        "impact": "high",
+        "category": "Design"
+      },
+      {
+        "id": "cf_002",
+        "name": "Carousel Builder",
+        "description": "10-slide carousel structure generator",
+        "effort": "medium",
+        "impact": "high",
+        "category": "Content"
+      },
+      {
+        "id": "cf_003",
+        "name": "Post Performance Simulator",
+        "description": "\"This style gets 2x engagement\"",
+        "effort": "high",
+        "impact": "medium",
+        "category": "AI"
+      },
+      {
+        "id": "cf_004",
+        "name": "Content Recycling",
+        "description": "Repurpose posts from 3 months ago",
+        "effort": "low",
+        "impact": "medium",
+        "category": "Productivity"
+      },
+      {
+        "id": "cf_005",
+        "name": "Hook Generator",
+        "description": "50 attention-grabbing opening lines",
+        "effort": "low",
+        "impact": "high",
+        "category": "Content"
+      },
+      {
+        "id": "cf_006",
+        "name": "Story Templates",
+        "description": "\"Day in the life\", \"Behind the scenes\"",
+        "effort": "low",
+        "impact": "medium",
+        "category": "Content"
+      },
+      {
+        "id": "cf_007",
+        "name": "Comment Reply Bank",
+        "description": "Pre-written responses to common comments",
+        "effort": "low",
+        "impact": "medium",
+        "category": "Engagement"
+      },
+      {
+        "id": "cf_008",
+        "name": "Competitor Swipe File",
+        "description": "Save and study best posts from others",
+        "effort": "low",
+        "impact": "medium",
+        "category": "Research"
+      },
+      {
+        "id": "cf_009",
+        "name": "A/B Test Headlines",
+        "description": "Test 3 versions, auto-pick winner",
+        "effort": "high",
+        "impact": "medium",
+        "category": "Analytics"
+      },
+      {
+        "id": "cf_010",
+        "name": "Content Gap Filler",
+        "description": "\"You haven't posted in 5 days - write this:\"",
+        "effort": "medium",
+        "impact": "high",
+        "category": "AI"
+      },
+      {
+        "id": "cf_011",
+        "name": "PDF Post Creator",
+        "description": "Generate PDF documents for LinkedIn",
+        "effort": "medium",
+        "impact": "high",
+        "category": "Export"
+      },
+      {
+        "id": "cf_012",
+        "name": "Hashtag Performance Tracker",
+        "description": "Which hashtags drive most views?",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "Analytics"
+      }
+    ]
+  },
+  "network_mapper": {
+    "name": "Network Mapper",
+    "icon": "fa-network-wired",
+    "built_features": [
+      "LinkedIn contact import",
+      "Warm intro pathfinding",
+      "AI conversation starters",
+      "Relationship scoring",
+      "News alerts for contacts"
+    ],
+    "missing_features": [
+      {
+        "id": "nm_001",
+        "name": "Contact Heatmap",
+        "description": "Visual: who haven't you contacted?",
+        "effort": "medium",
+        "impact": "high",
+        "category": "Visualization"
+      },
+      {
+        "id": "nm_002",
+        "name": "Relationship Graph",
+        "description": "Web visualization of all connections",
+        "effort": "high",
+        "impact": "medium",
+        "category": "Visualization"
+      },
+      {
+        "id": "nm_003",
+        "name": "Meeting Notes",
+        "description": "Notes per contact, searchable history",
+        "effort": "low",
+        "impact": "high",
+        "category": "Productivity"
+      },
+      {
+        "id": "nm_004",
+        "name": "Follow-up Streak",
+        "description": "34 day streak contacting 1 person daily",
+        "effort": "low",
+        "impact": "medium",
+        "category": "Gamification"
+      },
+      {
+        "id": "nm_005",
+        "name": "Contact Groups",
+        "description": "Groups: HealthTech VPs, Recruiters, Peers",
+        "effort": "low",
+        "impact": "high",
+        "category": "Organization"
+      },
+      {
+        "id": "nm_006",
+        "name": "Introduction Tracker",
+        "description": "Who introduced whom, success rate",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "Analytics"
+      },
+      {
+        "id": "nm_007",
+        "name": "Gift Ideas Log",
+        "description": "\"Sarah likes wine - noted for birthday\"",
+        "effort": "low",
+        "impact": "low",
+        "category": "CRM"
+      },
+      {
+        "id": "nm_008",
+        "name": "Conversation History",
+        "description": "Full chat log per contact",
+        "effort": "medium",
+        "impact": "high",
+        "category": "Data"
+      },
+      {
+        "id": "nm_009",
+        "name": "Network Value Score",
+        "description": "Your network reaches 12,000 people",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "Analytics"
+      },
+      {
+        "id": "nm_010",
+        "name": "Cold Email Templates",
+        "description": "20 proven outreach templates",
+        "effort": "low",
+        "impact": "high",
+        "category": "Content"
+      },
+      {
+        "id": "nm_011",
+        "name": "Birthday/Anniversary Alerts",
+        "description": "Never miss important dates",
+        "effort": "low",
+        "impact": "medium",
+        "category": "CRM"
+      },
+      {
+        "id": "nm_012",
+        "name": "Voice Memo Logging",
+        "description": "Record post-call notes",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "Productivity"
+      }
+    ]
+  },
+  "analytics_dashboard": {
+    "name": "Analytics Dashboard",
+    "icon": "fa-chart-line",
+    "built_features": [
+      "Predictive time-to-offer",
+      "Smart targets",
+      "Cohort analysis",
+      "Pipeline visualization",
+      "Benchmarking"
+    ],
+    "missing_features": [
+      {
+        "id": "ad_001",
+        "name": "Weekly Report Email",
+        "description": "Auto-generated Sunday night summary",
+        "effort": "low",
+        "impact": "high",
+        "category": "Automation"
+      },
+      {
+        "id": "ad_002",
+        "name": "Goal Setting Dashboard",
+        "description": "Monthly targets with progress tracking",
+        "effort": "medium",
+        "impact": "high",
+        "category": "Productivity"
+      },
+      {
+        "id": "ad_003",
+        "name": "Burnout Detector",
+        "description": "\"50 jobs in 3 days - time to rest\"",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "Wellness"
+      },
+      {
+        "id": "ad_004",
+        "name": "Application Quality Score",
+        "description": "Not just quantity - quality metric",
+        "effort": "high",
+        "impact": "high",
+        "category": "AI"
+      },
+      {
+        "id": "ad_005",
+        "name": "Best Time to Apply",
+        "description": "Tuesday 9am gets fastest responses",
+        "effort": "medium",
+        "impact": "high",
+        "category": "Intelligence"
+      },
+      {
+        "id": "ad_006",
+        "name": "Sector Breakdown",
+        "description": "Pie chart: HealthTech vs FinTech apps",
+        "effort": "low",
+        "impact": "medium",
+        "category": "Visualization"
+      },
+      {
+        "id": "ad_007",
+        "name": "Geographic Heatmap",
+        "description": "Where are you applying globally?",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "Visualization"
+      },
+      {
+        "id": "ad_008",
+        "name": "Response Time Leaderboard",
+        "description": "Which companies respond fastest?",
+        "effort": "medium",
+        "impact": "medium",
+        "category": "Intelligence"
+      },
+      {
+        "id": "ad_009",
+        "name": "Rejection Pattern Analysis",
+        "description": "You're rejected after 3rd round usually",
+        "effort": "high",
+        "impact": "high",
+        "category": "AI"
+      },
+      {
+        "id": "ad_010",
+        "name": "Peer Benchmarking",
+        "description": "How do you compare to other candidates?",
+        "effort": "high",
+        "impact": "medium",
+        "category": "Social"
+      }
+    ]
+  },
+  "calendar_integration": {
+    "name": "Calendar Integration",
+    "icon": "fa-cog",
+    "built_features": [
+      "Core functionality"
+    ],
+    "missing_features": []
+  },
+  "notification_hub": {
+    "name": "Notification Hub",
+    "icon": "fa-cog",
+    "built_features": [
+      "Core functionality"
+    ],
+    "missing_features": []
+  },
+  "mission_control": {
+    "name": "Mission Control",
+    "icon": "fa-cog",
+    "built_features": [
+      "Core functionality"
+    ],
+    "missing_features": []
+  },
+  "auto_trigger": {
+    "name": "Auto Trigger",
+    "icon": "fa-cog",
+    "built_features": [
+      "Core functionality"
+    ],
+    "missing_features": []
+  },
+  "voice_transcription": {
+    "name": "Voice Transcription",
+    "icon": "fa-cog",
+    "built_features": [
+      "Core functionality"
+    ],
+    "missing_features": []
+  },
+  "expense_tracker": {
+    "name": "Expense Tracker",
+    "icon": "fa-cog",
+    "built_features": [
+      "Core functionality"
+    ],
+    "missing_features": []
+  },
+  "bookmark_manager": {
+    "name": "Bookmark Manager",
+    "icon": "fa-cog",
+    "built_features": [
+      "Core functionality"
+    ],
+    "missing_features": []
+  },
+  "search_aggregator": {
+    "name": "Search Aggregator",
+    "icon": "fa-cog",
+    "built_features": [
+      "Core functionality"
+    ],
+    "missing_features": []
+  },
+  "second_brain": {
+    "name": "Second Brain",
+    "icon": "fa-cog",
+    "built_features": [
+      "Core functionality"
+    ],
+    "missing_features": []
+  }
+}
