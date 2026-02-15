@@ -1,0 +1,65 @@
+{
+  "Ahmed_Nasr_HCA_Healthcare_CV": {
+    "title": "CV - HCA Healthcare - VP Healthcare AI & Operations",
+    "type": "cv",
+    "tags": [
+      "job_application",
+      "executive",
+      "digital_transformation",
+      "healthcare"
+    ],
+    "created": "2026-02-15"
+  },
+  "Ahmed_Nasr_Tempus_CV": {
+    "title": "CV - Tempus - VP Product & Operations",
+    "type": "cv",
+    "tags": [
+      "job_application",
+      "executive",
+      "digital_transformation",
+      "healthcare"
+    ],
+    "created": "2026-02-15"
+  },
+  "Ahmed_Nasr_Teladoc_CV": {
+    "title": "CV - Teladoc Health - VP Digital Health Operations",
+    "type": "cv",
+    "tags": [
+      "job_application",
+      "executive",
+      "digital_transformation",
+      "healthcare"
+    ],
+    "created": "2026-02-15"
+  },
+  "Cover_Letter_HCA": {
+    "title": "Cover Letter - HCA Healthcare",
+    "type": "cover_letter",
+    "tags": [
+      "job_application",
+      "executive",
+      "cover_letter"
+    ],
+    "created": "2026-02-15"
+  },
+  "Cover_Letter_Tempus": {
+    "title": "Cover Letter - Tempus",
+    "type": "cover_letter",
+    "tags": [
+      "job_application",
+      "executive",
+      "cover_letter"
+    ],
+    "created": "2026-02-15"
+  },
+  "Cover_Letter_Teladoc": {
+    "title": "Cover Letter - Teladoc Health",
+    "type": "cover_letter",
+    "tags": [
+      "job_application",
+      "executive",
+      "cover_letter"
+    ],
+    "created": "2026-02-15"
+  }
+}

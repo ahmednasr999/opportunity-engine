@@ -1,0 +1,60 @@
+# Cover Letter - HCA Healthcare
+
+**Type:** Cover Letter
+**Company:** HCA Healthcare
+**Created:** 2026-02-15T07:45:00Z
+
+**Tags:** cover_letter, job_application, executive
+
+---
+
+Ahmed Nasr
++971 50 281 4490 (UAE) | +20 128 573 3991 (Egypt)
+ahmednasr999@gmail.com | linkedin.com/in/ahmednasr
+
+[Date]
+
+Hiring Manager
+HCA Healthcare
+
+Dear Hiring Manager,
+
+As a digital transformation leader who has implemented AI-driven clinical decision 
+support and enterprise-wide HealthTech solutions across hospital networks, I was 
+immediately drawn to HCA's scale and commitment to transforming patient care through 
+technology.
+
+At Saudi German Hospital Group (TopMed), I am leading digital transformation 
+initiatives that deliver measurable results:
+• Implementing Health Catalyst AI platform and enterprise data warehouse for 
+  real-time analytics across 10+ hospitals
+• Deploying AI-driven Clinical Decision Support tools, improving patient outcomes
+• Leading telemedicine and virtual care platform initiatives serving 500K+ patients
+• Managing $25M+ P&L and cross-functional teams of 50+ across 4 countries
+• Ensuring JCI, HIMSS, and HIPAA compliance across all digital health initiatives
+
+My previous experience leading digital transformation at El Araby Group (SAP S/4HANA 
+implementation) and scaling digital operations at Talabat (30K to 7M daily orders) 
+provides the enterprise-scale expertise to drive results at HCA's magnitude.
+
+I bring expertise in:
+• Digital transformation strategy and execution in healthcare
+• AI/ML implementation (Health Catalyst, predictive analytics, clinical decision support)
+• Large-scale healthcare operations ($25M+ P&L, 500K+ patients)
+• EMR/EHR systems and healthcare compliance (HIPAA, JCI, HIMSS)
+• Building and leading high-performing, cross-functional teams
+
+What distinguishes my background is the proven ability to lead digital transformation 
+initiatives that combine technical innovation with operational excellence—from 
+enterprise ERP implementations to AI-powered clinical solutions.
+
+I am excited about the opportunity to bring this digital transformation expertise 
+to HCA Healthcare's mission. I am available for a conversation at your convenience.
+
+Thank you for considering my application.
+
+Sincerely,
+
+Ahmed Nasr, MBA (In Progress), PMP
+Digital Transformation Leader & PMO Director
+
