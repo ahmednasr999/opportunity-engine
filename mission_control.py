@@ -8,6 +8,7 @@ import sys
 import json
 from pathlib import Path
 from datetime import datetime
+from typing import Dict, List, Optional
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 
 # Add src to path

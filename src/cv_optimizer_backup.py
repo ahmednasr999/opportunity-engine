@@ -52,6 +52,119 @@ class TailoredCV:
     generated_at: str
 
 class ProfileDatabase:
+    """Ahmed's master profile data"""
+    
+    def __init__(self):
+        self.data = {
+            "name": "Ahmed Nasr",
+            "title": "PMO & AI Automation Leader",
+            "location": "Dubai, UAE (Egypt: +20 128 573 3991)",
+            "visa": "UAE Permanent Work Visa",
+            "summary": "Senior PMO & AI Automation Leader with 20+ years driving digital transformation across FinTech, HealthTech, and enterprise technology. Proven track record leading $25M+ initiatives, achieving 40% efficiency gains, and building high-performance teams across Middle East markets.",
+            
+            "contact": {
+                "phone_uae": "+971 50 281 4490",
+                "phone_egypt": "+20 128 573 3991",
+                "email": "ahmednasr999@gmail.com",
+                "linkedin": "linkedin.com/in/ahmednasr",
+                "github": "github.com/ahmednasr999",
+                "newsletter": "linkedin.com/newsletters/an-fintech-weekly-newsletter-7342491220318818304",
+                "consulting": "anco-consulting.com"
+            },
+            
+            "core_skills": {
+                "leadership": [
+                    "PMO Leadership", "Program Management", "Digital Transformation",
+                    "AI Strategy", "Operational Excellence", "Change Management",
+                    "Team Leadership", "Stakeholder Management", "Executive Reporting"
+                ],
+                "technical": [
+                    "AI Automation", "Machine Learning", "Healthcare IT", "FinTech Systems",
+                    "Business Intelligence", "Data Analytics", "Cloud Platforms",
+                    "System Integration", "API Management", "Process Automation"
+                ],
+                "healthcare": [
+                    "HealthTech", "Hospital Operations", "Clinical Systems",
+                    "Healthcare AI", "EMR/EHR Systems", "Healthcare Compliance",
+                    "Patient Experience", "Healthcare Digital Transformation"
+                ],
+                "fintech": [
+                    "Digital Banking", "Payment Systems", "Stablecoins",
+                    "Financial Technology", "Banking Operations", "Risk Management",
+                    "Regulatory Compliance", "Financial Analytics"
+                ],
+                "methodologies": [
+                    "Agile", "Scrum", "Lean", "Six Sigma", "ITIL",
+                    "Waterfall", "Hybrid PM", "DevOps", "CI/CD"
+                ]
+            },
+            
+            "experience": [
+                {
+                    "title": "Acting PMO & Regional Engagement Lead",
+                    "company": "TopMed - Saudi German Hospital Group (SGH)",
+                    "location": "KSA",
+                    "period": "2024 - Present",
+                    "duration_years": 1,
+                    "sector": "HealthTech",
+                    "achievements": [
+                        "Lead AI automation initiatives across hospital operations, reducing processing time by 40%",
+                        "Manage PMO function for digital transformation programs across regional hospitals",
+                        "Oversee implementation of AI-driven clinical decision support systems",
+                        "Drive operational excellence initiatives resulting in 25% efficiency gains",
+                        "Build and lead cross-functional teams of 50+ professionals",
+                        "Manage multi-million dollar technology budgets and vendor relationships"
+                    ],
+                    "skills_used": ["AI Automation", "PMO", "Healthcare IT", "Digital Transformation", "Team Leadership"]
+                },
+                {
+                    "title": "Digital Transformation Consultant",
+                    "company": "AN & Co. Consulting",
+                    "location": "MENA Region",
+                    "period": "2020 - Present",
+                    "duration_years": 5,
+                    "sector": "Consulting",
+                    "achievements": [
+                        "Advise healthcare and FinTech organizations on digital transformation strategy",
+                        "Deliver AI automation solutions for operational efficiency",
+                        "Lead change management programs for technology adoption",
+                        "Published weekly FinTech newsletter with 1000+ subscribers"
+                    ],
+                    "skills_used": ["Consulting", "Digital Strategy", "AI", "FinTech", "Change Management"]
+                },
+                {
+                    "title": "Program Manager",
+                    "company": "Intel",
+                    "location": "Global",
+                    "period": "2015 - 2020",
+                    "duration_years": 5,
+                    "sector": "Technology",
+                    "achievements": [
+                        "Led large-scale technology programs across multiple regions",
+                        "Managed complex stakeholder ecosystems in enterprise environments",
+                        "Delivered digital transformation initiatives on time and budget",
+                        "Drove operational excellence in technology operations"
+                    ],
+                    "skills_used": ["Program Management", "Enterprise IT", "Digital Transformation", "Leadership"]
+                },
+                {
+                    "title": "Program Manager",
+                    "company": "Microsoft",
+                    "location": "Global",
+                    "period": "2010 - 2015",
+                    "duration_years": 5,
+                    "sector": "Technology",
+                    "achievements": [
+                        "Managed enterprise software development programs",
+                        "Led cross-functional teams in agile and waterfall environments",
+                        "Delivered solutions for Fortune 500 clients",
+                        "Built expertise in cloud platforms and enterprise systems"
+                    ],
+                    "skills_used": ["Program Management", "Agile", "Cloud", "Enterprise Software", "Client Management"]
+                }
+            ],
+            
+class ProfileDatabase:
     """Ahmed's master profile data - UPDATED with complete information"""
     
     def __init__(self):
@@ -242,7 +355,7 @@ class ProfileDatabase:
                 "Six Sigma (Multiple Certificates)"
             ],
             
-        "total_experience_years": 20,
+            "total_experience_years": 20,
             
             "sectors": ["HealthTech", "FinTech", "E-commerce", "Enterprise Technology", "Consulting"],
             
@@ -265,7 +378,8 @@ class ProfileDatabase:
                 "Chief Technology Officer", "VP Healthcare Technology",
                 "Digital Transformation Leader", "AI Strategy Director"
             ]
-    }
+        }
+    
     def get_all_skills(self) -> List[str]:
         """Get flat list of all skills"""
         skills = []

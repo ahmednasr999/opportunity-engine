@@ -242,7 +242,7 @@ class ProfileDatabase:
                 "Six Sigma (Multiple Certificates)"
             ],
             
-        "total_experience_years": 20,
+            "total_experience_years": 20,
             
             "sectors": ["HealthTech", "FinTech", "E-commerce", "Enterprise Technology", "Consulting"],
             
@@ -258,14 +258,17 @@ class ProfileDatabase:
             ]
         }
             
-            "total_experience_years": 20,
+        }
+    }
+}
             "sectors": ["HealthTech", "FinTech", "Technology", "Consulting"],
             "target_roles": [
                 "VP Digital Transformation", "Director PMO", "Head of AI",
                 "Chief Technology Officer", "VP Healthcare Technology",
                 "Digital Transformation Leader", "AI Strategy Director"
             ]
-    }
+        }
+    
     def get_all_skills(self) -> List[str]:
         """Get flat list of all skills"""
         skills = []

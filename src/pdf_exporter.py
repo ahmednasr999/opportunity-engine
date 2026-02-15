@@ -206,7 +206,8 @@ CV_TEMPLATE = """
         <div class="title">{{headline}}</div>
         <div class="contact">
             {% if location %}<span class="contact-item">{{location}}</span>{% endif %}
-            {% if phone %}<span class="contact-item">{{phone}}</span>{% endif %}
+            {% if phone_uae %}<span class="contact-item">📱 UAE: {{phone_uae}}</span>{% endif %}
+            {% if phone_egypt %}<span class="contact-item">📱 Egypt: {{phone_egypt}}</span>{% endif %}
             {% if email %}<span class="contact-item">{{email}}</span>{% endif %}
             {% if linkedin %}<span class="contact-item">{{linkedin}}</span>{% endif %}
         </div>
@@ -240,7 +241,6 @@ CV_TEMPLATE = """
                 </div>
                 <span class="exp-date">{{exp.date}}</span>
             </div>
-            <div class="exp-location">{{exp.location}}</div>
             <div class="exp-description">
                 <ul>
                     {% for bullet in exp.bullets %}
