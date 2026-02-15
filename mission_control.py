@@ -35,6 +35,7 @@ from ai_cv_rewriter import AICVRewriter
 from company_intelligence import CompanyIntelligence
 from email_automation import EmailAutomation
 from chat_brain import ChatBrain
+from data_coordinator import coordinator
 
 app = Flask(__name__)
 
@@ -163,6 +164,17 @@ def cv_optimizer():
                 "company": company,
                 "title": title
             }
+            
+            # Register CV in unified system
+            cv_id = coordinator.register_cv({
+                'filename': filename,
+                'pdf_filename': pdf_filename,
+                'company': company,
+                'title': title,
+                'ats_score': tailored_cv.ats_score,
+                'cv_text': output
+            })
+            result['cv_id'] = cv_id
     
     return render_template("cv_optimizer.html", result=result, linkedin_data=linkedin_data)
 
@@ -411,6 +423,45 @@ def view_cv(filename):
         return content
     else:
         return "File not found", 404
+
+# ===== UNIFIED DATA ROUTES =====
+@app.route("/job/<job_id>/context")
+def job_context(job_id):
+    """Get full context for a job: CVs, contacts, timeline"""
+    context = coordinator.get_job_context(job_id)
+    return jsonify(context)
+
+@app.route("/api/unified-search", methods=["POST"])
+def unified_search():
+    """Search across all data: jobs, contacts, documents, CVs"""
+    query = request.json.get('query', '') if request.json else request.form.get('query', '')
+    results = coordinator.unified_search(query)
+    return jsonify(results)
+
+@app.route("/api/dashboard-summary")
+def dashboard_summary():
+    """Get unified dashboard summary"""
+    summary = coordinator.get_dashboard_summary()
+    return jsonify(summary)
+
+@app.route("/api/link-cv-to-job", methods=["POST"])
+def link_cv_to_job():
+    """Link a CV to a job application"""
+    cv_id = request.form.get('cv_id', '')
+    job_id = request.form.get('job_id', '')
+    
+    if cv_id and job_id:
+        coordinator.link_cv_to_job(cv_id, job_id)
+        return jsonify({'status': 'success', 'message': 'CV linked to job'})
+    
+    return jsonify({'status': 'error', 'message': 'Missing cv_id or job_id'}), 400
+
+@app.route("/documents")
+def documents_view():
+    """View all documents (including auto-indexed CVs)"""
+    docs = coordinator.documents
+    cvs = coordinator.cvs
+    return render_template("documents.html", documents=docs, cvs=cvs)
 
 if __name__ == "__main__":
     print("🚀 Starting Mission Control...")

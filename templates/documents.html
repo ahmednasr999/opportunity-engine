@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Documents{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div style="margin-bottom: 32px;">
+    <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 8px;">Documents</h1>
+    <p class="text-secondary">All your CVs, files, and generated documents in one place</p>
+</div>
+
+<!-- Stats -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Total Documents</div>
+        <div style="font-size: 32px; font-weight: 700;">{{ documents|length + cvs|length }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Generated CVs</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--brand);">{{ cvs|length }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Linked to Jobs</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--success);">{{ cvs|selectattr('linked_to_job')|list|length }}</div>
+    </div>
+    <div class="card" style="padding: 20px;">
+        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">Indexed</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--info);">{{ documents|length }}</div>
+    </div>
+</div>
+
+<!-- Generated CVs -->
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-file-alt"></i> Generated CVs (Auto-Indexed)</div>
+    </div>
+    
+    {% if cvs %}
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            {% for cv in cvs %}
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px; border-left: 4px solid {% if cv.linked_to_job %}var(--success){% else %}var(--warning){% endif %};">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px;">{{ cv.title }} at {{ cv.company }}</div>
+                        <div class="text-muted" style="font-size: 13px;">
+                            <span class="badge {% if cv.ats_score >= 90 %}badge-green{% elif cv.ats_score >= 75 %}badge-blue{% else %}badge-yellow{% endif %}">
+                                ATS: {{ cv.ats_score }}/100
+                            </span>
+                            {% if cv.linked_to_job %}
+                                <span class="badge badge-green" style="margin-left: 8px;">Linked to Job</span>
+                            {% else %}
+                                <span class="badge badge-yellow" style="margin-left: 8px;">Not Linked</span>
+                            {% endif %}
+                            <span style="margin-left: 8px;">{{ cv.created_at[:10] }}</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        {% if cv.pdf_filename %}
+                        <a href="/cv-optimizer/view-cv/{{ cv.pdf_filename }}" target="_blank" class="btn btn-primary btn-sm">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-muted" style="text-align: center; padding: 40px;">
+            <i class="fas fa-file-alt" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+            <p>No CVs generated yet</p>
+            <a href="/cv-optimizer" class="btn btn-primary btn-sm">Generate Your First CV</a>
+        </div>
+    {% endif %}
+</div>
+
+<!-- All Documents -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-folder"></i> All Indexed Documents</div>
+    </div>
+    
+    {% if documents %}
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+            {% for doc in documents %}
+            <div style="padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <div style="font-weight: 600; margin-bottom: 4px;">{{ doc.title }}</div>
+                        <div class="text-muted" style="font-size: 13px; margin-bottom: 8px;">
+                            <span class="badge badge-blue">{{ doc.doc_type }}</span>
+                            <span style="margin-left: 8px;">{{ doc.date_added[:10] }}</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-file" style="color: var(--brand); font-size: 20px;"></i>
+                </div>
+                {% if doc.tags %}
+                <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;">
+                    {% for tag in doc.tags %}
+                        <span style="padding: 2px 8px; background: var(--bg-primary); border-radius: 4px; font-size: 11px; color: var(--text-secondary);">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-muted" style="text-align: center; padding: 40px;">
+            <i class="fas fa-folder-open" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+            <p>No documents indexed yet</p>
+            <p style="font-size: 13px;">CVs are automatically indexed when generated</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Unified Search -->
+<div class="card mt-4">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-search"></i> Search All Documents</div>
+    </div>
+    <form id="unified-search-form" onsubmit="return performSearch(event)">
+        <div style="display: flex; gap: 16px;">
+            <input type="text" id="search-query" class="form-input" placeholder="Search CVs, documents, jobs, contacts..." style="flex: 1;">
+            <button type="submit" class="btn btn-primary btn-md">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </div>
+    </form>
+    <div id="search-results" style="margin-top: 20px;"></div>
+</div>
+
+<script>
+function performSearch(event) {
+    event.preventDefault();
+    const query = document.getElementById('search-query').value;
+    const resultsDiv = document.getElementById('search-results');
+    
+    resultsDiv.innerHTML = '<div class="text-muted">Searching...</div>';
+    
+    fetch('/api/unified-search', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({query: query})
+    })
+    .then(r => r.json())
+    .then(data => {
+        let html = '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">';
+        
+        // Jobs
+        if (data.jobs && data.jobs.length > 0) {
+            html += '<div><h4>Jobs (' + data.jobs.length + ')</h4>';
+            data.jobs.slice(0, 3).forEach(job => {
+                html += `<div style="padding: 12px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 8px;">
+                    <strong>${job.company}</strong> - ${job.title}
+                </div>`;
+            });
+            html += '</div>';
+        }
+        
+        // CVs
+        if (data.cvs && data.cvs.length > 0) {
+            html += '<div><h4>CVs (' + data.cvs.length + ')</h4>';
+            data.cvs.slice(0, 3).forEach(cv => {
+                html += `<div style="padding: 12px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 8px;">
+                    <strong>${cv.title}</strong> at ${cv.company}
+                </div>`;
+            });
+            html += '</div>';
+        }
+        
+        // Contacts
+        if (data.contacts && data.contacts.length > 0) {
+            html += '<div><h4>Contacts (' + data.contacts.length + ')</h4>';
+            data.contacts.slice(0, 3).forEach(contact => {
+                html += `<div style="padding: 12px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 8px;">
+                    <strong>${contact.name}</strong> - ${contact.company}
+                </div>`;
+            });
+            html += '</div>';
+        }
+        
+        // Documents
+        if (data.documents && data.documents.length > 0) {
+            html += '<div><h4>Documents (' + data.documents.length + ')</h4>';
+            data.documents.slice(0, 3).forEach(doc => {
+                html += `<div style="padding: 12px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 8px;">
+                    <strong>${doc.title}</strong>
+                </div>`;
+            });
+            html += '</div>';
+        }
+        
+        html += '</div>';
+        
+        if (html === '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;"></div>') {
+            html = '<div class="text-muted">No results found</div>';
+        }
+        
+        resultsDiv.innerHTML = html;
+    });
+    
+    return false;
+}
+</script>
+{% endblock %}
