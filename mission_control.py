@@ -31,6 +31,10 @@ from job_board_scraper import JobBoardScraper
 from enhanced_network_mapper import EnhancedNetworkMapper
 from enhanced_content_factory import EnhancedContentFactory
 from enhanced_analytics import EnhancedAnalyticsDashboard
+from ai_cv_rewriter import AICVRewriter
+from company_intelligence import CompanyIntelligence
+from email_automation import EmailAutomation
+from chat_brain import ChatBrain
 
 app = Flask(__name__)
 
@@ -53,6 +57,10 @@ job_scraper = JobBoardScraper()
 enhanced_network = EnhancedNetworkMapper()
 enhanced_content = EnhancedContentFactory()
 enhanced_analytics = EnhancedAnalyticsDashboard()
+ai_rewriter = AICVRewriter()
+company_intel = CompanyIntelligence()
+email_auto = EmailAutomation()
+chat_brain = ChatBrain()
 
 @app.route("/")
 def dashboard():
