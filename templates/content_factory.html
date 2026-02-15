@@ -4,27 +4,27 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>✍️ Content Factory</h1>
+    <h1><i class="fas fa-pen-fancy" style="color: var(--primary);"></i> Content Factory</h1>
     <p>Generate LinkedIn posts and newsletters for your HealthTech AI positioning.</p>
 </div>
 
 <!-- Generator Form -->
-<div class="card">
+<div class="card mb-4">
     <div class="card-header">
-        <div class="card-title">Generate Content</div>
+        <div class="card-title"><i class="fas fa-magic"></i> Generate Content</div>
     </div>
     <form method="POST" action="/content-factory">
-        <div style="display: grid; grid-template-columns: 1fr 1fr 150px; gap: 1.5rem; align-items: end;">
-            <div class="form-group">
-                <label class="form-label">Content Type</label>
+        <div style="display: flex; gap: 1rem; align-items: end; flex-wrap: wrap;">
+            <div class="form-group" style="flex: 1; min-width: 200px;">
+                <label class="form-label"><i class="fas fa-type"></i> Content Type</label>
                 <select name="content_type" class="form-select" id="contentType">
                     <option value="linkedin">LinkedIn Post</option>
                     <option value="newsletter">Newsletter</option>
                     <option value="calendar">30-Day Calendar</option>
                 </select>
             </div>
-            <div class="form-group" id="topicGroup">
-                <label class="form-label">Topic</label>
+            <div class="form-group" id="topicGroup" style="flex: 1; min-width: 200px;">
+                <label class="form-label"><i class="fas fa-tag"></i> Topic</label>
                 <select name="topic" class="form-select">
                     <option value="healthtech_ai" selected>HealthTech AI</option>
                     <option value="digital_transformation">Digital Transformation</option>
@@ -33,7 +33,9 @@
                 </select>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Generate</button>
+                <button type="submit" class="btn btn-primary" style="height: 46px;">
+                    <i class="fas fa-wand-magic-sparkles"></i> Generate
+                </button>
             </div>
         </div>
     </form>
@@ -41,33 +43,35 @@
 
 {% if result %}
 <!-- Results -->
-<div class="card">
+<div class="card mb-4">
     <div class="card-header">
         <div class="card-title">
             {% if result.type == 'calendar' %}
-                📅 Content Calendar ({{ result.total }} items)
+                <i class="fas fa-calendar-alt"></i> Content Calendar ({{ result.total }} items)
             {% else %}
-                Generated {{ result.type|title if result.type else 'Content' }}
+                <i class="fas fa-check-circle" style="color: var(--success);"></i> Generated {{ result.type|title if result.type else 'Content' }}
             {% endif %}
         </div>
         {% if result.type != 'calendar' %}
-        <button onclick="copyContent()" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">📋 Copy</button>
+        <button onclick="copyContent()" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+            <i class="fas fa-copy"></i> Copy
+        </button>
         {% endif %}
     </div>
     
     {% if result.type == 'calendar' %}
         <!-- Calendar View -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+        <div class="grid-2">
             {% for item in result.calendar %}
-            <div style="background: #0f172a; border-radius: 8px; padding: 1rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                    <span class="badge badge-blue">{{ item.type }}</span>
-                    <span class="text-muted" style="font-size: 0.85rem;">{{ item.date }}</span>
+            <div style="background: var(--bg-dark); border-radius: var(--radius); padding: 1.25rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <span class="badge {% if item.type == 'Newsletter' %}badge-purple{% else %}badge-blue{% endif %}">{{ item.type }}</span>
+                    <span class="text-muted" style="font-size: 0.85rem;"><i class="fas fa-calendar"></i> {{ item.date }}</span>
                 </div>
                 {% if item.type == 'Newsletter' %}
-                    <div style="font-weight: 500;">{{ item.subject }}</div>
+                    <div style="font-weight: 600;">{{ item.subject }}</div>
                 {% else %}
-                    <div style="font-weight: 500;">{{ item.topic }}</div>
+                    <div style="font-weight: 600;"><i class="fas fa-hashtag"></i> {{ item.topic }}</div>
                 {% endif %}
                 <div class="text-muted" style="font-size: 0.85rem; margin-top: 0.5rem;">
                     {{ item.content_preview }}
@@ -75,33 +79,33 @@
             </div>
             {% endfor %}
         </div>
-        <div style="text-align: center; margin-top: 1rem; color: #64748b;">
+        <div class="mt-4 text-muted" style="text-align: center;">
             Showing first {{ result.calendar|length }} of {{ result.total }} items
         </div>
     {% else %}
         <!-- Single Content View -->
-        <div style="margin-bottom: 1rem;">
+        <div class="mb-4">
             {% if result.template %}
-                <span class="badge badge-green" style="margin-right: 0.5rem;">{{ result.template }}</span>
+                <span class="badge badge-green" style="margin-right: 0.5rem;"><i class="fas fa-template"></i> {{ result.template }}</span>
             {% endif %}
             {% if result.tone %}
-                <span class="badge badge-blue">{{ result.tone }}</span>
+                <span class="badge badge-blue"><i class="fas fa-volume-up"></i> {{ result.tone }}</span>
             {% endif %}
             {% if result.word_count %}
-                <span class="text-muted" style="margin-left: 1rem;">{{ result.word_count }} words</span>
+                <span class="text-muted" style="margin-left: 1rem;"><i class="fas fa-font"></i> {{ result.word_count }} words</span>
             {% endif %}
             {% if result.character_count %}
-                <span class="text-muted" style="margin-left: 1rem;">{{ result.character_count }} characters</span>
+                <span class="text-muted" style="margin-left: 1rem;"><i class="fas fa-text-width"></i> {{ result.character_count }} chars</span>
             {% endif %}
         </div>
         
-        <pre id="content-text" style="background: #0f172a; padding: 1.5rem; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; font-family: inherit; font-size: 0.95rem; line-height: 1.7;">{{ result.content }}</pre>
+        <pre id="content-text" style="background: var(--bg-dark); padding: 1.5rem; border-radius: var(--radius); overflow-x: auto; white-space: pre-wrap; font-family: inherit; font-size: 0.95rem; line-height: 1.8;">{{ result.content }}</pre>
         
         {% if result.hashtags %}
-        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #334155;">
-            <span class="text-muted">Hashtags:</span>
+        <div class="mt-4" style="padding-top: 1rem; border-top: 1px solid var(--border);">
+            <span class="text-muted"><i class="fas fa-hashtag"></i> Hashtags:</span>
             {% for tag in result.hashtags %}
-                <span style="color: #3b82f6; margin-right: 0.5rem;">#{{ tag }}</span>
+                <span style="color: var(--primary-light); margin-right: 0.75rem; font-weight: 500;">#{{ tag }}</span>
             {% endfor %}
         </div>
         {% endif %}
@@ -130,63 +134,66 @@ document.getElementById('contentType').addEventListener('change', function() {
 {% endif %}
 
 <!-- Content Templates Info -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+<div class="grid-3">
     <div class="card">
-        <div class="card-title">📢 LinkedIn Templates</div>
-        <ul style="margin-left: 1.5rem; color: #cbd5e1; line-height: 2;">
-            <li><strong>HealthTech Insight</strong> - Share expertise</li>
-            <li><strong>Lessons Learned</strong> - Career wisdom</li>
-            <li><strong>Industry Trend</strong> - Market analysis</li>
-            <li><strong>Behind the Scenes</strong> - Work stories</li>
-            <li><strong>Contrarian Take</strong> - Thought leadership</li>
+        <div class="card-title"><i class="fab fa-linkedin" style="color: #0077b5;"></i> LinkedIn Templates</div>
+        <ul style="margin-left: 1.5rem; color: var(--text-secondary); line-height: 2.2;">
+            <li><i class="fas fa-brain" style="color: var(--primary); margin-right: 0.5rem;"></i><strong>HealthTech Insight</strong> - Share expertise</li>
+            <li><i class="fas fa-graduation-cap" style="color: var(--primary); margin-right: 0.5rem;"></i><strong>Lessons Learned</strong> - Career wisdom</li>
+            <li><i class="fas fa-chart-line" style="color: var(--primary); margin-right: 0.5rem;"></i><strong>Industry Trend</strong> - Market analysis</li>
+            <li><i class="fas fa-eye" style="color: var(--primary); margin-right: 0.5rem;"></i><strong>Behind the Scenes</strong> - Work stories</li>
+            <li><i class="fas fa-bolt" style="color: var(--primary); margin-right: 0.5rem;"></i><strong>Contrarian Take</strong> - Thought leadership</li>
         </ul>
     </div>
     
     <div class="card">
-        <div class="card-title">📧 Newsletter Formats</div>
-        <ul style="margin-left: 1.5rem; color: #cbd5e1; line-height: 2;">
-            <li><strong>Weekly Roundup</strong> - Top 3 stories</li>
-            <li><strong>Deep Dive</strong> - In-depth analysis</li>
+        <div class="card-title"><i class="fas fa-envelope-open-text" style="color: var(--warning);"></i> Newsletter Formats</div>
+        <ul style="margin-left: 1.5rem; color: var(--text-secondary); line-height: 2.2;">
+            <li><i class="fas fa-newspaper" style="color: var(--warning); margin-right: 0.5rem;"></i><strong>Weekly Roundup</strong> - Top 3 stories</li>
+            <li><i class="fas fa-search-plus" style="color: var(--warning); margin-right: 0.5rem;"></i><strong>Deep Dive</strong> - In-depth analysis</li>
         </ul>
-        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #334155;">
-            <div class="text-muted" style="font-size: 0.9rem;">Recommended: 70% HealthTech, 30% FinTech bridge</div>
+        <div class="mt-4" style="padding: 1rem; background: var(--bg-dark); border-radius: var(--radius);">
+            <div class="text-muted" style="font-size: 0.9rem;">
+                <i class="fas fa-lightbulb" style="color: var(--warning);"></i> 
+                Recommended: 70% HealthTech, 30% FinTech bridge
+            </div>
         </div>
     </div>
     
     <div class="card">
-        <div class="card-title">💡 Best Practices</div>
-        <ul style="margin-left: 1.5rem; color: #cbd5e1; line-height: 2;">
-            <li>Post 3x/week (Mon, Wed, Fri)</li>
-            <li>Engage with comments within 1 hour</li>
-            <li>Use contrarian takes for virality</li>
-            <li>Always end with a question</li>
-            <li>Mix professional + personal</li>
+        <div class="card-title"><i class="fas fa-trophy" style="color: var(--success);"></i> Best Practices</div>
+        <ul style="margin-left: 1.5rem; color: var(--text-secondary); line-height: 2.2;">
+            <li><i class="fas fa-calendar-check" style="color: var(--success); margin-right: 0.5rem;"></i>Post 3x/week (Mon, Wed, Fri)</li>
+            <li><i class="fas fa-clock" style="color: var(--success); margin-right: 0.5rem;"></i>Engage within 1 hour</li>
+            <li><i class="fas fa-bolt" style="color: var(--success); margin-right: 0.5rem;"></i>Use contrarian takes for virality</li>
+            <li><i class="fas fa-question-circle" style="color: var(--success); margin-right: 0.5rem;"></i>Always end with question</li>
+            <li><i class="fas fa-user" style="color: var(--success); margin-right: 0.5rem;"></i>Mix professional + personal</li>
         </ul>
     </div>
 </div>
 
 <!-- Quick Generate Buttons -->
-<div class="card" style="margin-top: 1.5rem;">
-    <div class="card-title">⚡ Quick Generate</div>
-    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+<div class="card mt-4">
+    <div class="card-title"><i class="fas fa-bolt" style="color: var(--warning);"></i> Quick Generate</div>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
         <form method="POST" action="/content-factory" style="display: inline;">
             <input type="hidden" name="content_type" value="linkedin">
             <input type="hidden" name="topic" value="healthtech_ai">
-            <button type="submit" class="btn btn-primary">HealthTech AI Post</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-linkedin"></i> HealthTech AI Post</button>
         </form>
         <form method="POST" action="/content-factory" style="display: inline;">
             <input type="hidden" name="content_type" value="linkedin">
             <input type="hidden" name="topic" value="leadership">
-            <button type="submit" class="btn btn-secondary">Leadership Post</button>
+            <button type="submit" class="btn btn-secondary"><i class="fas fa-users"></i> Leadership Post</button>
         </form>
         <form method="POST" action="/content-factory" style="display: inline;">
             <input type="hidden" name="content_type" value="newsletter">
             <input type="hidden" name="topic" value="healthtech_ai">
-            <button type="submit" class="btn btn-success">Weekly Newsletter</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-envelope"></i> Weekly Newsletter</button>
         </form>
         <form method="POST" action="/content-factory" style="display: inline;">
             <input type="hidden" name="content_type" value="calendar">
-            <button type="submit" class="btn btn-secondary">30-Day Calendar</button>
+            <button type="submit" class="btn btn-secondary"><i class="fas fa-calendar-alt"></i> 30-Day Calendar</button>
         </form>
     </div>
 </div>
