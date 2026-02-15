@@ -1,203 +1,195 @@
 {% extends "base.html" %}
 
-{% block title %}Job Tracker{% endblock %}
+{% block title %}Job Applications{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1><i class="fas fa-tasks" style="color: var(--primary);"></i> Job Tracker</h1>
-    <p>Track your applications from "Applied" to "Offer".</p>
+<!-- Page Header -->
+<div style="margin-bottom: 32px;">
+    <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 8px;">Job Applications</h1>
+    <p class="text-secondary">
+        Applied: <strong style="color: var(--text-primary);">{{ stats.total_applications }}</strong> • 
+        Interviews: <strong style="color: var(--text-primary);">{{ stats.interviews }}</strong> • 
+        Offers: <strong style="color: var(--text-primary);">{{ stats.offers }}</strong>
+    </p>
+</div>
+
+<!-- Control Bar -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; gap: 16px;">
+    <!-- Left: Search -->
+    <div style="position: relative; width: 384px;">
+        <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary);"></i>
+        <input type="text" class="form-input" placeholder="Search jobs..." style="padding-left: 44px;">
+    </div>
+    
+    <!-- Right: Add Button -->
+    <button class="btn btn-primary btn-md" onclick="document.getElementById('addJobForm').scrollIntoView({behavior: 'smooth'})">
+        <i class="fas fa-plus"></i> New Application
+    </button>
+</div>
+
+<!-- Kanban Board -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
+    <!-- Column 1: Applied (Ideas) -->
+    <div class="card card-status-ideas" style="padding: 0; min-height: 500px;">
+        <div style="padding: 16px; border-bottom: 1px solid rgba(234, 179, 8, 0.3); display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-paper-plane" style="color: var(--status-ideas);"></i>
+            <span style="font-weight: 600;">Applied</span>
+            <span class="badge" style="background: rgba(234, 179, 8, 0.2); color: var(--status-ideas); margin-left: auto;">{{ pipeline.get('Applied', [])|length }}</span>
+        </div>
+        <div style="padding: 16px;">
+            {% for job in pipeline.get('Applied', []) %}
+            <div style="background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; margin-bottom: 12px; cursor: grab; transition: all 200ms;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-weight: 600; margin-bottom: 4px;">{{ job.title }}</div>
+                <div class="text-muted" style="font-size: 13px; margin-bottom: 12px;">{{ job.company }}</div>
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <span class="badge badge-blue">{{ job.sector }}</span>
+                </div>
+                <div class="progress-bar" style="margin-bottom: 8px;">
+                    <div class="progress-fill" style="width: {{ job.ats_score }}%; background: var(--status-ideas);"></div>
+                </div>
+                <div class="text-muted" style="font-size: 12px;">ATS: {{ job.ats_score }}/100</div>
+            </div>
+            {% endfor %}
+            {% if not pipeline.get('Applied', []) %}
+            <div class="text-muted" style="text-align: center; padding: 40px 20px;">
+                <i class="fas fa-inbox" style="font-size: 24px; margin-bottom: 8px; opacity: 0.5;"></i>
+                <p style="font-size: 13px;">No applications</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Column 2: Phone Screen (Building) -->
+    <div class="card card-status-building" style="padding: 0; min-height: 500px;">
+        <div style="padding: 16px; border-bottom: 1px solid rgba(37, 99, 235, 0.3); display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-phone" style="color: var(--status-building);"></i>
+            <span style="font-weight: 600;">Phone Screen</span>
+            <span class="badge" style="background: rgba(37, 99, 235, 0.2); color: var(--status-building); margin-left: auto;">{{ pipeline.get('Phone Screen', [])|length }}</span>
+        </div>
+        <div style="padding: 16px;">
+            {% for job in pipeline.get('Phone Screen', []) %}
+            <div style="background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; margin-bottom: 12px; cursor: grab; transition: all 200ms;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-weight: 600; margin-bottom: 4px;">{{ job.title }}</div>
+                <div class="text-muted" style="font-size: 13px; margin-bottom: 12px;">{{ job.company }}</div>
+                <div style="display: flex; gap: 8px;">
+                    <span class="badge badge-blue">{{ job.sector }}</span>
+                </div>
+            </div>
+            {% endfor %}
+            {% if not pipeline.get('Phone Screen', []) %}
+            <div class="text-muted" style="text-align: center; padding: 40px 20px;">
+                <i class="fas fa-inbox" style="font-size: 24px; margin-bottom: 8px; opacity: 0.5;"></i>
+                <p style="font-size: 13px;">No phone screens</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Column 3: Interview (Live) -->
+    <div class="card card-status-live" style="padding: 0; min-height: 500px;">
+        <div style="padding: 16px; border-bottom: 1px solid rgba(34, 197, 94, 0.3); display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-handshake" style="color: var(--status-live);"></i>
+            <span style="font-weight: 600;">Interview</span>
+            <span class="badge" style="background: rgba(34, 197, 94, 0.2); color: var(--status-live); margin-left: auto;">{{ pipeline.get('Interview', [])|length }}</span>
+        </div>
+        <div style="padding: 16px;">
+            {% for job in pipeline.get('Interview', []) %}
+            <div style="background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; margin-bottom: 12px; cursor: grab; transition: all 200ms;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-weight: 600; margin-bottom: 4px;">{{ job.title }}</div>
+                <div class="text-muted" style="font-size: 13px; margin-bottom: 12px;">{{ job.company }}</div>
+                <div style="display: flex; gap: 8px;">
+                    <span class="badge badge-blue">{{ job.sector }}</span>
+                </div>
+            </div>
+            {% endfor %}
+            {% if not pipeline.get('Interview', []) %}
+            <div class="text-muted" style="text-align: center; padding: 40px 20px;">
+                <i class="fas fa-inbox" style="font-size: 24px; margin-bottom: 8px; opacity: 0.5;"></i>
+                <p style="font-size: 13px;">No interviews</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Column 4: Offer/Closed (Archived) -->
+    <div class="card card-status-archived" style="padding: 0; min-height: 500px;">
+        <div style="padding: 16px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-check-circle" style="color: var(--status-archived);"></i>
+            <span style="font-weight: 600;">Closed</span>
+            <span class="badge" style="background: rgba(107, 114, 128, 0.2); color: var(--status-archived); margin-left: auto;">{{ pipeline.get('Offer', [])|length + pipeline.get('Rejected', [])|length + pipeline.get('Ghosted', [])|length }}</span>
+        </div>
+        <div style="padding: 16px;">
+            {% for job in pipeline.get('Offer', []) + pipeline.get('Rejected', []) + pipeline.get('Ghosted', []) %}
+            <div style="background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; margin-bottom: 12px; cursor: grab; transition: all 200ms;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 4px;">
+                    <div style="font-weight: 600;">{{ job.title }}</div>
+                    <span class="badge {% if job.status == 'Offer' %}badge-green{% else %}badge-gray{% endif %}">{{ job.status }}</span>
+                </div>
+                <div class="text-muted" style="font-size: 13px;">{{ job.company }}</div>
+            </div>
+            {% endfor %}
+            {% if not (pipeline.get('Offer', []) + pipeline.get('Rejected', []) + pipeline.get('Ghosted', [])) %}
+            <div class="text-muted" style="text-align: center; padding: 40px 20px;">
+                <i class="fas fa-inbox" style="font-size: 24px; margin-bottom: 8px; opacity: 0.5;"></i>
+                <p style="font-size: 13px;">No closed jobs</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
 <!-- Add Job Form -->
-<div class="card mb-4">
+<div id="addJobForm" class="card mt-4" style="margin-top: 48px;">
     <div class="card-header">
-        <div class="card-title"><i class="fas fa-plus-circle"></i> Add New Job</div>
+        <div class="card-title"><i class="fas fa-plus-circle"></i> New Application</div>
     </div>
     <form method="POST" action="/job-tracker/add">
-        <div class="grid-3">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
             <div class="form-group">
-                <label class="form-label"><i class="fas fa-building"></i> Company</label>
+                <label class="form-label">Company</label>
                 <input type="text" name="company" class="form-input" placeholder="Company name" required>
             </div>
             <div class="form-group">
-                <label class="form-label"><i class="fas fa-briefcase"></i> Job Title</label>
+                <label class="form-label">Job Title</label>
                 <input type="text" name="title" class="form-input" placeholder="Job title" required>
             </div>
             <div class="form-group">
-                <label class="form-label"><i class="fas fa-map-marker-alt"></i> Location</label>
+                <label class="form-label">Location</label>
                 <input type="text" name="location" class="form-input" placeholder="e.g., Dubai, UAE">
             </div>
         </div>
-        <div class="grid-4" style="margin-top: 1rem;">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px;">
             <div class="form-group">
-                <label class="form-label"><i class="fas fa-tag"></i> Source</label>
+                <label class="form-label">Source</label>
                 <select name="source" class="form-select">
                     <option value="LinkedIn">LinkedIn</option>
-                    <option value="Bayt">Bayt</option>
-                    <option value="GulfTalent">GulfTalent</option>
                     <option value="Referral">Referral</option>
                     <option value="Company Website">Company Website</option>
                     <option value="Recruiter">Recruiter</option>
-                    <option value="Other">Other</option>
                 </select>
             </div>
             <div class="form-group">
-                <label class="form-label"><i class="fas fa-industry"></i> Sector</label>
+                <label class="form-label">Sector</label>
                 <select name="sector" class="form-select">
-                    <option value="HealthTech" selected>HealthTech</option>
+                    <option value="HealthTech">HealthTech</option>
                     <option value="FinTech">FinTech</option>
                     <option value="Technology">Technology</option>
-                    <option value="Consulting">Consulting</option>
-                    <option value="Other">Other</option>
                 </select>
             </div>
             <div class="form-group">
-                <label class="form-label"><i class="fas fa-link"></i> Job URL</label>
-                <input type="url" name="url" class="form-input" placeholder="https://...">
-            </div>
-            <div class="form-group">
-                <label class="form-label"><i class="fas fa-flag"></i> Priority</label>
+                <label class="form-label">Priority</label>
                 <select name="priority" class="form-select">
-                    <option value="5">🔴 High</option>
-                    <option value="4" selected>🟡 Med-High</option>
-                    <option value="3">🟢 Medium</option>
-                    <option value="2">⚪ Low</option>
+                    <option value="5">High</option>
+                    <option value="3" selected>Medium</option>
+                    <option value="1">Low</option>
                 </select>
             </div>
         </div>
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary btn-md">
                 <i class="fas fa-plus"></i> Add Job
             </button>
         </div>
     </form>
 </div>
-
-<!-- Stats -->
-<div class="stats-grid mb-4">
-    <div class="stat-card">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value">{{ stats.total_applications }}</div>
-                <div class="stat-label">Total Applications</div>
-            </div>
-            <i class="fas fa-paper-plane" style="font-size: 2rem; color: var(--primary); opacity: 0.5;"></i>
-        </div>
-    </div>
-    <div class="stat-card">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value" style="color: var(--success);">{{ stats.active_applications }}</div>
-                <div class="stat-label">Active</div>
-            </div>
-            <i class="fas fa-spinner" style="font-size: 2rem; color: var(--success); opacity: 0.5;"></i>
-        </div>
-    </div>
-    <div class="stat-card">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value" style="color: var(--warning);">{{ stats.interviews }}</div>
-                <div class="stat-label">Interviews</div>
-            </div>
-            <i class="fas fa-handshake" style="font-size: 2rem; color: var(--warning); opacity: 0.5;"></i>
-        </div>
-    </div>
-    <div class="stat-card">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="stat-value" style="color: #8b5cf6;">{{ "%.0f"|format(stats.avg_ats_score) }}</div>
-                <div class="stat-label">Avg ATS Score</div>
-            </div>
-            <i class="fas fa-chart-line" style="font-size: 2rem; color: #8b5cf6; opacity: 0.5;"></i>
-        </div>
-    </div>
-</div>
-
-<!-- Pipeline View -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-    {% for status, jobs in pipeline.items() %}
-    <div class="card" style="min-height: 400px;">
-        <div class="card-header">
-            <div class="card-title">
-                {% if status == 'Applied' %}<i class="fas fa-paper-plane" style="color: var(--primary);"></i>{% endif %}
-                {% if status == 'Phone Screen' %}<i class="fas fa-phone" style="color: var(--info);"></i>{% endif %}
-                {% if status == 'Interview' %}<i class="fas fa-handshake" style="color: var(--warning);"></i>{% endif %}
-                {% if status == 'Offer' %}<i class="fas fa-trophy" style="color: var(--success);"></i>{% endif %}
-                {% if status == 'Rejected' %}<i class="fas fa-times-circle" style="color: var(--danger);"></i>{% endif %}
-                {% if status == 'Ghosted' %}<i class="fas fa-ghost" style="color: var(--text-muted);"></i>{% endif %}
-                {{ status }}
-            </div>
-            <span class="badge badge-blue">{{ jobs|length }}</span>
-        </div>
-        
-        {% if jobs %}
-            {% for job in jobs %}
-            <div style="background: var(--bg-dark); border-radius: var(--radius); padding: 1rem; margin-bottom: 0.75rem; border-left: 4px solid {% if job.priority >= 4 %}var(--danger){% elif job.priority == 3 %}var(--warning){% else %}var(--primary){% endif %};">
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
-                    <div style="flex: 1;">
-                        <strong style="font-size: 0.95rem; display: block; margin-bottom: 0.25rem;">{{ job.title }}</strong>
-                        <div class="text-muted" style="font-size: 0.85rem;">{{ job.company }}</div>
-                        {% if job.location %}
-                            <div class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">
-                                <i class="fas fa-map-marker-alt"></i> {{ job.location }}
-                            </div>
-                        {% endif %}
-                        {% if job.ats_score > 0 %}
-                            <div style="font-size: 0.8rem; margin-top: 0.25rem; color: {% if job.ats_score >= 90 %}var(--success){% elif job.ats_score >= 75 %}var(--warning){% else %}var(--text-muted){% endif %};">
-                                <i class="fas fa-chart-bar"></i> ATS: {{ job.ats_score }}/100
-                            </div>
-                        {% endif %}
-                    </div>
-                    <form method="POST" action="/job-tracker/update/{{ job.id }}" style="display: flex; gap: 0.5rem;">
-                        <select name="status" class="form-select" style="padding: 0.4rem 0.75rem; font-size: 0.8rem; width: 140px;">
-                            <option value="" disabled selected>Move to...</option>
-                            <option value="Applied">Applied</option>
-                            <option value="Phone Screen">Phone Screen</option>
-                            <option value="Interview">Interview</option>
-                            <option value="Offer">Offer</option>
-                            <option value="Rejected">Rejected</option>
-                            <option value="Ghosted">Ghosted</option>
-                            <option value="Withdrawn">Withdrawn</option>
-                        </select>
-                        <button type="submit" class="btn btn-secondary" style="padding: 0.4rem 0.75rem; font-size: 0.8rem;">Update</button>
-                    </form>
-                </div>
-                {% if job.notes %}
-                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-secondary);">
-                        <i class="fas fa-sticky-note"></i> {{ job.notes[:100] }}{% if job.notes|length > 100 %}...{% endif %}
-                    </div>
-                {% endif %}
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="text-muted" style="text-align: center; padding: 3rem;">
-                <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                <p>No jobs in this stage</p>
-            </div>
-        {% endif %}
-    </div>
-    {% endfor %}
-</div>
-
-<!-- Follow-ups Section -->
-{% if follow_ups %}
-<div class="card mt-4" style="border: 2px solid var(--warning);">
-    <div class="card-header">
-        <div class="card-title"><i class="fas fa-bell" style="color: var(--warning);"></i> Follow-ups Needed</div>
-    </div>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
-        {% for job in follow_ups %}
-        <div style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius); padding: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <strong>{{ job.title }}</strong>
-                    <div class="text-muted" style="font-size: 0.85rem;">{{ job.company }}</div>
-                </div>
-                <span class="badge badge-yellow"><i class="fas fa-clock"></i> Follow Up</span>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
 {% endblock %}
