@@ -111,3 +111,6 @@ class BookmarkManager:
                 self._save_bookmarks()
                 return b
         return None
+
+# Singleton instance for easy import
+bookmark_manager = BookmarkManager()

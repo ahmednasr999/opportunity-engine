@@ -163,7 +163,7 @@ class NetworkMapper:
         
         if any(k in company_lower for k in health_keywords):
             return "HealthTech"
-        elif any(k in company_keywords for k in fintech_keywords):
+        elif any(k in company_lower for k in fintech_keywords):
             return "FinTech"
         elif any(k in company_lower for k in tech_keywords):
             return "Technology"
