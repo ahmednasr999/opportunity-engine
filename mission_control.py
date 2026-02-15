@@ -175,6 +175,13 @@ def cv_optimizer():
                 'cv_text': output
             })
             result['cv_id'] = cv_id
+            
+            # Auto-find matching jobs to suggest linking
+            matching_jobs = [j for j in coordinator.jobs if 
+                           company.lower() in j.get('company', '').lower() or
+                           j.get('company', '').lower() in company.lower()]
+            if matching_jobs:
+                result['suggested_job_link'] = matching_jobs[0]
     
     return render_template("cv_optimizer.html", result=result, linkedin_data=linkedin_data)
 
@@ -192,7 +199,7 @@ def job_tracker_view():
 
 @app.route("/job-tracker/add", methods=["POST"])
 def add_job():
-    """Add a new job"""
+    """Add a new job - with auto-connections"""
     company = request.form.get("company", "")
     title = request.form.get("title", "")
     location = request.form.get("location", "")
@@ -212,6 +219,25 @@ def add_job():
         )
         job.url = url
         job_tracker.save()
+        
+        # Register with coordinator for unified tracking
+        job_data = {
+            'id': job.id,
+            'company': company,
+            'title': title,
+            'location': location,
+            'source': source,
+            'sector': sector,
+            'url': url,
+            'date_applied': datetime.now().isoformat(),
+            'status': 'applied'
+        }
+        coordinator.register_job(job_data)
+        
+        # Auto-find contacts at this company
+        contacts = coordinator.find_contacts_at_company(company)
+        if contacts:
+            job.suggested_contacts = [c.get('id') for c in contacts]
     
     return redirect(url_for("job_tracker_view"))
 
@@ -455,6 +481,47 @@ def link_cv_to_job():
         return jsonify({'status': 'success', 'message': 'CV linked to job'})
     
     return jsonify({'status': 'error', 'message': 'Missing cv_id or job_id'}), 400
+
+@app.route("/api/connections")
+def get_connections():
+    """Get all auto-detected connections between tools"""
+    connections = {
+        'cv_to_jobs': [],
+        'jobs_to_contacts': [],
+        'unlinked_cvs': [],
+        'jobs_without_cv': [],
+        'recent_activities': coordinator.activities[-10:]
+    }
+    
+    # Find CVs that could link to jobs
+    for cv in coordinator.cvs:
+        if not cv.get('linked_to_job'):
+            matching_jobs = [j for j in coordinator.jobs 
+                           if cv.get('company', '').lower() in j.get('company', '').lower()
+                           or j.get('company', '').lower() in cv.get('company', '').lower()]
+            if matching_jobs:
+                connections['cv_to_jobs'].append({
+                    'cv': cv,
+                    'suggested_jobs': matching_jobs
+                })
+            else:
+                connections['unlinked_cvs'].append(cv)
+    
+    # Find jobs without CVs
+    for job in coordinator.jobs:
+        if not any(cv.get('linked_to_job') == job.get('id') for cv in coordinator.cvs):
+            connections['jobs_without_cv'].append(job)
+    
+    # Find jobs with contacts at company
+    for job in coordinator.jobs:
+        contacts = coordinator.find_contacts_at_company(job.get('company', ''))
+        if contacts:
+            connections['jobs_to_contacts'].append({
+                'job': job,
+                'contacts': contacts
+            })
+    
+    return jsonify(connections)
 
 @app.route("/documents")
 def documents_view():
