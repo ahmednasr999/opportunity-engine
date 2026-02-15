@@ -76,6 +76,23 @@
             font-size: 14px;
         }
         
+        /* Links - Always visible as links */
+        a {
+            color: var(--brand);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            transition: color var(--transition-fast);
+        }
+        
+        a:hover {
+            color: var(--brand-light);
+        }
+        
+        /* Card links - styled as cards but clearly clickable */
+        a.card, a.btn {
+            text-decoration: none;
+        }
+        
         /* Navigation */
         .navbar {
             background: var(--bg-default);
