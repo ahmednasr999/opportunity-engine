@@ -27,6 +27,10 @@ from search_aggregator import SearchAggregator
 from cv_pdf_generator import CVPDFGenerator
 from linkedin_importer import LinkedInJobImporter
 from ahmed_profile import AHMED_PROFILE, SECTOR_SUMMARIES
+from job_board_scraper import JobBoardScraper
+from enhanced_network_mapper import EnhancedNetworkMapper
+from enhanced_content_factory import EnhancedContentFactory
+from enhanced_analytics import EnhancedAnalyticsDashboard
 
 app = Flask(__name__)
 
@@ -45,6 +49,10 @@ bookmark_manager = BookmarkManager()
 search_aggregator = SearchAggregator()
 pdf_generator = CVPDFGenerator()
 linkedin_importer = LinkedInJobImporter()
+job_scraper = JobBoardScraper()
+enhanced_network = EnhancedNetworkMapper()
+enhanced_content = EnhancedContentFactory()
+enhanced_analytics = EnhancedAnalyticsDashboard()
 
 @app.route("/")
 def dashboard():
