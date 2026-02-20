@@ -190,13 +190,15 @@ def job_finder_page():
     stats = job_finder.get_stats()
     return render_template("job_finder.html", stats=stats)
 
-@app.route("/adham-optimizer")
-def adham_optimizer_page():
+# DISABLED - AI Heavy
+# @app.route("/adham-optimizer")
+# def adham_optimizer_page():
     """ADHAM ATS Optimizer page"""
     return render_template("adham_optimizer.html")
 
-@app.route("/cv-optimizer", methods=["GET", "POST"])
-def cv_optimizer():
+# DISABLED - AI Heavy
+# @app.route("/cv-optimizer", methods=["GET", "POST"])
+# def cv_optimizer():
     """CV Optimizer page"""
     result = None
     linkedin_data = None
@@ -370,8 +372,9 @@ def update_job(job_id):
     
     return redirect(url_for("job_tracker_view"))
 
-@app.route("/content-factory", methods=["GET", "POST"])
-def content_factory_view():
+# DISABLED - AI Heavy
+# @app.route("/content-factory", methods=["GET", "POST"])
+# def content_factory_view():
     """Content Factory page"""
     result = None
     
